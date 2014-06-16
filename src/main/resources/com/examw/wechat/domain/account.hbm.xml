@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.examw.wechat.domain.account">
+	<!--公众账号管理 -->
+	<class name="Account" table="tbl_Examw_Wechat_Account">
+		<!--公众号ID -->
+		<id name="id"  type="string" length="64"/>
+		<!--公众号名称 -->
+		<property name="name"  type="string" not-null="true" length="32"/>
+		<!--公众号账号 -->
+		<property name="account"  type="string" unique="true" length="32"/>
+		<!-- 当前账号类型 1-服务号，2-订阅号 -->
+		<property name="type" type="integer"/>
+		<!--接入令牌 -->
+		<property name="token" type="string" not-null="true" length="32"/>
+		<!-- 公众号OpenId -->
+		<property name="openId" type="string" length="32"/>
+		<!-- 第三方用户唯一凭证 -->
+		<property name="appId" type="string" length="64"/>
+		<!-- 第三方用户唯一凭证密钥 -->
+		<property name="appSecret" type="string" length="128"/>
+		<!-- 业务接口URL -->
+		<property name="businessURL" type="string" length="64"/>
+		<!-- 当前账号状态  0-停用， 1-启用-->
+		<property name="status" type="integer"/>
+		<!-- 描述信息 -->
+		<property name="description" type="string" length="512"/>
+		<!-- 创建时间 -->
+		<property name="createTime" type="timestamp"/>
+	</class>
+</hibernate-mapping>

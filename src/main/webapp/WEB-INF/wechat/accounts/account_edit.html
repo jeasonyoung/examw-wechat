@@ -1,0 +1,58 @@
+<#--公众号账号管理编辑-->
+<#assign module="account_account"/>
+<#assign form="${module}_edit_form"/>
+<form id="${form}" method="POST" style="padding:10px;">
+	<div style="float:left;margin-top:2px;width:550px;">
+		<span style="float:left;width:75px;text-align:right;padding-top:3px;">公众号名称：</span>
+		<input type="text" name="name" class="easyui-validatebox" style="width:468px;" data-options="required:true"/>
+		<input type="hidden" name="id"/>
+	</div>
+	<div style="float:left;margin-top:12px;width:550px;">
+		<div style="float:left;">
+			<span style="float:left;width:75px;text-align:right;padding-top:3px;">公众号：</span>
+			<input type="text" name="account" class="easyui-validatebox" style="width:168px;" data-options="required:true"/>
+		</div>
+		<div style="float:right;padding-right:5px;">
+			<span style="float:left;width:75px;text-align:right;padding-top:3px;">接入令牌：</span>
+			<input type="text" name="token" class="easyui-validatebox" style="width:168px;" data-options="required:true"/>
+		</div>
+	</div>
+	<div style="float:left;margin-top:12px;width:550px;">
+		<div style="float:left;">
+			<span style="float:left;width:75px;text-align:right;padding-top:3px;">用户凭证：</span>
+			<input type="text" name="appId"  style="width:168px;"/>
+		</div>
+		<div style="float:right;padding-right:5px;">
+			<span style="float:left;width:75px;text-align:right;padding-top:3px;">凭证密钥：</span>
+			<input type="text" name="appSecret" style="width:168px;"/>
+		</div>
+	</div>
+	<div style="float:left;margin-top:12px;width:550px;">
+		<div style="float:left;">
+			<span style="float:left;width:75px;text-align:right;padding-top:3px;">类型：</span>
+			<div style="float:left;width:168px;">
+				<label><input name="type" type="radio" value="1" checked="checked"/>${TYPE_SERVICE}</label>
+				<label><input name="type" type="radio" value="2"/>${TYPE_SUBSCRIBE}</label>
+			</div>
+		</div>
+		<div style="float:right;padding-right:5px;">
+			<span style="float:left;width:75px;text-align:right;padding-top:3px;">状态：</span>
+			<div style="float:left;width:168px;">
+				<label><input name="status" type="radio" value="1" checked="checked"/>${STATUS_ENABLE}</label>
+				<label><input name="status" type="radio" value="0" />${STATUS_DISABLE}</label>
+			</div>
+		</div>
+	</div>
+	<div style="float:left;margin-top:12px;width:550px;">
+		<span style="float:left;width:75px;text-align:right;padding-top:3px;">微信ID：</span>
+		<input type="text" name="openId" title="在关注公众号的微信用户中输入:[Order:init:公众号]系统将自动将其关联" class="easyui-tooltip" style="width:468px;"/>
+	</div>
+	<div style="float:left;margin-top:12px;width:550px;">
+		<span style="float:left;width:75px;text-align:right;padding-top:3px;">业务接口：</span>
+		<input type="text" name="businessURL" style="width:468px;"/>
+	</div>
+	<div style="float:left;margin-top:12px;width:550px;">
+		<span style="float:left;width:75px;text-align:right;padding-top:3px;">描述：</span>
+		<textarea name="description"  style="width:468px;" rows="3" cols="10"></textarea>
+	</div>
+</form>

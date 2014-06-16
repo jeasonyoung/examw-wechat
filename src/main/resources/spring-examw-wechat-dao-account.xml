@@ -2,8 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- dao -->
-	<!-- 系统管理 数据接口实现 -->
-	<import resource="spring-examw-wechat-dao-security.xml"/>
-	<!-- 公众号账号管理 数据接口实现-->
-	<import resource="spring-examw-wechat-dao-account.xml"/>
+	<!-- 公众号账号管理 数据接口实现 begin-->
+	<bean id="accountDao" class="com.examw.wechat.dao.account.impl.AccountDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<!-- 公众号账号管理 数据接口实现 end-->
 </beans>

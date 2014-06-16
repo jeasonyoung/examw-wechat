@@ -1,0 +1,206 @@
+<#--公众号账号管理列表-->
+<#include "ftl/comm.ftl"/>
+<#assign module="account_account"/>
+<#assign dg="${module}_list_dg"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	//query
+	function query(){
+		return {
+			account:$("#${dg}_toolbar input[name='account']").val(),
+			status:$("#${dg}_toolbar input[name='status']:checked").val(),
+			type:$("#${dg}_toolbar input[name='type']:checked").val()
+		}
+	};
+	//dg
+	var dg=$("#${dg}").datagrid({
+		url:"<@s.url '/accounts/account/datagrid'/>",
+		queryParams:query(),
+		fit:true,
+		fitColumns:true,
+		rownumbers:true,
+		pagination:true,
+		pagePosition:"bottom",
+		pageSize:20,
+		pageList:[20,30,40],
+		border:true,
+		striped:true,
+		idField:"id",
+		sortName:"createTime",
+		sortOrder:"desc",
+		columns:[[{
+			field:"id",
+			checkbox:true
+		},{
+			title:"公众号名称",
+			field:"name",
+			width:40,
+			align:"left",
+			sortable:true
+		},{
+			title:"公众号",
+			field:"account",
+			width:30,
+			align:"left",
+			sortable:true
+		},{
+			title:"类型",
+			field:"type",
+			width:10,
+			align:"center",
+			formatter:function(value,row,index){
+				if(value == 0) return "";
+				if(value == 1) return "${TYPE_SERVICE}";
+				if(value == 2) return "${TYPE_SUBSCRIBE}";
+				return value;
+			},
+			sortable:true
+		},{
+			title:"接入令牌",
+			field:"token",
+			width:15,
+			align:"left",
+			sortable:true
+		},{
+			title:"微信ID",
+			field:"openId",
+			width:30,
+			align:"left",
+			sortable:true
+		},{
+			title:"状态",
+			field:"status",
+			width:10,
+			align:"center",
+			formatter:function(value,row,index){
+				if(value == 0) return "${STATUS_DISABLE}";
+				if(value == 1) return "${STATUS_ENABLE}";
+				return value;
+			},
+			sortable:true
+		}]],
+		toolbar:"#${dg}_toolbar",
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		onDblClickRow:function(rowIndex,rowData){
+			edit_window("编辑公众号",rowIndex,rowData);
+		}
+	});
+	//edit_window
+	function edit_window(title,index,row){
+		var d = $("<div/>").dialog({
+			title:title,
+			width:600,
+			height:400,
+			href:"<@s.url '/accounts/account/edit'/>",
+			modal:true,
+			buttons:[{
+				text:"保存",
+				iconCls:"icon-save",
+				handler:function(){
+					$.messager.progress();
+					$("#${module}_edit_form").form("submit",{
+						url:"<@s.url '/accounts/account/update'/>",
+						onSubmit: function(){
+							var isValid = $(this).form("validate");
+							if (!isValid)$.messager.progress("close");
+							return isValid;
+						},
+						success:function(data){
+							$.messager.progress("close");
+							var data = $.parseJSON(data);
+							if(data.success){
+								dg.datagrid(row ? "updateRow" : "insertRow",{
+									index:index,
+									row:data.data
+								});
+								d.dialog("close");
+							}else{
+								$.messager.show({
+									title:"保存异常",
+									msg:data.msg
+								});
+							}
+						}
+					});
+				}
+			},{
+				text:"关闭",
+				iconCls:"icon-cancel",
+				handler:function(){
+					d.dialog("close");
+				}
+			}],
+			onClose:function(){
+				$(this).dialog("destroy");
+			},
+			onLoad:function(){
+				if(row) $("#${module}_edit_form").form("load",row);
+			}
+		});
+	};
+	//search
+	${dg}_search = function(){
+		dg.datagrid("load",query());
+	};
+	//add
+	${dg}_add = function(){
+		edit_window("新增公众号",0,null);
+	};
+	//delete
+	${dg}_delete = function(){
+		var rows = dg.datagrid("getChecked");
+		if(rows && rows.length > 0){
+			$.messager.confirm("确认","您是否确认删除选中的数据?",function(r){
+				if(!r)return;
+				var ids = [];
+				for(var i = 0; i < rows.length; i++){
+					ids.push(rows[i].id);
+				}
+				$.ajax({
+					url:"<@s.url '/accounts/account/delete'/>",
+					type:"POST",
+					data:{
+						id:ids.join("|")
+					},
+					dataType:"json",
+					success:function(data,textStatus){
+						if(data.success){
+							dg.datagrid("load");
+							dg.datagrid("unselectAll");
+						}else{
+							$.messager.show({
+								title:"提示",
+								msg:data.msg
+							});
+						}
+					}
+				});
+			});
+		}else{
+			$.messager.alert("提示","未选中须删除的数据！");
+		}
+	};
+});
+//-->
+</script>
+<table id="${dg}"></table>
+<div id="${dg}_toolbar">
+	<a href="#" class="easyui-linkbutton" onclick="${dg}_add()" data-options="iconCls:'icon-add',plain:true" style="float:left;">新增</a>
+	<span>|</span>
+	<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+	<span>公众号/名称:</span>
+	<input name="account" type="text" style="width:198px;"/>
+	
+	<span style="text-align:right;padding-left:15px;">类型:</span>
+	<label><input name="type" type="radio" value="1"/>${TYPE_SERVICE}</label>
+	<label><input name="type" type="radio" value="2"/>${TYPE_SUBSCRIBE}</label>
+	
+	<span style="text-align:right;padding-left:15px;">状态:</span>
+	<label><input name="status" type="radio" value="1" checked="checked"/>${STATUS_ENABLE}</label>
+	<label><input name="status" type="radio" value="0" />${STATUS_DISABLE}</label>
+	
+	<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
+</div>

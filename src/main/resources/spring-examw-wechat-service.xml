@@ -4,4 +4,6 @@
 	<!-- service -->
 	<!--  系统管理 服务接口实现-->
 	<import resource="spring-examw-wechat-service-security.xml"/>
+	<!--  公众账号管理 服务接口实现-->
+	<import resource="spring-examw-wechat-service-account.xml"/>
 </beans>
