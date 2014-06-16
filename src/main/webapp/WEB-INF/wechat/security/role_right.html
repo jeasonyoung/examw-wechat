@@ -1,0 +1,104 @@
+<#--角色权限-->
+<#include "ftl/comm.ftl"/>
+<#assign module="security_role"/>
+<#assign right="${module}_right"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	//load role menu right tree data。
+	var t = $("#${right}_tree").tree({
+		 url:"<@s.url '/security/role/right-tree'/>?roleId=${roleId}",
+		 checkbox:true,
+		 animate:true,
+		 lines:true,
+		 onLoadError:function(e){
+			 <@error_dialog "e"/>
+		 },
+		 onLoadSuccess:function(node,data){
+			  $.each(data,function(i,n){
+				  loadChecked(n);
+			  });
+		 },
+		 onCheck:function(node,check){
+			if(check && !checkRight(node)){
+				$.messager.alert("警告","没有菜单权限选项！");
+				t.tree("uncheck",node.target);
+			}
+		 }
+	});
+	//load checked node
+	function loadChecked(node){
+		if(!node) return;
+		if(node.attributes.type == 1 && node.attributes.auth){
+			var e = t.tree("find",node.id);
+			if(e) t.tree("check",e.target);	
+		}
+		if($.isArray(node.children)){
+			$.each(node.children,function(i,n){
+				loadChecked(n);
+			});
+		}
+	};
+	//check leaf of right
+	function checkRight(node){
+		if(!node) return false;
+		if(node.attributes.type == 1) return true;
+		if($.isArray(node.children) && node.children.length > 0){
+			var result = false;
+			$.each(node.children,function(i,n){
+				 if(result = checkRight(n)) return false;
+			});
+			return result;
+		}
+		return false;
+	};
+	//add role right to save
+	${right}_save = function(d){
+		var menuRightIds = [];
+		createMenuRightIds(t.tree("getChecked"),menuRightIds);
+		$.messager.confirm("确认","您是否确认保存角色权限数据?",function(r){
+			if(!r)return;
+			$.messager.progress();
+			$.ajax({
+				url:"<@s.url '/security/role/addroleright'/>",
+				type:"POST",
+				data:{
+					roleId:"${roleId}",
+					menuRightIds:menuRightIds.join("|")
+				},
+				dataType:"json",
+				error:function(e){
+					$.messager.progress("close");
+					<@error_dialog "e"/>
+				},
+				success:function(data,textStatus){
+					$.messager.progress("close");
+					if(data.success){
+						d.dialog("close");
+					}else{
+						$.messager.show({
+							title:"提示",
+							msg:data.msg
+						});
+					}
+				}
+			});
+		});
+	};
+	//split tree menu id.
+	function createMenuRightIds(nodes,result){
+		if(!nodes)return;
+		if($.isArray(nodes)){
+			$.each(nodes,function(i,n){
+				if($.isArray(n.children) && n.children.length > 0){
+					createMenuRightIds(n,result);
+				}else if(n.attributes.type == 1){
+					result.push(n.id);
+				}
+			});
+		}
+	}
+});
+//-->
+</script>
+<ul id="${right}_tree"></ul>

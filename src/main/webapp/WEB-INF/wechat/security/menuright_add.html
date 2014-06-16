@@ -1,0 +1,91 @@
+<#--菜单权限编辑-->
+<#include "ftl/comm.ftl"/>
+<#assign module="security_menuright"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	//load menu tree
+	var menu = $("#${module}_add_menu_tree").tree({
+		url:"<@s.url '/security/menu/tree'/>",
+		checkbox:true,
+		onLoadSuccess:function(node,data){
+			var id = "${menuId}";
+			if($.trim(id) == "") return;
+			var e = menu.tree("find", id);
+			if(e){
+				menu.tree("check",e.target);	
+			}
+		}
+	});
+	//split tree menu id.
+	function create_menu_ids(nodes,result){
+		if(!nodes)return;
+		if($.isArray(nodes)){
+			$.each(nodes,function(i,n){
+				if($.isArray(n.children)){
+					create_menu_ids(n.children, result);
+				}else{
+					result.push(n.id);
+				}
+			});
+		}
+	}
+	//save
+	${module}_add_save = function(d,dg){
+		var menuIds = [],rightIds = [];
+		create_menu_ids(menu.tree("getChecked"),menuIds);
+		if(menuIds.length == 0){
+			$.messager.alert("警告","请选择添加权限的菜单！");
+			return;
+		}
+		$.each($("#${module}_add input[name='rightId']:checked"),function(i,n){
+			rightIds.push($(n).val());
+		});
+		if(rightIds.length == 0){
+			$.messager.alert("警告","请为菜单添加权限！");
+			return;
+		}
+		$.messager.confirm("确认","您是否确认为菜单添加权限数据?",function(r){
+			if(!r)return;
+			$.messager.progress();
+			$.ajax({
+				url:"<@s.url '/security/menu/right/update'/>",
+				type:"POST",
+				data:{
+					menuId:menuIds.join("|"),
+					rightId:rightIds.join("|")
+				},
+				dataType:"json",
+				error:function(e){
+					$.messager.progress("close");
+					<@error_dialog "e"/>
+				},
+				success:function(data,textStatus){
+					$.messager.progress("close");
+					if(data.success){
+						d.dialog("close");
+						dg.datagrid("load");
+						dg.datagrid("unselectAll");
+					}else{
+						$.messager.show({
+							title:"提示",
+							msg:data.msg
+						});
+					}
+				}
+			});
+		});
+	}
+});
+//-->
+</script>
+<div id="${module}_add" class="easyui-layout" data-options="fit:true,border:false">
+	 	<div data-options="region:'center'" title="菜单" style="padding:2px;"> 
+	 		<ul id="${module}_add_menu_tree"></ul>
+	 	</div>
+		<div data-options="region:'east',collapsible:false"  title="权限" style="width:250px;">
+			<#list rights as r>
+				<input type="checkbox" name="rightId" value="${r.id}" /> ${r.name}<br/>
+			</#list>
+		</div>
+</div>

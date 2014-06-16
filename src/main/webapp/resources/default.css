@@ -1,0 +1,119 @@
+*
+{
+	scrollbar-arrow-color:#f4ae21;/*三角箭头的颜色*/
+	scrollbar-face-color:#333;/*立体滚动条的颜色*/
+	scrollbar-3dlight-color:#666;/*立体滚动条亮边的颜色*/
+	
+	scrollbar-highlight-color:#666;/*滚动条白色部分的颜色*/
+	scrollbar-shadow-color:#999;/*立体滚动条阴影的颜色*/
+	scrollbar-darkshadow-color:#666;/*立体滚动条强阴影的颜色*/
+	scrollbar-track-color:#666;/*立体滚动条背景颜色*/
+	scrollbar-base-color:#f8f8f8;/*滚动条的基本颜色*/
+}
+form
+{
+	padding:2px;
+}
+form label,label
+{
+	padding-top:3px;
+	text-align:right;
+}
+form label
+{
+	float:left;
+}
+textarea
+{
+	border:solid 1px #d4d4d4;	
+}
+input
+{
+	height:18px;
+	/*background-color:#FFCC33;*/
+	border:solid 1px #d4d4d4;
+}
+input[type=checkbox],input[type=radio]
+{
+	width:18px;
+	border:0px;
+}
+select
+{
+	border:solid 1px #d4d4d4;
+	clip:rect(0 80 20 0);
+}
+/* 大题自定义样式  */
+ .table1
+  {
+  border-collapse:collapse;
+  }
+ .table1,.table1 th, .table1 td
+	{
+	border:1px solid #D9D9D9;
+	}
+	.icon_up {
+    background: url("img/icon_fold_normal.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    display: inline-block;
+    height: 16px;
+    margin: 0 !important;
+    padding: 0 3px;
+    position: relative;
+    top: 3px;
+    width: 16px;
+    z-index: 200;
+}
+a.icon_up:hover {
+    background: url("img/icon_up_over.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+}
+.icon_down {
+    background: url("img/icon_down_normal.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    display: inline-block;
+    height: 16px;
+    margin: 0 !important;
+    padding: 0 3px;
+    position: relative;
+    top: 3px;
+    width: 16px;
+    z-index: 200;
+}
+a.icon_down:hover {
+    background: url("img/icon_down_over.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+}
+.icon_del {
+    background: url("img/icon_del_normal.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    display: inline-block;
+    height: 19px;
+    padding: 0 3px;
+    position: relative;
+    top: 3px;
+    vertical-align: top;
+    width: 19px;
+    z-index: 200;
+}
+a.icon_del:hover {
+    background: url("img/icon_del_over.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+}
+.icon_up {
+    background: url("img/icon_up_normal.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    display: inline-block;
+    height: 20px;
+    padding: 0 3px;
+    position: relative;
+    top: 4px;
+    width: 20px;
+    z-index: 200;
+}
+.icon_down {
+    background: url("img/icon_down_normal.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    display: inline-block;
+    height: 20px;
+    padding: 0 3px;
+    position: relative;
+    top: 4px;
+    width: 20px;
+    z-index: 200;
+}
+.hidden {
+    visibility: hidden !important;
+}

@@ -1,0 +1,43 @@
+<#--后台管理界面布局-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cn">
+		<head>
+			<title>${systemName}</title>
+			<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+			<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+			<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+			<!-- easyui css -->
+			<link rel="stylesheet" href="<@s.url "/resources/themes/icon.css"/>" type="text/css"/>
+			<link rel="stylesheet" href="<@s.url "/resources/themes/bootstrap/easyui.css"/>" type="text/css"/>
+			<!-- uploadify css  -->
+			<link rel="stylesheet" href="<@s.url "/resources/uploadify/uploadify.css"/>" type="text/css"/>
+			<!-- custom css -->
+			<link rel="stylesheet" href="<@s.url "/resources/default.css"/>" type="text/css"/>
+			<!-- jquery -->
+			<script type="text/javascript" src="<@s.url "/resources/jquery.min.js"/>"></script>
+			<!-- easyui -->
+			<script type="text/javascript" src="<@s.url "/resources/jquery.easyui.min.js"/>"></script>
+			<script type="text/javascript" src="<@s.url "/resources/locale/easyui-lang-zh_CN.js"/>"></script>
+			<!--  富文本编辑器 -->
+			<link rel="stylesheet" href="<@s.url "/resources/editor/themes/default/default.css"/>"/>
+			<script type="text/javascript" src="<@s.url "/resources/editor/kindeditor-min.js"/>"></script>
+			<script type="text/javascript" src="<@s.url "/resources/editor/lang/zh_CN.js"/>"></script>
+			<script type="text/javascript" src="<@s.url "/resources/easyui-kindeditor.js"/>"></script>
+			<!-- easyui扩展 -->
+			<script type="text/javascript" src="<@s.url "/resources/easyui-ext.js"/>"></script>
+			<!-- uploadify 上传 -->
+			<script type="text/javascript" src="<@s.url "/resources/uploadify/jquery.uploadify.min.js"/>"></script>
+		</head>
+		<body class="easyui-layout">
+			<#--top-->
+			<div data-options="region:'north'" style="height:100px;padding:10px;" href="<@s.url '/top'/>"></div>
+			<#--left-->
+			<div data-options="region:'west',split:true" title="功能菜单" href="<@s.url '/left'/>" style="width:200px;padding:1px;overflow:hidden;"></div>
+			<#--center-->
+			<div data-options="region:'center'" href="<@s.url '/center'/>"></div>
+			<#--footer-->
+			<div data-options="region:'south'" style="height:20px;" align="center">
+				<label>www.examw.com &copy; 版权所有</label>
+			</div>
+		</body>
+</html>

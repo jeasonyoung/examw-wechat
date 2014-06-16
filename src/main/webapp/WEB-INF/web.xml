@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <display-name>中华考试网微信服务系统</display-name>
+  <description>中华考试网微信服务系统</description>
+  
+  <!--druid监控页面，使用${pageContext.request.contextPath}/druid/index.html访问-->
+  <servlet>
+  	<servlet-name>druidStatView</servlet-name>
+  	<servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+  	<load-on-startup>2</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>druidStatView</servlet-name>
+  	<url-pattern>/druid/*</url-pattern>
+  </servlet-mapping>
+    
+  <!--druid数据源Web监控-->
+  <filter>
+  	<filter-name>druidWebStatFilter</filter-name>
+  	<filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+  	<init-param>
+  		<param-name>exclusions</param-name>
+  		<param-value>/css/*,/style/*,/jslib/*,*.js,*.css,/druid*,/attached/*,*.jsp</param-value>
+  	</init-param>
+  	<init-param>
+  		<param-name>principalSessionName</param-name>
+  		<param-value>sessionInfo</param-value>
+  	</init-param>
+  	<init-param>
+  		<param-name>profileEnable</param-name>
+  		<param-value>true</param-value>
+  	</init-param>
+  </filter>
+   <filter-mapping>
+  	<filter-name>druidWebStatFilter</filter-name>
+  	<url-pattern>/druid/*</url-pattern>
+  </filter-mapping>
+  
+  <!--openSessionInView-->
+  <filter>
+  	<filter-name>openSessionInViewFilter</filter-name>
+  	<filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter</filter-class>
+  	<init-param>
+  		<param-name>singleSession</param-name>
+  		<param-value>true</param-value>
+  	</init-param>
+  </filter>
+   <filter-mapping>
+  	<filter-name>openSessionInViewFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <!--字符集编码配置-->
+  <filter>
+  	<filter-name>encodingFilter</filter-name>
+  	<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+  	<init-param>
+  		<param-name>encoding</param-name>
+  		<param-value>UTF-8</param-value>
+  	</init-param>
+  	<init-param>
+  		<param-name>foreEncoding</param-name>
+  		<param-value>true</param-value>
+  	</init-param>
+  </filter>
+  <filter-mapping>
+  	<filter-name>encodingFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <!--spring配置文件位置-->
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+  	<param-value>classpath:spring-examw-wechat.xml</param-value>
+  </context-param>
+  <!--spring监听器-->
+  <listener>
+  	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <!--防止spring内存溢出监听器-->
+  <listener>
+  	<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+  </listener>
+  
+  <!-- shiro安全过滤器 -->
+  <!-- The filter-name matches name of a 'shiroFilter' bean inside applicationContext.xml -->
+ <!--  <filter>
+  	<filter-name>shiroFilter</filter-name>
+  	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  	<init-param>
+  		<param-name>targetBeanName</param-name>
+  		<param-value>shiroFilter</param-value>
+  	</init-param>
+  	<init-param>
+  		<param-name>targetFilterLifecycle</param-name>
+  		<param-value>true</param-value>
+  	</init-param>
+  </filter> -->
+  <!--filter-mapping>
+  	<filter-name>shiroFilter</filter-name>
+  	<url-pattern>/admin/*</url-pattern>
+  </filter-mapping-->
+  
+   	<!-- Spring MVC 配置，配置文件名称默认为｛servlet-name｝-servlet.xml,路径默认在/WEB-INF/下 -->
+	<servlet>
+		<servlet-name>examw-wechat-mvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:spring-examw-wechat-mvc.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>examw-wechat-mvc</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+  
+  <!--配置session超时时间,单位分钟 -->
+  <session-config>
+  	<session-timeout>15</session-timeout>
+  </session-config>
+</web-app>

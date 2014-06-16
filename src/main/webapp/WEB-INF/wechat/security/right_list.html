@@ -1,0 +1,133 @@
+<#--基础权限列表-->
+<#include "ftl/comm.ftl"/>
+<#assign module="security_Right"/>
+<#assign dg="${module}_list_dg"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	//dg
+	var dg=$("#${dg}").datagrid({
+		url:"<@s.url '/security/right/datagrid'/>",
+		fit:true,
+		fitColumns:true,
+		rownumbers:true,
+		pagination:true,
+		pagePosition:"bottom",
+		pageSize:20,
+		pageList:[20,30,40],
+		border:true,
+		striped:true,
+		idField:"id",
+		sortName:"orderNo",
+		sortOrder:"asc",
+		columns:[[{
+			field:"id",
+			checkbox:true
+		},{
+			title:"权限名称",
+			field:"name",
+			width:50,
+			align:"left",
+			sortable:true
+		},{
+			title:"权限值",
+			field:"value",
+			width:20,
+			align:"center",
+			sortable:true
+		},{
+			title:"排序号",
+			field:"orderNo",
+			width:10,
+			align:"right",
+			sortable:true
+		}]],
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		toolbar:[
+				/* <shiro.hasPermission name="${PER_UPDATE}"> */
+		         {
+	        	 	iconCls:"icon-add",
+		 			text:"初始化权限数据",
+		 			handler:function(){
+		 				$.messager.confirm("确认","您是否确认初始化菜单数据?",function(r){
+		 					if(!r)return;
+		 					$.messager.progress();
+		 					$.ajax({
+		 						url:"<@s.url '/security/right/init'/>",
+		 						type:"POST",
+		 						dataType:"json",
+		 						error:function(e){
+									$.messager.progress("close");
+									<@error_dialog "e"/>
+								},
+		 						success:function(data,textStatus){
+		 							$.messager.progress("close");
+		 							if(data.success){
+		 								dg.datagrid("load");
+		 								dg.datagrid("unselectAll");
+		 							}else{
+		 								$.messager.show({
+		 									title:"提示",
+		 									msg:data.msg
+		 								});
+		 							}
+		 						}
+		 					});
+		 				});
+		 			}
+		         },
+		        /* </shiro.hasPermission> */
+		         "-"
+		        /* <shiro.hasPermission name="${PER_DELETE}"> */
+		         ,{
+		        	iconCls:"icon-remove",
+		 			text:"删除",
+		 			handler:function(){
+		 				var rows = dg.treegrid("getChecked");
+		 				if(rows && rows.length > 0){
+		 					$.messager.confirm("确认","您是否确认删除选中的数据?",function(r){
+		 						if(!r)return;
+		 						$.messager.progress();
+		 						var ids = [];
+		 						for(var i = 0; i < rows.length; i++){
+		 							ids.push(rows[i].id);
+		 						}
+		 						$.ajax({
+		 							url:"<@s.url '/security/right/delete'/>",
+		 							type:"POST",
+		 							data:{
+		 								id:ids.join("|")
+		 							},
+		 							dataType:"json",
+		 							error:function(e){
+										$.messager.progress("close");
+										<@error_dialog "e"/>
+									},
+		 							success:function(data,textStatus){
+		 								$.messager.progress("close");
+		 								if(data.success){
+		 									dg.datagrid("load");
+		 									dg.datagrid("unselectAll");
+		 								}else{
+		 									$.messager.show({
+		 										title:"提示",
+		 										msg:data.msg
+		 									});
+		 								}
+		 							}
+		 						});
+		 					});
+		 				}else{
+		 					$.messager.alert("提示","未选中须删除的数据！");
+		 				}
+		 			}
+		         }
+		        /*  </shiro.hasPermission> */
+		         ]
+	});
+});
+//-->
+</script>
+<table id="${dg}"></table>

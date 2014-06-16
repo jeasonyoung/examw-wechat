@@ -1,0 +1,133 @@
+<#--菜单设置列表-->
+<#include "ftl/comm.ftl"/>
+<#assign module="security_menu"/>
+<#assign dg="${module}_list_dg"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	//dg
+	var dg = $("#${dg}").treegrid({
+		url:"<@s.url '/security/menu/datagrid'/>",
+		fit:true,
+		fitColumns:true,
+		rownumbers:true,
+		idField:"id",
+		treeField:"name",
+		singleSelect:false,
+		animate:true,
+		border:true,
+		striped:true,
+		columns:[[{
+			field:"children",
+			checkbox:true
+		},{
+			title:"菜单名称",
+			field:"name",
+			width:25
+		},{
+			title:"菜单代码",
+			field:"id",
+			width:15
+		},{
+			title:"菜单icon",
+			field:"icon",
+			width:15
+		},{
+			title:"菜单URI",
+			field:"uri",
+			width:35
+		},{
+			title:"排序号",
+			field:"orderNo",
+			width:5,
+			align:"right"
+		}]],
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		toolbar:[
+		/* <shiro.hasPermission name="${PER_UPDATE}"> */
+		{
+			iconCls:"icon-add",
+			text:"初始化菜单数据",
+			handler:function(){
+				$.messager.confirm("确认","您是否确认初始化菜单数据?",function(r){
+					if(!r)return;
+					$.messager.progress();
+					$.ajax({
+						url:"<@s.url '/security/menu/init'/>",
+						type:"POST",
+						dataType:"json",
+						error:function(e){
+							$.messager.progress("close");
+							<@error_dialog "e"/>
+						},
+						success:function(data,textStatus){
+							$.messager.progress("close");
+							if(data.success){
+								dg.treegrid("load");
+								dg.treegrid("unselectAll");
+							}else{
+								$.messager.show({
+									title:"提示",
+									msg:data.msg
+								});
+							}
+						}
+					});
+				});
+			}
+		},
+		/* </shiro.hasPermission> */
+		"-"
+		/* <shiro.hasPermission name="${PER_DELETE}"> */
+		,{
+			iconCls:"icon-remove",
+			text:"删除",
+			handler:function(){
+				var rows = dg.treegrid("getChecked");
+				if(rows && rows.length > 0){
+					$.messager.confirm("确认","您是否确认删除选中的数据?",function(r){
+						if(!r)return;
+						$.messager.progress();
+						var ids = [];
+						for(var i = 0; i < rows.length; i++){
+							ids.push(rows[i].id);
+						}
+						$.ajax({
+							url:"<@s.url '/security/menu/delete'/>",
+							type:"POST",
+							data:{
+								id:ids.join("|")
+							},
+							dataType:"json",
+							error:function(e){
+								$.messager.progress("close");
+								<@error_dialog "e"/>
+							},
+							success:function(data,textStatus){
+								$.messager.progress("close");
+								if(data.success){
+									dg.treegrid("load");
+									dg.treegrid("unselectAll");
+								}else{
+									$.messager.show({
+										title:"提示",
+										msg:data.msg
+									});
+								}
+							}
+						});
+					});
+				}else{
+					$.messager.alert("提示","未选中须删除的数据！");
+				}
+			}
+		}
+		/* </shiro.hasPermission> */
+		]
+	});
+});
+//-->
+</script>
+<table id="${dg}"></table>

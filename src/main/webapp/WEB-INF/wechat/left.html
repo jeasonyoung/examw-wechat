@@ -1,0 +1,39 @@
+<#--左侧功能菜单-->
+<#assign module="index"/>
+<#--创建菜单树-->
+<#macro createTree modules>
+<#if modules ??>
+	<ul class="easyui-tree" data-options="onClick:function(node){${module}_workspace_addWorkspaceTab(node);}">
+		<@createNode modules/>
+	</ul>
+</#if>
+</#macro>
+<#--创建节点-->
+<#macro createNode modules>
+	<#if modules ??>
+		<#list modules as m>
+			<li id="${m.id}" data-options="<#if (m.icon ? length > 0)>iconCls='${m.icon}',</#if>attributes:{url:'<#if (m.uri ? length > 0)><@s.url m.uri/></#if>'}">
+				<span>${m.name}</span>
+				<#if (m.modules ? size > 0)>
+					<@createChilds m.modules/>
+				</#if>
+			</li>
+		</#list>
+	</#if>
+</#macro>
+<#--创建子树-->
+<#macro createChilds modules>
+<#if (modules ?size > 0)>
+	<ul>
+		<@createNode modules/>
+	</ul>
+</#if>
+</#macro>
+
+<div class="easyui-accordion" data-options="fit:true">
+	<#list modules as m>
+		<div title="${m.name}"<#if (m.icon ? length  > 0)> data-options="iconCls:'${m.icon}'"</#if> >
+			<@createTree m.modules/>
+		</div>
+	</#list>
+</div>

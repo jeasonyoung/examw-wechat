@@ -1,0 +1,19 @@
+<#--角色编辑-->
+<#assign module="security_role"/>
+<#assign form="${module}_edit_form"/>
+<form id="${form}" method="POST">
+	<div style="float:left;margin-top:10px;width:100%;">
+		<label style="width:75px;">角色名称：</label>
+		<input type="text" name="name" class="easyui-validatebox"  style="width:268px;" data-options="required:true"/>
+		<input type="hidden" name="id"/>
+	</div>
+	<div style="float:left;margin-top:10px;width:100%;">
+		<label style="width:75px;">状态：</label>
+		<label><input type="radio" name="status" value="1" checked="checked"/>${STATUS_ENABLED}</label>
+		<label><input type="radio" name="status" value="0"/>${STATUS_DISABLE}</label>
+	</div>
+	<div style="float:left;margin-top:10px;width:100%;">
+		<label style="width:75px;">描述：</label>
+		<textarea name="description" rows="3" cols="20" style="width:268px;" />
+	</div>
+</form>

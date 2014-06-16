@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+			xmlns:context="http://www.springframework.org/schema/context"
+			xmlns:aop="http://www.springframework.org/schema/aop"
+			xmlns:mvc="http://www.springframework.org/schema/mvc"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+											 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+											 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+											 http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+		<!-- 注解注入 -->
+		<context:annotation-config/>
+		<!-- spring mvc 注解扫描的 controller 包 -->
+		<context:component-scan base-package="com.examw.wechat.controllers">
+			<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		</context:component-scan>
+		<!-- shiro拦截器 -->
+		<!--aop:config proxy-target-class="true"></aop:config>
+		<bean  class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+			<property name="securityManager"  ref="securityManager" />
+		</bean-->
+		<!--  mvc 注解驱动 -->
+		<mvc:annotation-driven/>
+		<!-- mvc 资源处理 -->
+		<mvc:resources location="/resources/" mapping="/resources/**"/>
+		<mvc:resources location="/uploadfiles/" mapping="/uploadfiles/**"/>
+		<!-- mvc 拦截器 -->
+		<!-- <mvc:interceptors>
+			<bean class="com.examw.oa.interceptors.UserAuthenticationInterceptor">
+				<property name="userService"  ref="userService" />
+			</bean>
+		</mvc:interceptors> -->
+		<!-- 文件上传 -->
+		<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+			<!-- 解析request的编码 -->
+			<property name="defaultEncoding"  value="UTF-8" />
+			<!-- 设置上传文件的最大尺寸20MB -->
+			<property name="maxUploadSize" value="20971520" />
+			<property name="maxInMemorySize"  value="4096" />
+		</bean>
+		<!-- ViewResolver For FreeMarker -->
+		<bean id="freemarkerResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+			<property name="order" value="1"/>
+			<!-- 设置文件后缀 -->
+			<property name="suffix" value=".html"/>
+			<property name="contentType" value="text/html;charset=utf-8"/>
+			<property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
+		</bean>
+		<!-- freemarkerConfigurer -->
+		<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+			<!--  设置模版文件位置 -->
+			<property name="templateLoaderPaths">
+				<list>
+					<value>/WEB-INF/wechat/</value>
+					<!-- <value>classpath:com/examw/netplatform/ftl</value> -->
+					<!-- <value>classpath:org/springframework/web/servlet/view/freemarker</value> -->
+				</list>
+			</property>
+			<!-- 设置FreeMarker环境属性 -->
+			<property name="freemarkerSettings">
+				<props>
+					<!-- 刷新模块的周期，单位为秒 -->
+					<prop key="template_update_delay">5</prop>
+					<!-- 模版的编码格式 -->
+					<prop key="default_encoding">utf-8</prop>
+					<!--  自动导入 -->
+					<prop key="auto_import">"spring.ftl" as s</prop>
+					<prop key="whitespace_stripping">true</prop>
+					<prop key="tag_syntax">auto_detect</prop>
+					<prop key="classic_compatible">true</prop> 
+				</props>
+			</property>
+			<!-- 设置扩展标签 -->
+			<property name="freemarkerVariables">
+				<map>
+					<entry key="shiro">
+						<bean class="com.examw.shiro.freemarker.ShiroTags" />
+					</entry>
+				</map>
+			</property>
+		</bean>
+		
+		<!-- 异常处理 -->
+		<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+			<!-- 定义默认的异常处理页面，当该异常类型的注册时使用 --> 
+			<property name="defaultErrorView" value="/error/error" />
+			<!-- 定义异常处理页面用来获取异常信息的变量名，默认名为exception -->
+			<property name="exceptionAttribute" value="ex" />
+			<!-- 定义需要特殊处理的异常，用类名或完全路径名作为key，异常也页名作为值 -->
+			<property name="exceptionMappings">
+				<props>
+					<prop key="org.apache.shiro.authz.UnauthorizedException">/error/403</prop>
+				</props>
+			</property>
+		</bean>
+</beans>

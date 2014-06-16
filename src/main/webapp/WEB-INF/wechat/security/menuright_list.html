@@ -1,0 +1,173 @@
+<#--菜单权限列表-->
+<#include "ftl/comm.ftl"/>
+<#assign module="security_menuright"/>
+<#assign dg="${module}_dg"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	var current_menuId = "";
+	//tree
+	var t = $("#${module}_list_menu_tree").tree({
+		url:"<@s.url '/security/menu/tree'/>",
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		onBeforeLoad:function(){
+			current_menuId = "";
+		},
+		onClick:function(node){
+			current_menuId = node.id;
+			${dg}_search();
+		}
+	});
+	//dg
+	var dg=$("#${dg}").datagrid({
+		url:"<@s.url '/security/menu/right/datagrid'/>",
+		fit:true,
+		fitColumns:true,
+		rownumbers:true,
+		pagination:true,
+		pagePosition:"bottom",
+		pageSize:20,
+		pageList:[20,30,40],
+		border:true,
+		striped:true,
+		idField:"id",
+		sortName:"menu.id",
+		sortOrder:"asc",
+		columns:[[{
+			field:"id",
+			checkbox:true
+		},{
+			title:"菜单名称",
+			field:"menuName",
+			width:40,
+			align:"left",
+			sortable:true
+		},{
+			title:"权限名称",
+			field:"rightName",
+			width:30,
+			align:"left",
+			sortable:true
+		},{
+			title:"菜单权限代码",
+			field:"code",
+			width:50,
+			align:"right",
+			sortable:true
+		}]],
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		toolbar:"#${dg}_toobar"
+	});
+	//edit
+	function edit_window(title,index,row){
+		var d = $("<div/>").dialog({
+			title:title,
+			width:600,
+			height:400,
+			href:"<@s.url '/security/menu/right/add'/>?menuId=" + current_menuId,
+			modal:true,
+			buttons:[
+			/* <shiro.hasPermission name="${PER_UPDATE}"> */
+			{
+				text:"保存",
+				iconCls:"icon-save",
+				handler:function(){
+					${module}_add_save(d,dg);
+				}
+			},
+			/* </shiro.hasPermission> */
+			{
+				text:"关闭",
+				iconCls:"icon-cancel",
+				handler:function(){
+					d.dialog("close");
+				}
+			}],
+			onClose:function(){
+				$(this).dialog("destroy");
+			}
+	  });
+	};
+	//search
+	${dg}_search = function(){
+		dg.datagrid("load",{
+			menuId:current_menuId,
+			menuName:$("#${dg}_toobar input[name='menuName']").val(),
+			rightName:$("#${dg}_toobar input[name='rightName']").val()
+		});
+	};
+	//add
+	${dg}_add = function(){
+		edit_window("添加菜单权限",0,null);
+	};
+	/* <shiro.hasPermission name="${PER_DELETE}"> */
+	//delete
+	${dg}_delete = function(){
+		var rows = dg.datagrid("getChecked");
+		if(rows && rows.length > 0){
+			$.messager.confirm("确认","您是否确认删除选中的数据?",function(r){
+				if(!r)return;
+				$.messager.progress();
+				var ids = [];
+				for(var i = 0; i < rows.length; i++){
+					ids.push(rows[i].id);
+				}
+				$.ajax({
+					url:"<@s.url '/security/menu/right/delete'/>",
+					type:"POST",
+					data:{
+						id:ids.join("|")
+					},
+					dataType:"json",
+					error:function(e){
+						$.messager.progress("close");
+						<@error_dialog "e"/>
+					},
+					success:function(data,textStatus){
+						$.messager.progress("close");
+						if(data.success){
+							dg.datagrid("load");
+							dg.datagrid("unselectAll");
+						}else{
+							$.messager.show({
+								title:"提示",
+								msg:data.msg
+							});
+						}
+					}
+				});
+			});
+		}else{
+			$.messager.alert("提示","未选中须删除的数据！");
+		}
+	};
+	/* </shiro.hasPermission> */
+});
+//-->
+</script>
+<div class="easyui-layout" data-options="fit:true">
+	 <div data-options="region:'west',title:'菜单',split:true,tools: [{iconCls:'icon-reload',handler:function(){$('#${module}_list_menu_tree').tree('reload');${dg}_search();}}]" style="padding:5px;width:190px;">
+	 	<ul id="${module}_list_menu_tree"></ul>
+	 </div>
+	<div data-options="region:'center',title:'菜单权限'">
+		<table id="${dg}"></table>
+		<div id="${dg}_toobar">
+			<!-- <shiro.hasPermission name="${PER_UPDATE}"> -->
+			<a href="#" class="easyui-linkbutton" onclick="${dg}_add()" data-options="iconCls:'icon-add',plain:true" style="float:left;">添加</a>
+			<!-- </shiro.hasPermission> -->
+			<span>|</span>
+			<!-- <shiro.hasPermission name="${PER_DELETE}"> -->
+			<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+			<!-- </shiro.hasPermission> -->
+			
+			<label>菜单名称：<input name="menuName" type="text" style="width:198px;"/></label>
+			<label>权限名称：<input name="rightName" type="text" style="width:198px;"/></label>
+			
+			<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
+		</div>
+	</div>
+</div>

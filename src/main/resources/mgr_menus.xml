@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipower verion="1.0" xmlns="http://ipower.org/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ipower.org/ iPowerSchema.xsd ">
+  <system id="WeChatMgr0000000000000000000000" sign="examw.wechat" name="微信公众账号自服务系统" description="微信公众账号自服务系统">
+  	<module id="WeChatMgr0000000000000000000001"  icon="" name="系统管理" uri="" order="1">
+  		<module id="WeChatMgr0000000000000000000101" icon="" name="菜单设置" uri="/security/menu" order="1"/>
+  		<module id="WeChatMgr0000000000000000000201" icon="" name="基础权限" uri="/security/right" order="2"/>
+  		<module id="WeChatMgr0000000000000000000301" icon="" name="菜单权限" uri="/security/menu/right" order="3"/>
+  		<module id="WeChatMgr0000000000000000000401" icon="" name="角色设置" uri="/security/role" order="4"/>
+  		<module id="WeChatMgr0000000000000000000501" icon="" name="登录日志" uri="/security/log" order="5"/>
+  	</module>
+  	<module id="WeChatMgr0000000000000000000002"  icon="" name="接入管理" uri="" order="1">
+  		<module id="WeChatMgr0000000000000000000102" icon="" name="公众号设置" uri="/mgr/account" order="1"/>
+  		<module id="WeChatMgr0000000000000000000202" icon="" name="公众号菜单" uri="/mgr/wechatmenu" order="2"/>
+  		<module id="WeChatMgr0000000000000000000302" icon="" name="公众号票据" uri="/mgr/wechatmenu" order="3"/>
+  	</module>
+  </system>
+</ipower>

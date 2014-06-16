@@ -1,0 +1,95 @@
+<#--默认首页-->
+<#assign module="index_workspace"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	//menu
+	var tabsMenu = $("#${module}_tabs_menu").menu({
+		onClick:function(item){
+			if(!workspaceTabs)return;
+			var c_tab_title = $(this).data("tabTitle");
+			var t = $(item.target).attr("type");
+			if(t == "refresh"){
+				refreshTab(c_tab_title);
+				return;
+			}
+			if(t == "close"){
+				var tab = workspaceTabs.tabs("getTab",c_tab_title);
+				if(tab && tab.panel("options").closable){
+					workspaceTabs.tabs("close",c_tab_title);
+				}
+				return;
+			}
+			var allTabs = workspaceTabs.tabs("tabs");
+			var closeTabsTitle = [];
+			$.each(allTabs,function(){
+				var opts = $(this).panel("options");
+				if(opts.closable && opts.title != c_tab_title && t == "closeOther"){
+					closeTabsTitle.push(opts.title);
+				}else if(opts.closable && t == "closeAll"){
+					closeTabsTitle.push(opts.title);
+				}
+			});
+			for(var i = 0; i < closeTabsTitle.length;i++){
+				workspaceTabs.tabs("close",closeTabsTitle[i]);
+			}
+		}
+	});
+	//tabs
+	var workspaceTabs = $("#${module}_tabs").tabs({
+		fit:true,
+		border:false,
+		onContextMenu:function(e,title,index){
+			e.preventDefault();
+			if(tabsMenu){
+				tabsMenu.menu("show",{
+					left:e.pageX,
+					top:e.pageY
+				}).data("tabTitle",title);
+			}
+		}
+	});
+	//refresh
+	function refreshTab(title){
+		if(workspaceTabs && title){
+			var tab = workspaceTabs.tabs("getTab", title);
+			if(tab){
+				var opts = tab.panel("options");
+				workspaceTabs.tabs("update",{
+					tab:tab,
+					options:opts
+				});
+			}
+		}
+	}
+	//add tab
+	${module}_addWorkspaceTab = function(node){
+		if(node && workspaceTabs){
+			var text = node.text || "";
+			var url = node.attributes.url || "";
+			if(workspaceTabs.tabs("exists",text)){
+				workspaceTabs.tabs("select",text);
+			}else if(url && url.length > 0){
+				//add
+				workspaceTabs.tabs("add",{
+					title:text,
+					closable:true,
+					href:url
+				});
+			}
+		}
+	}
+});
+//-->
+</script>
+<div id="${module}_tabs">
+	<div title="桌面">
+	</div>
+</div>
+<div id="${module}_tabs_menu" style="width:120px;display:none;">
+	<div type="refresh">刷新</div>
+	<div class="menu-sep"></div>
+	<div type="close">关闭</div>
+	<div type="closeOther">关闭其他</div>
+	<div type="closeAll">关闭所有</div>
+</div>

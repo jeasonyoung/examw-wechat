@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.examw.wechat.domain.security">
+	<!-- 菜单数据 -->
+	<class name="Menu"  table="tbl_Examw_WeChat_Security_Menus">
+		<cache usage="read-write"/>
+		<!--菜单ID -->
+		<id name="id"  type="string"  length="64" />
+		<!-- 菜单图标 -->
+		<property name="icon"  type="string"  length="32"/>
+		<!-- 菜单名称 -->
+		<property name="name"  type="string"  length="32"  not-null="true"/>
+		<!-- 菜单Uri -->
+		<property name="uri"  type="string" length="255" />
+		<!-- 排序 -->
+		<property name="orderNo"  type="integer" />
+		<!-- 上级菜单 -->
+		<many-to-one name="parent"  column="pid"  class="Menu"/>
+		<!-- 下级菜单集合 -->
+		<set name="children"  inverse="true"  cascade="save-update"  order-by="orderNo asc">
+				<!-- <cache usage="read-write"/> -->
+				<key  column="pid"/>
+				<one-to-many class="Menu"/>
+		</set>
+	</class>
+	<!--  基础权限 -->
+	<class  name="Right"  table="tbl_Examw_WeChat_Security_Rights">
+		<cache usage="read-write"/>
+		<!-- 权限ID -->
+		<id name="id"  type="string"  length="64" />
+		<!-- 权限名称 -->
+		<property name="name"  type="string"  length="45" />
+		<!-- 权限值 -->
+		<property name="value"  type="integer" unique="true" />
+		<!-- 排序号 -->
+		<property name="orderNo"  type="integer" />
+	</class>
+	<!-- 菜单权限 -->
+	<class name="MenuRight"  table="tbl_Examw_WeChat_Security_MenuRights">
+		<cache usage="read-write"/>
+		<!-- 菜单权限ID -->
+		<id  name="id"  type="string"  length="64" />
+		<!-- 所属菜单 -->
+		<many-to-one name="menu" column="menu_id"  class="Menu"  unique-key="menu_right_unique" />
+		<!-- 所属权限 -->
+		<many-to-one name="right" column="right_id"  class="Right"  unique-key="menu_right_unique" />
+		<!-- 菜单权限代码 -->
+		<property name="code"  type="string"  length="128"  not-null="true"  unique="true" />
+		<!-- 所属角色集合 -->
+		<set name="roles"  inverse="true"  table="tbl_Examw_OA_Security_RoleRight">
+			<!-- 开启二级缓存 -->
+			<cache usage="read-write"/>
+			<!-- 菜单权限ID -->
+			<key column="menu_right_id" />
+			<!-- 角色ID -->
+			<many-to-many class="Role"  column="role_id" />
+		</set>
+	</class>
+	<!-- 角色 -->
+	<class name="Role"  table="tbl_Examw_WeChat_Security_Role">
+		<cache usage="read-write"/>
+		 <!-- 角色ID -->
+     	 <id name="id"  type="string"  length="64" />
+     	 <!-- 角色名称 -->
+     	 <property name="name"  type="string"  length="32"  not-null="true"  unique="true"/>
+     	 <!-- 描述信息 -->
+     	 <property name="description"  type="string"  length="255" />
+     	 <!-- 状态 -->
+     	 <property name="status"  type="integer" />
+     	 <!-- 所属菜单权限集合 -->
+     	 <set name="rights"  inverse="false"  cascade="save-update"  table="tbl_Examw_OA_Security_RoleRight">
+   	 		<!-- 开启二级缓存 -->
+   	 		<cache usage="read-write"/>
+     	 	<!-- 角色ID -->
+     	 	<key column="role_id" />
+     	 	<!-- 菜单权限ID -->
+     	 	<many-to-many  class="MenuRight"  column="menu_right_id" />
+     	 </set>
+     	 <!-- 所属用户集合 -->
+     	 <!-- <set name="users"  inverse="true"  table="tbl_Examw_OA_Security_UserRoles">
+     	 	<cache usage="read-write"/>
+     	 	角色ID
+     	 	<key column="role_id" />
+     	 	用户ID
+     	 	<many-to-many  class="User" column="user_id" />
+     	 </set> -->
+	</class>
+	<!-- 用户 -->
+	<!-- <class name="User"  table="tbl_Examw_OA_Security_Users">
+		<cache usage="read-write"/>
+		用户ID
+		<id  name="id"  type="string"  length="64" />
+		用户姓名
+		<property name="name"  type="string"  length="20"  not-null="true" />
+		用户账号
+		<property name="account"  type="string"  length="32"  not-null="true"  unique="true"/>
+		用户密码
+		<property name="password"  type="string"  length="512" />
+		用户昵称
+		<property name="nickName"  type="string"  length="20" />
+		头像图片URL
+		<property name="imgUrl"  type="string"  length="255" />
+		性别 1-男，2-女
+		<property name="gender"  type="integer" />
+		状态 1-启用，0-停用
+		<property name="status"  type="integer" />
+		手机号码
+		<property name="phone"  type="string"  length="20" />
+		qq
+		<property name="qq"  type="string"  length="20" />
+		email
+		<property name="email"  type="string"  length="45" />
+		用户创建时间
+		<property name="createTime"  type="timestamp" />
+		最后登录IP
+		<property name="lastLoginIP"  type="string"  length="45" />
+		最后登录时间
+		<property name="lastLoginTime"  type="timestamp" />
+		所属角色集合
+		<set name="roles"  inverse="false" cascade="save-update"  table="tbl_Examw_OA_Security_UserRoles" >
+			<cache usage="read-write"/>
+			用户ID
+			<key  column="user_id" />
+			角色ID
+			<many-to-many class="Role"  column="role_id" />
+		</set>
+	</class> -->
+	<!-- 用户登录日志 -->
+	<class name="LoginLog"  table="tbl_Examw_WeChat_Security_LoginLog">
+		<cache usage="read-write"/>
+		<!-- 日志ID -->
+		<id  name="id"  type="string"  length="64" />
+		<!-- 登录账号 -->
+		<property name="account"  type="string"  length="64" />
+		<!-- 登录IP -->
+		<property name="ip"  type="string"  length="32" />
+		<!-- 登录浏览器 -->
+		<property name="browser"  type="string"  length="255" />
+		<!-- 登录时间 -->
+		<property name="time" type="timestamp" />
+	</class>
+</hibernate-mapping>

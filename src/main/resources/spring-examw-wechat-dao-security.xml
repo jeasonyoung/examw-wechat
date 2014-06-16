@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<!-- dao -->
+	
+	<!-- 系统管理 数据接口实现 begin -->
+	<!-- 菜单设置Dao -->
+	<bean id="menuDao"  class="com.examw.wechat.dao.security.impl.MenuDaoImpl">
+	  <property name="sessionFactory"  ref="sessionFactory" />
+	</bean>
+	<!-- 基础权限Dao -->
+	<bean id="rightDao" class="com.examw.wechat.dao.security.impl.RightDaoImpl">
+	  <property name="sessionFactory"  ref="sessionFactory" />
+	</bean>
+	<!-- 菜单权限Dao -->
+	<bean id="menuRightDao"  class="com.examw.wechat.dao.security.impl.MenuRightDaoImpl">
+	   <property name="sessionFactory"  ref="sessionFactory" />
+	</bean>
+	<!-- 角色设置Dao -->
+	<bean id="roleDao"  class="com.examw.wechat.dao.security.impl.RoleDaoImpl">
+	   <property name="sessionFactory"  ref="sessionFactory" />
+	</bean>
+	<!-- 用户管理Dao -->
+	<bean id="userDao"  class="com.examw.wechat.dao.security.impl.UserDaoImpl">
+		<property name="sessionFactory"  ref="sessionFactory" />
+	</bean>
+	<!-- 登录日志Dao -->
+	<bean id="loginLogDao"  class="com.examw.wechat.dao.security.impl.LoginLogDaoImpl">
+		<property name="sessionFactory"  ref="sessionFactory" />
+	</bean>
+	<!-- 系统管理 数据接口实现 end -->
+</beans>

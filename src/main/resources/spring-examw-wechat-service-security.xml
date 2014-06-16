@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<!-- service -->
+	<!-- 系统管理 服务接口实现 begin -->
+	<!-- 菜单服务 -->
+	<bean id="menuService" class="com.examw.wechat.service.security.impl.MenuServiceImpl">
+		<!-- 菜单文件 -->
+		<property name="menuFile" value="${menuFile}"/>
+		<!-- 系统ID -->
+		<property name="systemId" value="${systemId}"/>
+		<!-- 菜单数据操作接口 -->
+		<property name="menuDao" ref="menuDao" />
+	</bean>
+	<!-- 基础权限服务 -->
+	<bean id="rightService"  class="com.examw.wechat.service.security.impl.RightServiceImpl">
+		<!-- 基础权限数据接口 -->
+		<property name="rightDao" ref="rightDao" />
+		<!-- 权限名称 -->
+		<property name="rightNameMap">
+		    <map>
+		    	 <!-- 查看 -->
+		         <entry key="1"  value="${RIGHT_VIEW}" />
+		         <!-- 更新 -->
+		         <entry key="2" value="${RIGHT_UPDATE}" />
+		         <!-- 删除 -->
+		         <entry key="3" value="${RIGHT_DELETE}" />
+		    </map>
+		</property>
+	</bean>
+	<!-- 菜单权限服务 -->
+	<bean id="menuRightService"  class="com.examw.wechat.service.security.impl.MenuRightServiceImpl">
+		<!-- 菜单权限数据接口 -->
+	    <property name="menuRightDao" ref="menuRightDao" />
+	    <!-- 菜单数据接口 -->
+	    <property name="menuDao" ref="menuDao" />
+	    <!-- 基础权限数据接口 -->
+	    <property name="rightDao" ref="rightDao" />
+	</bean>
+	<!-- 角色设置服务 -->
+	<bean id="roleService"  class="com.examw.wechat.service.security.impl.RoleServiceImpl">
+		<!-- 角色数据接口 -->
+		<property name="roleDao" ref="roleDao" />
+		<!-- 菜单数据接口 -->
+		<property name="menuDao" ref="menuDao" />
+		<!-- 菜单权限数据接口 -->
+		<property name="menuRightDao" ref="menuRightDao" />
+		<!-- 角色状态 -->
+		<property name="roleStatusName">
+	   		<map>
+	   			<entry key="0"  value="${STATUS_DISABLE}" />
+	   			<entry key="1"  value="${STATUS_ENABLED}" />
+	   		</map>
+	   </property>
+	</bean>
+	<!-- 密码工具 -->
+	<bean id="passwordHelper"  class="com.examw.wechat.support.PasswordHelper">
+		<!-- 验证密码算法 -->
+		<property name="algorithmName"  value="${algorithmName}" />
+		<!-- 迭代次数 -->
+		<property name="hashIterations"  value="${hashIterations}"  />
+	</bean>
+	<!-- 用户管理服务 -->
+	<bean id="userService"  class="com.examw.wechat.service.security.impl.UserServiceImpl">
+		<!-- 用户数据接口 -->
+		<property name="userDao"  ref="userDao" />
+		<!-- 角色数据接口 -->
+		<property name="roleDao"  ref="roleDao" />
+		<!-- 密码工具 -->
+		<property name="passwordHelper"  ref="passwordHelper" />
+		<!-- 用户状态 -->
+		<property name="statusNames">
+			<map>
+	   			<entry key="0"  value="${STATUS_DISABLE}" />
+	   			<entry key="1"  value="${STATUS_ENABLED}" />
+	   		</map>
+		</property>
+		<!-- 性别 -->
+		<property name="genderNames">
+			<map>
+	   			<entry key="1"  value="${GENDER_MALE}" />
+	   			<entry key="2"  value="${GENDER_FEMALE}" />
+	   		</map>
+		</property>
+	</bean>
+	<!-- 登录日志服务 -->
+	<bean id="loginLogService"  class="com.examw.wechat.service.security.impl.LoginLogServiceImpl">
+		<property name="loginLogDao" ref="loginLogDao" />
+	</bean>
+	<!-- 系统管理 服务接口实现 end -->
+</beans>

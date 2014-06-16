@@ -1,0 +1,113 @@
+<#--登录日志列表-->
+<#include "ftl/comm.ftl"/>
+<#assign module="security_log"/>
+<#assign dg="${module}_list_dg"/> 
+<script type="text/javascript">
+<!--
+$(function(){
+	//dg
+	var dg = $("#${dg}").datagrid({
+		url:"<@s.url '/security/log/datagrid'/>",
+		fit:true,
+		fitColumns:true,
+		rownumbers:true,
+		pagination:true,
+		pagePosition:"bottom",
+		pageSize:20,
+		pageList:[20,30,40],
+		border:true,
+		striped:true,
+		idField:"id",
+		sortName:"time",
+		sortOrder:"desc",
+		columns:[[{
+			field:"id",
+			checkbox:true
+		},{
+			title:"用户账号",
+			field:"account",
+			width:30,
+			align:"left",
+			sortable:true
+		},{
+			title:"登录IP",
+			field:"ip",
+			width:20,
+			align:"center",
+			sortable:true
+		},{
+			title:"浏览器信息",
+			field:"browser",
+			width:120,
+			align:"left",
+			sortable:true
+		},{
+			title:"登录时间",
+			field:"time",
+			width:25,
+			align:"center"
+		}]],
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		toolbar:"#${dg}_toobar"
+	});
+	//search
+	${dg}_search = function(){
+		dg.datagrid("load",{
+			account:$("#${dg}_toobar input[name='account']").val()
+		});
+	};
+	/* <shiro.hasPermission name="${PER_DELETE}"> */
+	//delete
+	${dg}_delete = function(){
+		var rows = dg.datagrid("getChecked");
+		if(rows && rows.length > 0){
+			$.messager.confirm("确认","您是否确认删除选中的数据?",function(r){
+				if(!r)return;
+				$.messager.progress();
+				var ids = [];
+				for(var i = 0; i < rows.length; i++){
+					ids.push(rows[i].id);
+				}
+				$.ajax({
+					url:"<@s.url '/security/log/delete'/>",
+					type:"POST",
+					data:{
+						id:ids.join("|")
+					},
+					dataType:"json",
+					error:function(e){
+						$.messager.progress("close");
+						<@error_dialog "e"/>
+					},
+					success:function(data,textStatus){
+						$.messager.progress("close");
+						if(data.success){
+							dg.datagrid("load");
+							dg.datagrid("unselectAll");
+						}else{
+							$.messager.show({
+								title:"提示",
+								msg:data.msg
+							});
+						}
+					}
+				});
+			});
+		}else{
+			$.messager.alert("提示","未选中须删除的数据！");
+		}
+	};
+	/* </shiro.hasPermission> */
+});
+//-->
+</script> 
+<table id="${dg}"></table>
+<div id="${dg}_toobar">
+	<!-- <shiro.hasPermission name="${PER_DELETE}"> -->
+	<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+	<!-- </shiro.hasPermission> -->
+	<label>用户账号：<input name="account" type="text" style="width:198px;"/></label>
+	<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
+</div>
