@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<!-- service -->
+	<!--  公众号管理 服务接口实现 begin-->
+	 <!-- 微信关注用户服务 -->
+	<bean id="accountUserService" class="com.examw.wechat.service.mgr.impl.AccountUserServiceImpl">
+		<!-- 微信关注用户数据访问 -->
+		<property name="accountUserDao" ref="accountUserDao"/>
+		<!-- 微信公众号数据访问 -->
+		<property name="accountDao" ref="accountDao"/>
+		<!-- 公众号用户状态 -->
+		<property name="statusMap">
+			<map>
+				<!-- 关注 -->
+				<entry key="1" value="已关注" />
+				<!-- 取消关注 -->
+				<entry key="-1" value="取消关注" />
+			</map>
+		</property>
+	</bean>
+	<!--  公众号管理 服务接口实现 end-->
+</beans>

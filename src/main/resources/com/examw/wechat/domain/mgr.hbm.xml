@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.examw.wechat.domain.mgr">
+	<!-- 微信关注用户 -->
+	<class name="AccountUser" table="tbl_Examw_Wechat_AccountUsers">
+		<!-- 联合主键 -->
+		<composite-id>
+			<!-- 微信ID。 -->
+			<key-property name="openId" type="string" length="64"/>
+			<!-- 所属微信公众号 -->
+			<key-many-to-one name="account" column="account_id" class="com.examw.wechat.domain.account.Account"/>
+		</composite-id>
+		<!-- 关联注册用户ID -->
+		<property name="userId" type="string" length="64"/>
+		<!-- 关联注册用户账号 -->
+		<property name="userSign" type="string" length="32"/>
+		<!-- 关联注册用户姓名 -->
+		<property name="userName" type="string" length="20"/>
+		<!-- 微信用户首次关注时间 -->
+		<property name="createTime" type="timestamp"/>
+		<!-- 微信用户最近一次交互时间 -->
+		<property name="lastTime" type="timestamp"/>
+		<!-- 微信用户状态(1-关注，－1-取消关注) -->
+		<property name="status" type="integer"/>
+	</class>
+</hibernate-mapping>

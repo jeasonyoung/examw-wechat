@@ -10,4 +10,6 @@
 	<import resource="spring-examw-wechat-dao-server.xml"/>
 	<!-- 考试设置 数据接口实现 -->
 	<import resource="spring-examw-wechat-dao-settings.xml"/>
+	<!-- 公众号管理 数据接口实现 -->
+	<import resource="spring-examw-wechat-dao-mgr.xml"/>
 </beans>

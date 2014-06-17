@@ -1,0 +1,147 @@
+<#--公众号关注用户-->
+<#include "ftl/comm.ftl"/>
+<#assign module="mgr_usr"/>
+<#assign dg="${module}_list_dg"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	//query
+	function query(){
+		return {
+			accountName:$("#${dg}_toolbar input[name='account']").val(),
+			userName:$("#${dg}_toolbar input[name='userName']").val(),
+			openId:$("#${dg}_toolbar input[name='openId']").val(),
+			status:$("#${dg}_toolbar input[name='status']:checked").val()
+		};
+	}
+	//dg
+	var dg=$("#${dg}").datagrid({
+		url:"<@s.url '/mgr/usr/datagrid'/>",
+		queryParams:query(),
+		fit:true,
+		fitColumns:true,
+		rownumbers:true,
+		pagination:true,
+		pagePosition:"bottom",
+		pageSize:20,
+		pageList:[20,30,40],
+		border:true,
+		striped:true,
+		//idField:"openId",
+		sortName:"createTime",
+		sortOrder:"desc",
+		columns:[[{
+			field:"accountId",
+			checkbox:true
+		},{
+			title:"所属公众号",
+			field:"accountName",
+			width:20,
+			align:"left",
+			sortable:true
+		},{
+			title:"微信关注用户",
+			field:"openId",
+			width:20,
+			align:"left",
+			sortable:true
+		},{
+			title:"关联注册用户",
+			field:"userName",
+			width:20,
+			align:"left",
+			sortable:true
+		},{
+			title:"状态",
+			field:"status",
+			width:10,
+			align:"center",
+			formatter:function(value,row,index){
+				if(value == 1) return "${USER_STATUS_SUBSCRIBE}";
+				if(value == -1) return "${USER_STATUS_UNSUBSCRIBE}";
+				return value;
+			},
+			sortable:true
+		},{
+			title:"首次关注时间",
+			field:"createTime",
+			width:15,
+			align:"center",
+			sortable:true
+		},{
+			title:"最后交互时间",
+			field:"lastTime",
+			width:15,
+			align:"center",
+			sortable:true
+		}]],
+		toolbar:"#${dg}_toolbar",
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		}
+	});
+	//search
+	${dg}_search = function(){
+		dg.datagrid("load",query());
+	};
+	//delete
+	${dg}_delete = function(){
+		var rows = dg.datagrid("getChecked");
+		if(rows && rows.length > 0){
+			$.messager.confirm("确认","您是否确认删除选中的数据?",function(r){
+				if(!r)return;
+				$.messager.progress();
+				var ids = [];
+				for(var i = 0; i < rows.length; i++){
+					ids.push(rows[i].accountId + "," + rows[i].openId);
+				}
+				$.ajax({
+					url:"<@s.url '/mgr/usr/delete'/>",
+					type:"POST",
+					data:{
+						openId:ids.join("|")
+					},
+					dataType:"json",
+					error:function(e){
+						$.messager.progress("close");
+						<@error_dialog "e"/>
+					},
+					success:function(data,textStatus){
+						$.messager.progress("close");
+						if(data.success){
+							dg.datagrid("load");
+							dg.datagrid("unselectAll");
+						}else{
+							$.messager.show({
+								title:"提示",
+								msg:data.msg
+							});
+						}
+					}
+				});
+			});
+		}else{
+			$.messager.alert("提示","未选中须删除的数据！");
+		}
+	};
+});
+//-->
+</script>
+<table id="${dg}"></table>
+<div id="${dg}_toolbar">
+	<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+	<span>公众号/名称:</span>
+	<input name="account" type="text" style="width:148px;"/>
+	
+	<span>关联注册用户:</span>
+	<input name="userName" type="text" style="width:148px;"/>
+	
+	<span>微信关注用户:</span>
+	<input name="openId" type="text" style="width:148px;"/>
+	
+	<span style="text-align:right;padding-left:10px;">状态:</span>
+	<label><input name="status" type="radio" value="1" checked="checked"/>${USER_STATUS_SUBSCRIBE}</label>
+	<label><input name="status" type="radio" value="-1" />${USER_STATUS_UNSUBSCRIBE}</label>
+	
+	<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
+</div>

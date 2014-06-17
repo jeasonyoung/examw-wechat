@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<!-- dao -->
+	<!-- 公众号管理 数据接口实现 begin-->
+	<!-- 微信关注用户管理 -->
+	<bean id="accountUserDao" class="com.examw.wechat.dao.mgr.impl.AccountUserDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<!-- 公众号管理 数据接口实现 end-->
+</beans>
