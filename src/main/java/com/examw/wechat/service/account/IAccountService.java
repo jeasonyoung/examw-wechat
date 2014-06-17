@@ -2,14 +2,14 @@ package com.examw.wechat.service.account;
 
 import java.util.List;
 
-import com.examw.service.IDataService;
 import com.examw.wechat.model.account.AccountInfo;
+import com.examw.wechat.service.IBaseDataService;
 /**
  * 微信公众账号服务接口。
  * @author yangyong.
  * @since 2014-04-01.
  * */
-public interface IAccountService extends IDataService<AccountInfo> {
+public interface IAccountService extends IBaseDataService<AccountInfo> {
 	/**
 	 * 加载公众号状态名称。
 	 * @param status

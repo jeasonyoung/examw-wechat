@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.examw.wechat.domain.server">
+	<!-- 公众号全局唯一票据 -->
+	<class name="AccessToken" table="tbl_Examw_WeChat_AccessToken">
+		<!--票据 ID -->
+		<id name="id"  type="string" length="64"/>
+		<!-- 所属公众号 -->
+		<many-to-one name="account" column="account_id" class="com.examw.wechat.domain.account.Account"/>
+		<!--票据 -->
+		<property name="accessToken"  type="string" length="256"/>
+		<!-- 创建时间 -->
+		<property name="createTime" type="timestamp"/>
+		<!-- 失效时间 -->
+		<property name="failureTime" type="timestamp"/>
+	</class>
+</hibernate-mapping>

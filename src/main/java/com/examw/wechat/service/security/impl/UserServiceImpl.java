@@ -31,7 +31,6 @@ public class UserServiceImpl extends BaseDataServiceImpl<User, UserInfo> impleme
 	private IRoleDao roleDao; 
 	private Map<Integer, String> genderNames,statusNames;
 	private PasswordHelper passwordHelper;
-	
 	/**
 	 * 设置用户数据接口。
 	 * @param userDao
@@ -222,6 +221,10 @@ public class UserServiceImpl extends BaseDataServiceImpl<User, UserInfo> impleme
 		}
 		return rolesSet;
 	}
+	/*
+	 * 查询权限集合。
+	 * @see com.examw.wechat.service.security.IUserService#findPermissions(java.lang.String)
+	 */
 	@Override
 	public Set<String> findPermissions(String account) {
 		if(StringUtils.isEmpty(account)) return null;

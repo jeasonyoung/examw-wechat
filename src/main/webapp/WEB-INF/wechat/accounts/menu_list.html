@@ -1,0 +1,293 @@
+<#--公众号账号菜单列表-->
+<#include "ftl/comm.ftl"/>
+<#assign module="accounts_menu"/>
+<#assign tree="${module}_list_tree"/>
+<#assign dg="${module}_list_dg"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	var CURRENT_ACCOUNT_ID = "";
+	//tree
+	var t = $("#${tree}").tree({
+		url:"<@s.url '/accounts/account/all-tree'/>",
+		onClick:function(node){
+			CURRENT_ACCOUNT_ID = node.id;
+			if(dg)dg.treegrid("reload");
+		},
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		onLoadSuccess:function(node,data){
+			CURRENT_ACCOUNT_ID = "";
+		},
+		onContextMenu:function(e,node){
+			e.preventDefault();
+			$(this).tree("select",node.target);
+			$("#${tree}_context").menu('show',{
+				left:e.pageX,
+				top:e.pageY
+			});
+		}
+	});
+	//reload
+	${tree}_reload = function(){
+		if(t)t.tree("reload");
+		if(dg)dg.treegrid("reload");
+	};
+	//dg
+	var dg = $("#${dg}").treegrid({
+		url:"<@s.url '/accounts/menu/datagrid'/>",
+		queryParams:{
+			accountId:CURRENT_ACCOUNT_ID
+		},
+		fit:true,
+		fitColumns:true,
+		rownumbers:true,
+		idField:"id",
+		treeField:"name",
+		animate:true,
+		border:true,
+		striped:true,
+		columns:[[{
+				field:"id",
+				checkbox:true
+			},{
+				title:"菜单名称",
+				field:"name",
+				width:20
+			},{
+				title:"所属类型",
+				field:"type",
+				formatter:function(value,row,index){
+					if(value == 0) return " ";
+					if(value == 1) return "按钮";
+					if(value == 2) return "超链接";
+					return value;
+				},
+				align:"center",
+				width:10
+			},{
+				title:"菜单代码",
+				field:"code",
+				width:15
+			},{
+				title:"所属公众号名称",
+				field:"accountName",
+				width:20
+			},{
+				title:"超链接/业务接口地址",
+				field:"url",
+				width:40
+			},{
+				title:"排序号",
+				field:"orderNo",
+				width:10,
+				align:"right"
+			}
+		]],
+		toolbar:"#${dg}_toolbar",
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		onDblClickRow:function(row){
+			edit_window("编辑公众号菜单",row);
+		}
+	});
+	//edit
+	function edit_window(title,row){
+		var d = $("<div/>").dialog({
+			title:title,
+			width:600,
+			height:300,
+			href:"<@s.url '/accounts/menu/edit'/>",
+			modal:true,
+			buttons:[{
+				text:"保存",
+				iconCls:"icon-save",
+				handler:function(){
+					$.messager.progress();
+					$("#${module}_edit_form").form("submit",{
+						url:"<@s.url '/accounts/menu/update'/>",
+						onSubmit: function(){
+							var isValid = $(this).form("validate");
+							if (!isValid)$.messager.progress("close");
+							return isValid;
+						},
+						onLoadError:function(e){
+							$.messager.progress("close");
+							<@error_dialog "e"/>
+						},
+						success:function(data){
+							$.messager.progress("close");
+							var data = $.parseJSON(data);
+							if(data.success){
+								dg.treegrid("load");
+								dg.treegrid("unselectAll");
+								d.dialog("close");
+							}else{
+								$.messager.show({
+									title:"保存异常",
+									msg:data.msg
+								});
+							}
+						}
+					});
+				}
+			},{
+				text:"关闭",
+				iconCls:"icon-cancel",
+				handler:function(){
+					d.dialog("close");
+				}
+			}],
+			onClose:function(){
+				$(this).dialog("destroy");
+			},
+			onLoad:function(){
+				if(!row && CURRENT_ACCOUNT_ID){
+					row = {accountId:CURRENT_ACCOUNT_ID};
+				}
+				${module}_edit_form_load(row);
+			}
+		});
+	};
+	//tree query
+	${tree}_context_query = function(){
+		if(t){
+			var node = t.tree("getSelected");
+			if(node && node.id){
+				$.messager.confirm("确认","您是否确认查询公众号["+ node.text +"]的菜单数据?",function(r){
+					if(!r)return;
+					$.messager.progress();
+					$.ajax({
+						url:"<@s.url '/accounts/menu/query/'/>" + node.id,
+						type:"POST",
+						dataType:"json",
+						error:function(e){
+							$.messager.progress("close");
+							<@error_dialog "e"/>
+						},
+						success:function(data,textStatus){
+							$.messager.progress("close");
+							$.messager.alert("反馈结果", data);
+						}
+					});
+				});
+			}
+		}
+	};
+	//tree create
+	${tree}_context_create = function(){
+		if(t){
+			var node = t.tree("getSelected");
+			if(node && node.id){
+				$.messager.confirm("确认","您是否确认创建公众号["+ node.text +"]的菜单数据?",function(r){
+					if(!r)return;
+					$.messager.progress();
+					$.ajax({
+						url:"<@s.url '/accounts/menu/create/'/>" + node.id,
+						type:"POST",
+						dataType:"json",
+						error:function(e){
+							$.messager.progress("close");
+							<@error_dialog "e"/>
+						},
+						success:function(data,textStatus){
+							$.messager.progress("close");
+							$.messager.alert("反馈结果", data);
+						}
+					});
+				});
+			}
+		}
+	};
+	//tree remove
+	${tree}_context_remove = function(){
+		if(t){
+			var node = t.tree("getSelected");
+			if(node && node.id){
+				$.messager.confirm("确认","您是否确认删除公众号["+ node.text +"]的菜单数据?",function(r){
+					if(!r)return;
+					$.messager.progress();
+					$.ajax({
+						url:"<@s.url '/accounts/menu/remove/'/>" + node.id,
+						type:"POST",
+						dataType:"json",
+						error:function(e){
+							$.messager.progress("close");
+							<@error_dialog "e"/>
+						},
+						success:function(data,textStatus){
+							$.messager.progress("close");
+							$.messager.alert("反馈结果", data);
+						}
+					});
+				});
+			}
+		}
+	};
+	//add
+	${dg}_add = function(){
+		edit_window("新增公众号菜单",null);
+	};
+	//delete
+	${dg}_delete = function(){
+		var rows = dg.treegrid("getChecked");
+		if(rows && rows.length > 0){
+			$.messager.confirm("确认","您是否确认删除选中的数据?",function(r){
+				if(!r)return;
+				$.messager.progress();
+				var ids = [];
+				for(var i = 0; i < rows.length; i++){
+					ids.push(rows[i].id);
+				}
+				$.ajax({
+					url:"<@s.url '/accounts/menu/delete'/>",
+					type:"POST",
+					data:{
+						id:ids.join("|")
+					},
+					dataType:"json",
+					error:function(e){
+						$.messager.progress("close");
+						<@error_dialog "e"/>
+					},
+					success:function(data,textStatus){
+						$.messager.progress("close");
+						if(data.success){
+							dg.treegrid("load");
+							dg.treegrid("unselectAll");
+						}else{
+							$.messager.show({
+								title:"提示",
+								msg:data.msg
+							});
+						}
+					}
+				});
+			});
+		}else{
+			$.messager.alert("提示","未选中须删除的数据！");
+		}
+	};
+});
+//-->
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	 <div data-options="region:'west',title:'公众号',split:true,tools:[{iconCls:'icon-reload',handler:function(){${tree}_reload();}}]" style="width:198px;">
+	 	    <ul id="${tree}"></ul>
+	 	    <div id="${tree}_context" class="easyui-menu" style="width:120px;">
+	 	    	<div onclick="${tree}_context_query()" data-options="iconCls:'icon-search'">查询公众号上的菜单</div>
+				<div onclick="${tree}_context_create()" data-options="iconCls:'icon-save'">创建公众号的菜单</div>
+				<div onclick="${tree}_context_remove()" data-options="iconCls:'icon-remove'">删除公众号的菜单</div>
+	 	    </div>
+	 </div>
+	 <div data-options="region:'center',border:false">
+	 	<table id="${dg}"></table>
+	 	<div id="${dg}_toolbar">
+	 		<a href="#" class="easyui-linkbutton" onclick="${dg}_add()" data-options="iconCls:'icon-add',plain:true" style="float:left;">新增</a>
+			<span>|</span>
+			<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+	 	</div>
+	 </div>
+</div>

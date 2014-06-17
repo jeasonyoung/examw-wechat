@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<!-- service -->
+	<!--  公众号服务 服务接口实现 begin-->
+	<!-- 微信公众号全局唯一票据服务 -->
+	<bean id="accessTokenService" class="com.examw.wechat.service.server.impl.AccessTokenServiceImpl">
+		<!--公众号数据 -->
+		<property name="accessTokenDao" ref="accessTokenDao"/>
+		<!--票据数据 -->
+		<property name="accountDao" ref="accountDao"/>
+		<!-- 票据产生地址 -->
+		<property name="accessTokenUrl" value="${WECHAT_ACCESS_TOKEN_URL}"/>
+	</bean>
+	<!--  公众号服务 服务接口实现 end-->
+</beans>

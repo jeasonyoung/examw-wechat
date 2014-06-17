@@ -1,0 +1,125 @@
+<#--用户编辑-->
+<#assign module="security_user"/>
+<#assign form="${module}_edit_form"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	var root = $.trim("<@s.url ''/>");
+	//fileupload
+	var upload = $("#${form}_file_upload").uploadify({
+		swf:"<@s.url '/resources/uploadify/uploadify.swf'/>",
+		uploader:"<@s.url '/upload'/>",
+		method:"POST",
+		fileObjName:"file",
+		buttonText:"上传头像",
+		height:20,
+		multi:false,
+		fileExt:"*.jpg",
+		fileDesc:"请选择jpg图片文件上传",
+		uploadLimit:1024000,//10M
+		auto:true,
+		queueID:"${form}_file_queue",
+		onUploadError : function(file, errorCode, errorMsg){
+			$.messager.show({
+				title:"上传文件异常",
+				msg:errorCode + "|" + errorMsg
+			});
+		},
+		onUploadSuccess:function(file, data, response){
+			if(!data){
+				$.messager.show({
+					title:"上传文件失败",
+					msg:"服务器端发生异常，未反馈数据！"
+				});
+				return;
+			}
+			var result = $.parseJSON(data)
+			if(result){
+				$("#${form} img").attr("src", root + result.url);
+				$("#${form} input[name='imgUrl']").val(result.url);
+			}
+		}
+	});
+	//change
+	$("#${form} input[name='imgUrl']").change(function(data){
+		if(data){
+			$("#${form} img").attr("src", root + $(data.target).val());	
+		}
+	});
+});
+//-->
+</script>
+<form id="${form}" class="easyui-tabs" method="POST">
+	<div title="用户信息">
+		<div style="float:left;margin-top:10px;width:100%;">
+			<div style="float:left;width:205px;height:190px;margin-left:5px;padding:1px;text-align:center;border:solid 1px #ccc;">
+			   <div style="width:200px;height:160px;">
+					<div id="${form}_file_queue"  style="position:absolute;border:solid 0px red;"></div>
+					<img src="http://image.s1979.com/allimg/100310/24_100310154041_1.jpg" alt="用户头像" width="200" height="150" style="border:solid 1px red;">
+				</div>
+				<input id="${form}_file_upload" name="file" type="file"/>
+				<input type="hidden" name="imgUrl" />
+			</div>
+			<div style="float:left;margin-left:5px;width:340px;">
+				<div style="float:left;">
+					<label style="width:70px;">姓 名：</label>
+					<input type="text" name="name" class="easyui-validatebox"  style="width:198px;" data-options="required:true,validType:'length[1,20]'"/>
+					<input type="hidden" name="id"/>
+				</div>
+				
+				<div style="float:left;margin-top:10px;" class="easyui-tooltip"  title="请输入20位以内的字母、数字、下划线、连结线等字符作为账号"  data-options="position:'top'">
+					<label style="width:70px;">账 号：</label>
+					<input type="text" name="account" class="easyui-validatebox"   style="width:198px;" data-options="required:true,validType:['account','length[1,20]']"/>
+				</div>
+				
+				<div style="float:left;margin-top:10px;">
+					<label style="width:70px;">昵 称：</label>
+					<input type="text" name="nickName" class="easyui-validatebox"  style="width:198px;" data-options="validType:'length[0,20]'"/>
+				</div>
+				
+				<div style="float:left;margin-top:10px;">
+					<label style="width:70px;">性 别：</label>
+					<input type="radio" name="gender" value="1" checked="checked"/>${GENDER_MALE}
+					<input type="radio" name="gender" value="0"/>${GENDER_FEMALE}
+				</div>
+				
+				<div style="float:left;margin-top:10px;">
+					<label style="width:70px;">密 码：</label>
+					<input type="text" name="password" class="easyui-validatebox"   style="width:198px;" data-options="required:true,validType:['length[1,20]']"/>
+				</div>
+				
+				<div style="float:left;margin-top:10px;">
+					<label style="width:70px;">状 态：</label>
+					<label><input type="radio" name="status" value="1" checked="checked"/>${STATUS_ENABLED}</label>
+					<label><input type="radio" name="status" value="0"/>${STATUS_DISABLE}</label>
+				</div>
+			</div>
+		</div>
+		<div style="float:left;margin-top:15px;width:100%;">
+				<div style="float:left;">
+					<label style="width:70px;">手机号码：</label>
+					<input type="text" name="phone" class="easyui-validatebox"  style="width:100px;" data-options="validType:'length[0,20]'"/>
+				</div>
+				
+				<div style="float:left;">
+					<label style="width:50px;">QQ：</label>
+					<input type="text" name="qq" class="easyui-validatebox"  style="width:100px;" data-options="validType:'length[0,20]'"/>
+				</div>
+				
+				<div style="float:left;">
+					<label style="width:50px;">Email：</label>
+					<input type="text" name="email" class="easyui-validatebox"  style="width:178px;" data-options="validType:'length[0,45]'"/>
+				</div>
+		</div>
+	</div>
+	
+	<div title="用户角色" style="padding:5px;">
+	<#if roles ??>
+		<ul style="list-style:none;">
+			 <#list roles as r>
+			 <li style="float:left;padding:2px;"><label><input type="checkbox"  name="roleId" value="${r.id}"/>${r.name}</label></li>
+			 </#list>
+		</ul>
+	</#if>
+	</div>
+</form>

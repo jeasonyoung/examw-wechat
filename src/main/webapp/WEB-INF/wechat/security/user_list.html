@@ -1,22 +1,13 @@
-<#--公众号账号管理列表-->
+<#--用户列表-->
 <#include "ftl/comm.ftl"/>
-<#assign module="accounts_account"/>
+<#assign module="security_user"/>
 <#assign dg="${module}_list_dg"/>
 <script type="text/javascript">
 <!--
 $(function(){
-	//query
-	function query(){
-		return {
-			account:$("#${dg}_toolbar input[name='account']").val(),
-			status:$("#${dg}_toolbar input[name='status']:checked").val(),
-			type:$("#${dg}_toolbar input[name='type']:checked").val()
-		}
-	};
 	//dg
 	var dg=$("#${dg}").datagrid({
-		url:"<@s.url '/accounts/account/datagrid'/>",
-		queryParams:query(),
+		url:"<@s.url '/security/user/datagrid'/>",
 		fit:true,
 		fitColumns:true,
 		rownumbers:true,
@@ -33,89 +24,86 @@ $(function(){
 			field:"id",
 			checkbox:true
 		},{
-			title:"公众号名称",
+			title:"用户姓名",
 			field:"name",
-			width:40,
-			align:"left",
-			sortable:true
-		},{
-			title:"公众号",
-			field:"account",
-			width:30,
-			align:"left",
-			sortable:true
-		},{
-			title:"类型",
-			field:"type",
-			width:10,
-			align:"center",
-			formatter:function(value,row,index){
-				if(value == 0) return "";
-				if(value == 1) return "${TYPE_SERVICE}";
-				if(value == 2) return "${TYPE_SUBSCRIBE}";
-				return value;
-			},
-			sortable:true
-		},{
-			title:"接入令牌",
-			field:"token",
 			width:15,
 			align:"left",
 			sortable:true
 		},{
-			title:"微信ID",
-			field:"openId",
-			width:30,
+			title:"用户账号",
+			field:"account",
+			width:15,
 			align:"left",
 			sortable:true
 		},{
-			title:"状态",
-			field:"status",
-			width:10,
-			align:"center",
-			formatter:function(value,row,index){
-				if(value == 0) return "${STATUS_DISABLE}";
-				if(value == 1) return "${STATUS_ENABLE}";
-				return value;
-			},
+			title:"用户昵称",
+			field:"nickName",
+			width:15,
+			align:"left",
 			sortable:true
+		},{
+			title:"性别",
+			field:"genderName",
+			width:10,
+			align:"center"
+		},{
+			title:"类型",
+			field:"typeName",
+			width:15,
+			align:"left",
+			sortable:true
+		},{
+			title:"创建时间",
+			field:"createTime",
+			width:15,
+			align:"center",
+			sortable:true
+		},{
+			title:"状态",
+			field:"statusName",
+			width:10,
+			align:"center"
 		}]],
-		toolbar:"#${dg}_toolbar",
 		onLoadError:function(e){
 			<@error_dialog "e"/>
 		},
+		toolbar:"#${dg}_toobar",
 		onDblClickRow:function(rowIndex,rowData){
-			edit_window("编辑公众号",rowIndex,rowData);
+			edit_window("编辑用户",rowIndex,rowData);
 		}
 	});
-	//edit_window
+	//edit
 	function edit_window(title,index,row){
 		var d = $("<div/>").dialog({
 			title:title,
 			width:600,
 			height:400,
-			href:"<@s.url '/accounts/account/edit'/>",
+			href:"<@s.url '/security/user/edit'/>",
 			modal:true,
-			buttons:[{
+			buttons:[
+			/* <shiro.hasPermission name="${PER_UPDATE}"> */
+			 {
 				text:"保存",
 				iconCls:"icon-save",
 				handler:function(){
 					$.messager.progress();
 					$("#${module}_edit_form").form("submit",{
-						url:"<@s.url '/accounts/account/update'/>",
+						url:"<@s.url '/security/user/update'/>",
 						onSubmit: function(){
 							var isValid = $(this).form("validate");
 							if (!isValid)$.messager.progress("close");
 							return isValid;
 						},
+						onLoadError:function(e){
+							$.messager.progress("close");
+							<@error_dialog "e"/>
+						},
 						success:function(data){
 							$.messager.progress("close");
 							var data = $.parseJSON(data);
 							if(data.success){
-								dg.datagrid(row ? "updateRow" : "insertRow",{
-									index:index,
-									row:data.data
-								});
+								dg.datagrid("load");
+								dg.datagrid("unselectAll");
 								d.dialog("close");
 							}else{
 								$.messager.show({
@@ -126,7 +114,9 @@ $(function(){
 						}
 					});
 				}
-			},{
+			},
+			/* </shiro.hasPermission> */
+			{
 				text:"关闭",
 				iconCls:"icon-cancel",
 				handler:function(){
@@ -137,36 +127,49 @@ $(function(){
 				$(this).dialog("destroy");
 			},
 			onLoad:function(){
-				if(row) $("#${module}_edit_form").form("load",row);
+				if(row){
+					$("#${module}_edit_form").form("load",row);
+					$("#${module}_edit_form :hidden").change();
+				}
 			}
-		});
+	  });
 	};
 	//search
 	${dg}_search = function(){
-		dg.datagrid("load",query());
+		dg.datagrid("load",{
+			  name:$("#${dg}_toobar input[name='name']").val(),
+			  status:$("#${dg}_toobar input[name='status']:checked").val()
+		});
 	};
 	//add
 	${dg}_add = function(){
-		edit_window("新增公众号",0,null);
+		edit_window("新增用户",0,null);
 	};
+	/* <shiro.hasPermission name="${PER_DELETE}"> */
 	//delete
 	${dg}_delete = function(){
 		var rows = dg.datagrid("getChecked");
 		if(rows && rows.length > 0){
 			$.messager.confirm("确认","您是否确认删除选中的数据?",function(r){
 				if(!r)return;
+				$.messager.progress();
 				var ids = [];
 				for(var i = 0; i < rows.length; i++){
 					ids.push(rows[i].id);
 				}
 				$.ajax({
-					url:"<@s.url '/accounts/account/delete'/>",
+					url:"<@s.url '/security/user/delete'/>",
 					type:"POST",
 					data:{
 						id:ids.join("|")
 					},
 					dataType:"json",
+					error:function(e){
+						$.messager.progress("close");
+						<@error_dialog "e"/>
+					},
 					success:function(data,textStatus){
+						$.messager.progress("close");
 						if(data.success){
 							dg.datagrid("load");
 							dg.datagrid("unselectAll");
@@ -183,24 +186,24 @@ $(function(){
 			$.messager.alert("提示","未选中须删除的数据！");
 		}
 	};
+	/* </shiro.hasPermission> */
 });
 //-->
 </script>
 <table id="${dg}"></table>
-<div id="${dg}_toolbar">
-	<a href="#" class="easyui-linkbutton" onclick="${dg}_add()" data-options="iconCls:'icon-add',plain:true" style="float:left;">新增</a>
+<div id="${dg}_toobar">
+	<!-- <shiro.hasPermission name="${PER_UPDATE}"> -->
+	<a href="#" class="easyui-linkbutton" onclick="${dg}_add()" data-options="iconCls:'icon-add',plain:true" style="float:left;">添加</a>
+	<!-- </shiro.hasPermission> -->
 	<span>|</span>
+	<!-- <shiro.hasPermission name="${PER_DELETE}"> -->
 	<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
-	<span>公众号/名称:</span>
-	<input name="account" type="text" style="width:198px;"/>
+	<!-- </shiro.hasPermission> -->
 	
-	<span style="text-align:right;padding-left:15px;">类型:</span>
-	<label><input name="type" type="radio" value="1"/>${TYPE_SERVICE}</label>
-	<label><input name="type" type="radio" value="2"/>${TYPE_SUBSCRIBE}</label>
-	
-	<span style="text-align:right;padding-left:15px;">状态:</span>
-	<label><input name="status" type="radio" value="1" checked="checked"/>${STATUS_ENABLE}</label>
-	<label><input name="status" type="radio" value="0" />${STATUS_DISABLE}</label>
+	<label>用户：<input name="name" type="text" style="width:198px;"/></label>
+	<label style="margin-left:10px;">状态:</label>
+	<label><input type="radio" name="status" value="1" checked="checked"/>${STATUS_ENABLED}</label>
+	<label><input type="radio" name="status" value="0"/>${STATUS_DISABLE}</label>
 	
 	<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
 </div>

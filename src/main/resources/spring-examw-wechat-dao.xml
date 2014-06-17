@@ -6,4 +6,6 @@
 	<import resource="spring-examw-wechat-dao-security.xml"/>
 	<!-- 公众号账号管理 数据接口实现-->
 	<import resource="spring-examw-wechat-dao-account.xml"/>
+	<!-- 公众号账号服务 数据接口实现-->
+	<import resource="spring-examw-wechat-dao-server.xml"/>
 </beans>

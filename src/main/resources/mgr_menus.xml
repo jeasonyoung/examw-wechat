@@ -6,11 +6,12 @@
   		<module id="WeChatMgr0000000000000000000201" icon="" name="基础权限" uri="/security/right" order="2"/>
   		<module id="WeChatMgr0000000000000000000301" icon="" name="菜单权限" uri="/security/menu/right" order="3"/>
   		<module id="WeChatMgr0000000000000000000401" icon="" name="角色设置" uri="/security/role" order="4"/>
-  		<module id="WeChatMgr0000000000000000000501" icon="" name="登录日志" uri="/security/log" order="5"/>
+  		<module id="WeChatMgr0000000000000000000501" icon="" name="用户管理" uri="/security/user" order="5"/>
+  		<module id="WeChatMgr0000000000000000000601" icon="" name="登录日志" uri="/security/log" order="6"/>
   	</module>
   	<module id="WeChatMgr0000000000000000000002"  icon="" name="接入管理" uri="" order="1">
   		<module id="WeChatMgr0000000000000000000102" icon="" name="公众号设置" uri="/accounts/account" order="1"/>
-  		<module id="WeChatMgr0000000000000000000202" icon="" name="公众号菜单" uri="" order="2"/>
+  		<module id="WeChatMgr0000000000000000000202" icon="" name="公众号菜单" uri="/accounts/menu" order="2"/>
   		<module id="WeChatMgr0000000000000000000302" icon="" name="公众号票据" uri="" order="3"/>
   	</module>
   </system>

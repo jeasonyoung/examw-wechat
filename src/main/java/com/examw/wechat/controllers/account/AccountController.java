@@ -1,5 +1,8 @@
 package com.examw.wechat.controllers.account;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.model.DataGrid;
 import com.examw.model.Json;
+import com.examw.model.TreeNode;
 import com.examw.wechat.domain.account.Account;
 import com.examw.wechat.model.account.AccountInfo;
 import com.examw.wechat.service.account.IAccountService;
@@ -64,6 +68,27 @@ public class AccountController {
 	@ResponseBody
 	public DataGrid<AccountInfo> datagrid(AccountInfo info){
 		return this.accountService.datagrid(info);
+	}
+	/**
+	 * 加载全部微信公众账号。
+	 * @return
+	 */
+	@RequestMapping(value = "/all-tree", method = {RequestMethod.GET, RequestMethod.POST})
+	@ResponseBody
+	public List<TreeNode> allTree(){
+		List<TreeNode> results = new ArrayList<>();
+		List<AccountInfo> list = this.accountService.loadAllAccounts();
+		if(list != null && list.size() > 0){
+			for(int i = 0; i < list.size(); i++){
+				AccountInfo info = list.get(i);
+				if(info == null) continue;
+				TreeNode tn = new TreeNode();
+				 tn.setId(info.getId());
+				 tn.setText(info.getName());
+				 results.add(tn);
+			}
+		}
+		return results;
 	}
 	/**
 	 * 更新数据。

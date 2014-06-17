@@ -28,4 +28,28 @@
 		<!-- 创建时间 -->
 		<property name="createTime" type="timestamp"/>
 	</class>
+	<!--公众号菜单 -->
+	<class name="AccountMenu" table="tbl_Examw_WeChat_AccountMenu">
+		<!--菜单ID -->
+		<id name="id"	type="string" length="64"/>
+		<!--菜单名称 -->
+		<property name="name"	type="string"	 not-null="true" length="20"/>
+		<!--菜单代码 -->
+		<property name="code" type="string" not-null="true"  unique-key="menu_code_account_uk"  length="10"/>
+		<!--菜单类型 -->
+		<property name="type" type="integer"/>
+		<!-- 菜单URL -->
+		<property name="url" type="string" length="128"/>
+		<!-- 排序号 -->
+		<property name="orderNo" type="integer"/>
+		<!-- 所属公众号 -->
+		<many-to-one name="account" column="account_id" class="Account" unique-key="menu_code_account_uk" />
+		<!-- 上级菜单 -->
+		<many-to-one name="parent" column="parent_id"  class="AccountMenu"/>
+		<!-- 子菜单集合 -->
+		<set name="children" inverse="true"  cascade="save-update">
+			<key column="parent_id"/>
+			<one-to-many class="AccountMenu"/>
+		</set>
+	</class>
 </hibernate-mapping>

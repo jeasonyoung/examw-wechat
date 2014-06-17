@@ -1,0 +1,73 @@
+<#--公众号账号菜单编辑-->
+<#include "ftl/comm.ftl"/>
+<#assign module="accounts_menu"/>
+<#assign form="${module}_edit_form"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	//cbb
+	var cbb_account = $("#${form} input[name='accountId']").combobox({
+		url:"<@s.url '/accounts/account/all-tree'/>",
+		valueField:"id",
+		textField:"text",
+		required:true,
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		}
+	});
+	//load
+	${form}_load = function(row){
+		var dd_p = $("#${form} input[name='pid']").combotree({
+			url:"<@s.url '/accounts/menu/tree'/>",
+			onBeforeLoad:function(node, param){
+				if(row && row.id){
+					param.accountId = row.accountId;
+					param.id = row.id;
+				}
+			},
+			onLoadSuccess:function(node, data){
+				if(row){
+					$("#${form}").form("load",row);
+				}
+			}
+		});
+	}
+});
+//-->
+</script>
+<form id="${form}" method="POST" style="padding:10px;">
+	<div style="float:left;margin-top:2px;width:550px;">
+		<span style="float:left;width:75px;text-align:right;padding-top:3px;">所属公众号：</span>
+		<input type="text" name="accountId" style="width:468px;"/>
+	</div>
+	<div style="float:left;margin-top:12px;width:550px;">
+		<span style="float:left;width:75px;text-align:right;padding-top:3px;">上级菜单：</span>
+		<input type="text" name="pid" style="width:468px;"/>
+	</div>
+	<div style="float:left;margin-top:12px;width:550px;">
+		<div style="float:left;">
+			<span style="float:left;width:75px;text-align:right;padding-top:3px;">菜单名称：</span>
+			<input type="text" name="name" class="easyui-validatebox" data-options="required:true" style="width:168px;"/>
+			<input type="hidden" name="id"/>
+		</div>
+		<div style="float:right;padding-right:5px;">
+			<span style="float:left;width:75px;text-align:right;padding-top:3px;">菜单类型：</span>
+			<label><input name="type" type="radio" value="1" checked="checked"/>按钮 </label>
+			<label><input name="type" type="radio" value="2"/>超链接</label>
+		</div>
+	</div>
+	<div style="float:left;margin-top:12px;width:550px;">
+		<div style="float:left;">
+			<span style="float:left;width:75px;text-align:right;padding-top:3px;">菜单代码：</span>
+			<input type="text" name="code" class="easyui-validatebox" data-options="required:true" style="width:168px;"/>
+		</div>
+		<div style="float:right;padding-right:5px;">
+			<span style="float:left;width:75px;text-align:right;padding-top:3px;">菜单排序：</span>
+			<input type="text" name="orderNo" class="easyui-numberspinner" data-options="required:true,min:1,max:100,value:1,editable:false" style="width:40px;"/>
+		</div>
+	</div>
+	<div style="float:left;margin-top:12px;width:550px;">
+		<span style="float:left;width:75px;text-align:right;padding-top:3px;">链接/接口：</span>
+		<textarea name="url"  style="width:468px;" rows="3" cols="10"></textarea>
+	</div>
+</form>
