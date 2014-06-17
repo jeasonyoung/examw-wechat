@@ -1,47 +1,27 @@
-package com.examw.wechat.model.server;
+package com.examw.wechat.domain.account;
 
+import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
-
-import com.examw.model.Paging;
 /**
- * 微信访问令牌。
+ * 微信公众号全局唯一票据。
  * @author yangyong.
- * @since 2014-05-16.
- */
-public class AccessTokenInfo extends Paging {
+ * @since 2014-04-03.
+ * */
+public class AccessToken implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String id,accessToken,accountId,accountName;
+	private Account account;
+	private String id,accessToken;
 	private Date createTime,failureTime;
 	/**
-	 * 获取公众号ID。
-	 * @return 
-	 * 	公众号ID。
+	 * 构造函数。
 	 * */
-	public String getAccountId() {
-		return accountId;
-	}
-	/**
-	 * 设置公众号ID。
-	 * @param accountId
-	 * 公众号ID。
-	 * */
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
-	}
-	/**
-	 * 获取公众号名称。
-	 * @return 公众号名称。
-	 * */
-	public String getAccountName() {
-		return accountName;
-	}
-	/**
-	 * 设置公众号名称。
-	 * @param accountName
-	 * 公众号名称。
-	 * */
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
+	public AccessToken(){
+		this.createTime = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(this.createTime);
+		cal.add(Calendar.SECOND, 7200);
+		this.failureTime = cal.getTime();
 	}
 	/**
 	 * 获取票据ID。
@@ -57,6 +37,21 @@ public class AccessTokenInfo extends Paging {
 	 * */
 	public void setId(String id) {
 		this.id = id;
+	}
+	/**
+	 * 获取公众号。
+	 * @return 公众号。
+	 * */
+	public Account getAccount() {
+		return account;
+	}
+	/**
+	 * 设置公众号。
+	 * @param account
+	 * 公众号。
+	 * */
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 	/**
 	 * 获取全局唯一票据。
@@ -102,5 +97,13 @@ public class AccessTokenInfo extends Paging {
 	 * */
 	public void setFailureTime(Date failureTime) {
 		this.failureTime = failureTime;
+	}
+	/**
+	 * 票据是否有效。
+	 * @return 
+	 * 有效返回true，失效返回false。
+	 * */
+	public boolean isEffective(){
+		return System.currentTimeMillis() < this.failureTime.getTime();
 	}
 }

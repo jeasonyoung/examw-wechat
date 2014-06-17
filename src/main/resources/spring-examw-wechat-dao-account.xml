@@ -10,5 +10,9 @@
 	<bean id="accountMenuDao" class="com.examw.wechat.dao.account.impl.AccountMenuDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
+	<!-- 公众号票据Dao -->
+	<bean id="accessTokenDao" class="com.examw.wechat.dao.account.impl.AccessTokenDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
 	<!-- 公众号账号管理 数据接口实现 end-->
 </beans>

@@ -1,10 +1,10 @@
-package com.examw.wechat.dao.server;
+package com.examw.wechat.dao.account;
 
 import java.util.List;
 
 import com.examw.wechat.dao.IBaseDao;
-import com.examw.wechat.domain.server.AccessToken;
-import com.examw.wechat.model.server.AccessTokenInfo;
+import com.examw.wechat.domain.account.AccessToken;
+import com.examw.wechat.model.account.AccessTokenInfo;
 /**
  * 公众号全局唯一票据数据接口。
  * @author yangyong.

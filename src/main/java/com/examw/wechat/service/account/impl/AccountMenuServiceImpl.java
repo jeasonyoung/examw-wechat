@@ -21,8 +21,8 @@ import com.examw.wechat.message.menu.ComplexButton;
 import com.examw.wechat.message.menu.Menu;
 import com.examw.wechat.message.menu.UrlButton;
 import com.examw.wechat.model.account.AccountMenuInfo;
+import com.examw.wechat.service.account.IAccessTokenService;
 import com.examw.wechat.service.account.IAccountMenuService;
-import com.examw.wechat.service.server.IAccessTokenService;
 import com.examw.wechat.support.HttpUtil;
 
 /**

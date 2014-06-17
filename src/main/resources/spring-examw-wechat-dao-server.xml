@@ -3,8 +3,6 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- dao -->
 	<!-- 公众号账号服务 数据接口实现 begin-->
-	<bean id="accessTokenDao" class="com.examw.wechat.dao.server.impl.AccessTokenDaoImpl">
-		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>
+	
 	<!-- 公众号账号服务 数据接口实现 end-->
 </beans>

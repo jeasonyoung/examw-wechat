@@ -1,4 +1,4 @@
-package com.examw.wechat.service.server.impl;
+package com.examw.wechat.service.account.impl;
 
 import java.util.Calendar;
 import java.util.Date; 
@@ -11,13 +11,13 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
+import com.examw.wechat.dao.account.IAccessTokenDao;
 import com.examw.wechat.dao.account.IAccountDao;
-import com.examw.wechat.dao.server.IAccessTokenDao;
+import com.examw.wechat.domain.account.AccessToken;
 import com.examw.wechat.domain.account.Account;
-import com.examw.wechat.domain.server.AccessToken;
-import com.examw.wechat.model.server.AccessTokenInfo;
+import com.examw.wechat.model.account.AccessTokenInfo;
+import com.examw.wechat.service.account.IAccessTokenService;
 import com.examw.wechat.service.impl.BaseDataServiceImpl;
-import com.examw.wechat.service.server.IAccessTokenService;
 import com.examw.wechat.support.HttpUtil;
 /**
  * 公众号全局唯一票据服务实现类。

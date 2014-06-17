@@ -1,6 +1,6 @@
-package com.examw.wechat.service.server;
+package com.examw.wechat.service.account;
 
-import com.examw.wechat.model.server.AccessTokenInfo;
+import com.examw.wechat.model.account.AccessTokenInfo;
 import com.examw.wechat.service.IBaseDataService;
 
 /**

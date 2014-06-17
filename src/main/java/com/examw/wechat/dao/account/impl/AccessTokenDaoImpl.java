@@ -1,13 +1,13 @@
-package com.examw.wechat.dao.server.impl;
+package com.examw.wechat.dao.account.impl;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.examw.wechat.dao.account.IAccessTokenDao;
 import com.examw.wechat.dao.impl.BaseDaoImpl;
-import com.examw.wechat.dao.server.IAccessTokenDao;
-import com.examw.wechat.domain.server.AccessToken;
-import com.examw.wechat.model.server.AccessTokenInfo;
+import com.examw.wechat.domain.account.AccessToken;
+import com.examw.wechat.model.account.AccessTokenInfo;
 /**
  * 公众号全局唯一票据数据访问实现。
  * @author yangyong.
