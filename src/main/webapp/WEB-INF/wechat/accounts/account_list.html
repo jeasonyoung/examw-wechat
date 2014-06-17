@@ -108,6 +108,10 @@ $(function(){
 							if (!isValid)$.messager.progress("close");
 							return isValid;
 						},
+						onLoadError:function(e){
+							$.messager.progress("close");
+							<@error_dialog "e"/>
+						},
 						success:function(data){
 							$.messager.progress("close");
 							var data = $.parseJSON(data);
@@ -155,6 +159,7 @@ $(function(){
 		if(rows && rows.length > 0){
 			$.messager.confirm("确认","您是否确认删除选中的数据?",function(r){
 				if(!r)return;
+				$.messager.progress();
 				var ids = [];
 				for(var i = 0; i < rows.length; i++){
 					ids.push(rows[i].id);
@@ -166,7 +171,12 @@ $(function(){
 						id:ids.join("|")
 					},
 					dataType:"json",
+					error:function(e){
+						$.messager.progress("close");
+						<@error_dialog "e"/>
+					},
 					success:function(data,textStatus){
+						$.messager.progress("close");
 						if(data.success){
 							dg.datagrid("load");
 							dg.datagrid("unselectAll");

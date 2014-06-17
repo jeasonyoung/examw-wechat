@@ -1,0 +1,114 @@
+<#--公众号令牌列表-->
+<#include "ftl/comm.ftl"/>
+<#assign module="accounts_token"/>
+<#assign dg="${module}_list_dg"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	//dg
+	var dg = $("#${dg}").datagrid({
+		url:"<@s.url '/accounts/token/datagrid'/>",
+		fit:true,
+		fitColumns:true,
+		rownumbers:true,
+		pagination:true,
+		pagePosition:"bottom",
+		pageSize:20,
+		pageList:[20,30,40],
+		border:true,
+		striped:true,
+		idField:"id",
+		sortName:"createTime",
+		sortOrder:"desc",
+		columns:[[{
+			field:"id",
+			checkbox:true
+		},{
+			title:"公众号名称",
+			field:"accountName",
+			width:40,
+			align:"left",
+			sortable:true
+		},{
+			title:"全局票据",
+			field:"accessToken",
+			width:30,
+			align:"left",
+			sortable:true
+		},{
+			title:"创建时间",
+			field:"createTime",
+			width:12,
+			align:"left",
+			sortable:true
+		},{
+			title:"失效时间",
+			field:"failureTime",
+			width:12,
+			align:"left",
+			sortable:true
+		}]],
+		toolbar:"#${dg}_toolbar",
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		}
+	});
+	//search
+	${dg}_search = function(){
+		dg.datagrid("load",{
+			accountName:$("#${dg}_toolbar input[name='account']").val(),
+			accessToken:$("#${dg}_toolbar input[name='accessToken']").val()
+		});
+	};
+	//delete
+	${dg}_delete = function(){
+		var rows = dg.datagrid("getChecked");
+		if(rows && rows.length > 0){
+			$.messager.confirm("确认","您是否确认删除选中的数据?",function(r){
+				if(!r)return;
+				$.messager.progress();
+				var ids = [];
+				for(var i = 0; i < rows.length; i++){
+					ids.push(rows[i].id);
+				}
+				$.ajax({
+					url:"<@s.url '/accounts/token/delete'/>",
+					type:"POST",
+					data:{
+						id:ids.join("|")
+					},
+					dataType:"json",
+					onLoadError:function(e){
+						$.messager.progress("close");
+						<@error_dialog "e"/>
+					},
+					success:function(data,textStatus){
+						$.messager.progress("close");
+						if(data.success){
+							dg.datagrid("load");
+							dg.datagrid("unselectAll");
+						}else{
+							$.messager.show({
+								title:"提示",
+								msg:data.msg
+							});
+						}
+					}
+				});
+			});
+		}else{
+			$.messager.alert("提示","未选中须删除的数据！");
+		}
+	};
+});
+//-->
+</script>
+<table id="${dg}"></table>
+<div id="${dg}_toolbar">
+	<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+	<span>公众号/名称:</span>
+	<input name="account" type="text" style="width:198px;"/>
+	<span>票据:</span>
+	<input name="accessToken" type="text" style="width:198px;"/>
+	<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
+</div>

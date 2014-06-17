@@ -12,7 +12,7 @@
   	<module id="WeChatMgr0000000000000000000002"  icon="" name="接入管理" uri="" order="1">
   		<module id="WeChatMgr0000000000000000000102" icon="" name="公众号设置" uri="/accounts/account" order="1"/>
   		<module id="WeChatMgr0000000000000000000202" icon="" name="公众号菜单" uri="/accounts/menu" order="2"/>
-  		<module id="WeChatMgr0000000000000000000302" icon="" name="公众号票据" uri="" order="3"/>
+  		<module id="WeChatMgr0000000000000000000302" icon="" name="公众号票据" uri="/accounts/token" order="3"/>
   	</module>
   </system>
 </ipower>
