@@ -1,0 +1,52 @@
+<#--考试设置编辑页面-->
+<#include "ftl/comm.ftl"/>
+<#assign module="settings_exam_edit"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	var c = $("#${module}_form input[name='catalogId']").combobox({
+		url:"<@s.url '/settings/catalog/all'/>",
+		valueField:"id",
+		textField:"name",
+		required:true,
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		onLoadSuccess:function(){
+			var id = "${CURRENT_CATALOG_ID}";
+			if($.trim(id) == "") return;
+			c.combobox("setValue",id);
+		}
+	});
+});
+//-->
+</script>
+<form id="${module}_form" method="POST" style="padding:10px;">
+	<div style="float:left;margin-top:2px;width:100%;">
+		<label style="width:75px;">所属类别：</label>
+		<input name="catalogId" style="width:368px;"/>
+	</div>
+	<div style="float:left;margin-top:12px;width:100%;">
+		<label style="width:75px;">考试名称：</label>
+		<input type="text" name="name" class="easyui-validatebox"  data-options="required:true" style="width:368px;"/>
+		<input type="hidden" name="id"/>
+	</div>
+	<div style="float:left;margin-top:12px;width:100%;">
+		<div style="float:left;">
+			<label style="width:75px;">中文简称：</label>
+			<input type="text" name="abbr_cn" class="easyui-validatebox" data-options="validType:['chinese','length[0,20]']"  style="width:128px;" />
+		</div>
+		<div style="float:left;margin-left:32px;">
+			<label style="width:75px;">英文简称：</label>
+			<input type="text" name="abbr_en" class="easyui-validatebox" data-options="required:true,validType:['english','length[0,15]']"  style="width:128px;"/>
+		</div>
+	</div>
+	<div style="float:left;margin-top:12px;width:100%;">
+		<label style="width:75px;">描述：</label>
+		<textarea name="description"  rows="4" cols="20" style="width:368px;" />
+	</div>
+	<div style="float:left;margin-top:12px;width:100%;">
+		<label style="width:75px;">排序号：</label>
+		<input type="text" name="orderNo" class="easyui-numberspinner" data-options="required:true,min:1,max:100,value:1,editable:false" style="width:80px;" />
+	</div>
+</form>

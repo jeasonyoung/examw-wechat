@@ -1,0 +1,239 @@
+<#--科目设置列表-->
+<#include "ftl/comm.ftl"/>
+<#assign module="settings_subject"/>
+<#assign dg="${module}_list_dg"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	var current_catalog_id = "",current_exam_id = "";
+	//catalog-exam-tree
+	var t = $("#${module}_list_catalog_exam_tree").tree({
+		url:"<@s.url '/settings/catalog/exams-tree'/>",
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		onBeforeLoad:function(){
+			current_catalog_id = current_exam_id = "";
+		},
+		onClick:function(node){
+			 if(node.attributes.type == "catalog"){
+				 current_catalog_id = node.id;
+				 current_exam_id = "";
+			 }else if(node.attributes.type == "exam"){
+				 current_catalog_id = "";
+				 current_exam_id = node.id;
+			 }else{
+				 current_catalog_id = current_exam_id = "";
+			 }
+			 //search;
+			 ${dg}_search();
+		}
+	});
+	//dg
+	var dg=$("#${dg}").datagrid({
+		url:"<@s.url '/settings/subject/datagrid'/>",
+		fit:true,
+		fitColumns:true,
+		rownumbers:true,
+		pagination:true,
+		pagePosition:"bottom",
+		pageSize:20,
+		pageList:[20,30,40],
+		border:true,
+		striped:true,
+		idField:"id",
+		sortName:"orderNo",
+		sortOrder:"asc",
+		columns:[[{
+			field:"id",
+			checkbox:true
+		},{
+			title:"所属考试类别",
+			field:"catalogName",
+			width:20,
+			align:"left",
+			sortable:true
+		},{
+			title:"所属考试",
+			field:"examName",
+			width:30,
+			align:"left",
+			sortable:true
+		},{
+			title:"科目名称",
+			field:"name",
+			width:40,
+			align:"left",
+			sortable:true
+		},{
+			title:"科目类型",
+			field:"typeName",
+			width:10,
+			align:"center",
+			sortable:true
+		},{
+			title:"排序号",
+			field:"orderNo",
+			width:10,
+			align:"right",
+			sortable:true
+		}]],
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		toolbar:"#${dg}_toobar",
+		onDblClickRow:function(rowIndex,rowData){
+			edit_window("编辑科目",rowIndex,rowData);
+		}
+	});
+	//edit
+	function edit_window(title,index,row){
+		var c_id = current_catalog_id,e_id = current_exam_id;
+		if(row != null){
+			c_id = row.catalogId;
+			e_id = row.examId;
+		}
+		var d = $("<div/>").dialog({
+			title:title,
+			width:400,
+			height:260,
+			href:"<@s.url '/admin/settings/subject/edit'/>?catalogId="+c_id+"&examId=" + e_id,
+			modal:true,
+			buttons:[
+			/* <shiro.hasPermission name="${PER_UPDATE}"> */
+			  {
+				text:"保存",
+				iconCls:"icon-save",
+				handler:function(){
+					$.messager.progress();
+					$("#${module}_edit_form").form("submit",{
+						url:"<@s.url '/settings/subject/update'/>",
+						onSubmit: function(){
+							var isValid = $(this).form("validate");
+							if (!isValid)$.messager.progress("close");
+							return isValid;
+						},
+						onLoadError:function(e){
+							$.messager.progress("close");
+							<@error_dialog "e"/>
+						},
+						success:function(data){
+							$.messager.progress("close");
+							var data = $.parseJSON(data);
+							if(data.success){
+								dg.datagrid(row ? "updateRow" : "insertRow",{
+									index:index,
+									row:data.data
+								});
+								d.dialog("close");
+							}else{
+								$.messager.show({
+									title:"保存异常",
+									msg:data.msg
+								});
+							}
+						}
+					});
+				}
+			},
+			/* </shiro.hasPermission> */
+			{
+				text:"关闭",
+				iconCls:"icon-cancel",
+				handler:function(){
+					d.dialog("close");
+				}
+			}],
+			onClose:function(){
+				$(this).dialog("destroy");
+			},
+			onLoad:function(){
+				if(row) $("#${module}_edit_form").form("load",row);
+			}
+	  });
+	};
+	//search
+	${dg}_search = function(){
+		dg.datagrid("load",{
+			  name:$("#${dg}_toobar input[name='name']").val(),
+			  catalogId:current_catalog_id,
+			  examId:current_exam_id
+		});
+	};
+	//add
+	${dg}_add = function(){
+		edit_window("新增科目",0,null);
+	};
+	/* <shiro.hasPermission name="${PER_DELETE}"> */
+	//delete
+	${dg}_delete = function(){
+		var rows = dg.datagrid("getChecked");
+		if(rows && rows.length > 0){
+			$.messager.confirm("确认","您是否确认删除选中的数据?",function(r){
+				if(!r)return;
+				$.messager.progress();
+				var ids = [];
+				for(var i = 0; i < rows.length; i++){
+					ids.push(rows[i].id);
+				}
+				$.ajax({
+					url:"<@s.url '/settings/subject/delete'/>",
+					type:"POST",
+					data:{
+						id:ids.join("|")
+					},
+					dataType:"json",
+					error:function(e){
+						$.messager.progress("close");
+						<@error_dialog "e"/>
+					},
+					success:function(data,textStatus){
+						$.messager.progress("close");
+						if(data.success){
+							dg.datagrid("load");
+							dg.datagrid("unselectAll");
+						}else{
+							$.messager.show({
+								title:"提示",
+								msg:data.msg
+							});
+						}
+					}
+				});
+			});
+		}else{
+			$.messager.alert("提示","未选中须删除的数据！");
+		}
+	};
+	/* </shiro.hasPermission> */
+});
+//-->
+</script>
+<div class="easyui-layout" data-options="fit:true" id="${dg}_layout">
+	 <div data-options="region:'west',title:'所属考试',split:true,tools: [{
+		 	iconCls:'icon-reload',
+		 	handler:function(){
+			 		$('#${module}_list_catalog_exam_tree').tree('reload');
+			 		${dg}_search();
+		 	}
+	 	}]" style="padding:5px;width:190px;">
+	 	<ul id="${module}_list_catalog_exam_tree"></ul>
+	 </div>
+	 <div data-options="region:'center',title:'科目列表'">
+		<table id="${dg}"></table>
+		<div id="${dg}_toobar">
+			<!-- <shiro.hasPermission name="${PER_UPDATE}"> -->
+			<a href="#" class="easyui-linkbutton" onclick="${dg}_add()" data-options="iconCls:'icon-add',plain:true" style="float:left;">新增</a>
+			<!-- </shiro.hasPermission> -->
+			<span>|</span>
+			<!-- <shiro.hasPermission name="${PER_DELETE}"> -->
+			<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+			<!-- </shiro.hasPermission> -->
+			
+			<label>科目名称:</label>
+			<input name="name" type="text" style="width:198px;"/>
+
+			<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
+		</div>
+	</div>
+</div>

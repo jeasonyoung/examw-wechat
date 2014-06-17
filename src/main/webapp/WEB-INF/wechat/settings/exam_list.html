@@ -1,0 +1,222 @@
+<#--考试设置列表-->
+<#include "ftl/comm.ftl"/>
+<#assign module="settings_exam"/>
+<#assign dg="${module}_dg"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	var current_catalog_id = "";
+	//tree
+	var t = $("#${module}_list_catalog_tree").tree({
+		url:"<@s.url '/settings/catalog/tree'/>",
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		onBeforeLoad:function(){
+			current_catalog_id = "";
+		},
+		onClick:function(node){
+			current_catalog_id = node.id;
+			${dg}_search();
+		}
+	});
+	//dg
+	var dg=$("#${dg}").datagrid({
+		url:"<@s.url '/settings/exam/datagrid'/>",
+		fit:true,
+		fitColumns:true,
+		rownumbers:true,
+		pagination:true,
+		pagePosition:"bottom",
+		pageSize:20,
+		pageList:[20,30,40],
+		border:true,
+		striped:true,
+		idField:"id",
+		sortName:"orderNo",
+		sortOrder:"asc",
+		columns:[[{
+			field:"id",
+			checkbox:true
+		},{
+			title:"所属考试类别",
+			field:"catalogName",
+			width:40,
+			align:"left",
+			sortable:true
+		},{
+			title:"考试名称",
+			field:"name",
+			width:40,
+			align:"left",
+			sortable:true
+		},{
+			title:"中文简称",
+			field:"abbr_cn",
+			width:20,
+			align:"left",
+			sortable:true
+		},{
+			title:"英文简称",
+			field:"abbr_en",
+			width:20,
+			align:"left",
+			sortable:true
+		},{
+			title:"描述",
+			field:"description",
+			width:40,
+			align:"left",
+			sortable:true
+		}]],
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		toolbar:"#${dg}_toobar",
+		onDblClickRow:function(rowIndex,rowData){
+			edit_window("编辑考试设置",rowIndex,rowData);
+		}
+	});
+	//edit
+	function edit_window(title,index,row){
+		var d = $("<div/>").dialog({
+			title:title,
+			width:550,
+			height:320,
+			href:"<@s.url '/settings/exam/edit'/>?catalogId="+current_catalog_id,
+			modal:true,
+			buttons:[
+			/* <shiro.hasPermission name="${PER_UPDATE}"> */
+			  {
+				text:"保存",
+				iconCls:"icon-save",
+				handler:function(){
+					$.messager.progress();
+					$("#${module}_edit_form").form("submit",{
+						url:"<@s.url '/settings/exam/update'/>",
+						onSubmit: function(){
+							var isValid = $(this).form("validate");
+							if (!isValid)$.messager.progress("close");
+							return isValid;
+						},
+						onLoadError:function(e){
+							$.messager.progress("close");
+							<@error_dialog "e"/>
+						},
+						success:function(data){
+							$.messager.progress("close");
+							var data = $.parseJSON(data);
+							if(data.success){
+								dg.datagrid(row ? "updateRow" : "insertRow",{
+									index:index,
+									row:data.data
+								});
+								d.dialog("close");
+							}else{
+								$.messager.show({
+									title:"保存异常",
+									msg:data.msg
+								});
+							}
+						}
+					});
+				}
+			},
+			/* </shiro.hasPermission> */
+			{
+				text:"关闭",
+				iconCls:"icon-cancel",
+				handler:function(){
+					d.dialog("close");
+				}
+			}],
+			onClose:function(){
+				$(this).dialog("destroy");
+			},
+			onLoad:function(){
+				if(row) $("#${module}_edit_form").form("load",row); 
+			}
+	  });
+	};
+	//search
+	${dg}_search = function(){
+		dg.datagrid("load",{
+			catalogId:current_catalog_id,
+			name:$("#${dg}_toobar input[name='name']").val()
+		});
+	};
+	//add
+	${dg}_add = function(){
+		edit_window("新增考试设置",0,null);
+	};
+	//delete
+	${dg}_delete = function(){
+		var rows = dg.datagrid("getChecked");
+		if(rows && rows.length > 0){
+			$.messager.confirm("确认","您是否确认删除选中的数据?",function(r){
+				if(!r)return;
+				$.messager.progress();
+				var ids = [];
+				for(var i = 0; i < rows.length; i++){
+					ids.push(rows[i].id);
+				}
+				$.ajax({
+					url:"<@s.url '/settings/exam/delete'/>",
+					type:"POST",
+					data:{
+						id:ids.join("|")
+					},
+					dataType:"json",
+					error:function(e){
+						$.messager.progress("close");
+						<@error_dialog "e"/>
+					},
+					success:function(data,textStatus){
+						$.messager.progress("close");
+						if(data.success){
+							dg.datagrid("load");
+							dg.datagrid("unselectAll");
+						}else{
+							$.messager.show({
+								title:"提示",
+								msg:data.msg
+							});
+						}
+					}
+				});
+			});
+		}else{
+			$.messager.alert("提示","未选中须删除的数据！");
+		}
+	};
+});
+//-->
+</script>
+<div id="${dg}_layout" class="easyui-layout" data-options="fit:true">
+	 <div data-options="region:'west',title:'考试类别',split:true,tools: [{
+		 	iconCls:'icon-reload',
+		 	handler:function(){
+		 			$('#${module}_list_catalog_tree').tree('reload');
+		 			${dg}_search();
+		 	}
+	 	}]" style="padding:5px;width:190px;">
+	 	<ul id="${module}_list_catalog_tree"></ul>
+	 </div>
+	 <div data-options="region:'center',title:'考试列表'">
+	 	<table id="${dg}"></table>
+		<div id="${dg}_toobar">
+			<!-- <shiro.hasPermission name="${PER_UPDATE}"> -->
+			<a href="#" class="easyui-linkbutton" onclick="${dg}_add()" data-options="iconCls:'icon-add',plain:true" style="float:left;">新增</a>
+			<!-- </shiro.hasPermission> -->
+			<span>|</span>
+			<!-- <shiro.hasPermission name="${PER_DELETE}"> -->
+			<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+			<!-- </shiro.hasPermission> -->
+			
+			<label>名称:</label>
+			<input name="name" type="text" style="width:168px;"/>
+	
+			<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
+		</div>
+	 </div>
+</div>

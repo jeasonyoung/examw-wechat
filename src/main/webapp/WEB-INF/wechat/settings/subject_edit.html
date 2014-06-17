@@ -1,0 +1,68 @@
+<#--科目设置编辑-->
+<#include "ftl/comm.ftl"/>
+<#assign module="settings_subject"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	var current_catalog_select = false;
+	//catalog_tree
+	var c_t = $("#${module}_edit_form input[name='catalogId']").combobox({
+		url:"<@s.url '/settings/catalog/all'/>",
+		required:true,
+		valueField:"id",
+		textField:"name",
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		onLoadSuccess:function(){
+			var id = "${CURRENT_CATALOG_ID}";
+			if($.trim(id) == "") return;
+			c_t.combobox("setValue",id);
+		},
+		onSelect:function(record){
+			current_catalog_select = true;
+			if(e_t){
+				e_t.combobox("reload","<@s.url '/settings/exam/all'/>?catalogId=" + record.id);
+			}
+		}
+	});
+	//exam_tree
+	var e_t = $("#${module}_edit_form input[name='examId']").combobox({
+		url:"<@s.url '/settings/exam/all'/>?catalogId=${CURRENT_CATALOG_ID}",
+		required:true,
+		valueField:"id",
+		textField:"name",
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		onLoadSuccess:function(){
+			e_t.combobox("clear");
+			var id = "${CURRENT_EXAM_ID}";
+			if($.trim(id) == "" || current_catalog_select) return;
+			e_t.combobox("setValue",id);
+		}
+	});
+});
+//-->
+</script>
+<form id="${module}_edit_form" method="POST" style="padding:10px;">
+	<div style="float:left;margin-top:2px;width:100%;">
+		<label style="width:75px;">所属考试：</label>
+		<input type="text" name="catalogId"  style="width:130px;"/>
+		<input type="text" name="examId"  style="width:130px;"/>
+	</div>
+	<div style="float:left;margin-top:12px;width:100%;">
+		<label style="width:75px;">科目名称：</label>
+		<input type="text" name="name" class="easyui-validatebox" style="width:258px;" data-options="required:true"/>
+		<input type="hidden" name="id"/>
+	</div>
+	<div style="float:left;margin-top:12px;width:100%;">
+		<label style="width:75px;">科目类型：</label>
+		<label><input type="radio" name="type" value="1" checked="checked" />${SUBJECT_COMPULSORY}</label>
+		<label><input type="radio" name="type" value="0"/>${SUBJECT_ELECTIVE}</label>
+	</div>
+	 <div style="float:left;margin-top:12px;width:100%;">
+		<label style="width:75px;">排序号：</label>
+		<input type="text" name="orderNo" class="easyui-numberspinner" data-options="required:true,min:1,max:100,value:1,editable:false" style="width:80px;" />
+	</div>
+</form>

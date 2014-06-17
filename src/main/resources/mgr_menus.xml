@@ -9,10 +9,15 @@
   		<module id="WeChatMgr0000000000000000000501" icon="" name="用户管理" uri="/security/user" order="5"/>
   		<module id="WeChatMgr0000000000000000000601" icon="" name="登录日志" uri="/security/log" order="6"/>
   	</module>
-  	<module id="WeChatMgr0000000000000000000002"  icon="" name="接入管理" uri="" order="1">
+  	<module id="WeChatMgr0000000000000000000002"  icon="" name="接入管理" uri="" order="2">
   		<module id="WeChatMgr0000000000000000000102" icon="" name="公众号设置" uri="/accounts/account" order="1"/>
   		<module id="WeChatMgr0000000000000000000202" icon="" name="公众号菜单" uri="/accounts/menu" order="2"/>
   		<module id="WeChatMgr0000000000000000000302" icon="" name="公众号票据" uri="/accounts/token" order="3"/>
+  	</module>
+  	<module id="WeChatMgr0000000000000000000003"  icon="" name="考试设置" uri="" order="3">
+  		<module id="WeChatMgr0000000000000000000103" icon="" name="考试类别" uri="/settings/catalog" order="1"/>
+  		<module id="WeChatMgr0000000000000000000203" icon="" name="考试" uri="/settings/exam" order="2"/>
+  		<module id="WeChatMgr0000000000000000000303" icon="" name="科目" uri="/settings/subject" order="3"/>
   	</module>
   </system>
 </ipower>
