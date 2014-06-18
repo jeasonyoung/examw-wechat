@@ -1,7 +1,6 @@
 package com.examw.wechat.message;
 
 import java.io.Serializable;
-
 /**
  * 微信通用接口凭证。
  * @author yangyong。
