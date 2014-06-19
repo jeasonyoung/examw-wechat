@@ -2,12 +2,15 @@ package com.examw.wechat.model.mgr;
 
 import java.util.Date;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import com.examw.model.Paging;
 /**
  * 微信关注用户信息。
  * @author yangyong.
  * @since 2014-04-08.
  * */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class AccountUserInfo extends Paging {
 	private static final long serialVersionUID = 1L;
 	private String openId,userId,userSign,userName,accountId,accountName;

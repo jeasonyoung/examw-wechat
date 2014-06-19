@@ -3,6 +3,8 @@
 <hibernate-mapping package="com.examw.wechat.domain.mgr">
 	<!-- 微信关注用户 -->
 	<class name="AccountUser" table="tbl_Examw_Wechat_AccountUsers">
+		<!-- 开启二级缓存 -->
+		<cache usage="read-write"/>
 		<!-- 联合主键 -->
 		<composite-id>
 			<!-- 微信ID。 -->
@@ -22,5 +24,37 @@
 		<property name="lastTime" type="timestamp"/>
 		<!-- 微信用户状态(1-关注，－1-取消关注) -->
 		<property name="status" type="integer"/>
+	</class>
+	<!-- 资讯文档 -->
+	<class name="Article" table="tbl_Examw_Wechat_Articles">
+		<!-- 开启二级缓存 -->
+		<cache usage="read-write"/>
+		<!-- 资讯文档ID -->
+		<id name="id" type="string" length="64" />
+		<!-- 资讯标题 -->
+		<property name="title"  type="string" length="255" not-null="true" />
+		<!-- 资讯类型 -->
+		<property name="type" type="string" length="20" />
+		<!-- 所属科目 -->
+		<many-to-one name="subject" column="subject_id" class="com.examw.wechat.domain.settings.Subject" />
+		<!-- 图片链接 -->
+		<property name="picUrl" type="string" length="512" />
+		<!-- 跳转链接 -->
+		<property name="url" type="string" length="512" />
+		<!-- 描述信息 -->
+		<property name="description" type="string" length="512" />
+		<!-- 内容 -->
+		<property name="content" type="text" />
+		<!-- 创建时间 -->
+		<property name="createTime" type="timestamp" />
+		<!-- 排序号 -->
+		<property name="orderNo" type="integer" />
+		<!-- 父级资讯 -->
+		<many-to-one name="parent" column="pid" class="Article" />
+		<!-- 子级资讯集合 -->
+		<set name="children" inverse="true" cascade="save-update"  order-by="orderNo asc">
+			<key column="pid" />
+			<one-to-many class="Article"/>
+		</set>
 	</class>
 </hibernate-mapping>

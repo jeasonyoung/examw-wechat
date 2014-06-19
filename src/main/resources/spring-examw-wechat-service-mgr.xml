@@ -19,5 +19,12 @@
 			</map>
 		</property>
 	</bean>
+	<!-- 资讯文档服务 -->
+	<bean id="articleService" class="com.examw.wechat.service.mgr.impl.ArticleServiceImpl">
+		<!-- 资讯文档数据接口 -->
+		<property name="articleDao" ref="articleDao" />
+		<!-- 考试科目数据接口 -->
+		<property name="subjectDao" ref="subjectDao" />
+	</bean>
 	<!--  公众号管理 服务接口实现 end-->
 </beans>

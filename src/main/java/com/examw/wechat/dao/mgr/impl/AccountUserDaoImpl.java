@@ -26,7 +26,7 @@ public class AccountUserDaoImpl extends BaseDaoImpl<AccountUser> implements IAcc
 		String hql = "from AccountUser a where 1 = 1 ";
 		Map<String, Object> parameters = new HashMap<>();
 		hql = this.addWhere(info, hql, parameters);
-		if(info.getSort() != null && !info.getSort().trim().isEmpty()){
+		if(!StringUtils.isEmpty(info.getSort())){
 			if(info.getSort().equalsIgnoreCase("accountName")){
 				info.setSort("account.name");
 			}

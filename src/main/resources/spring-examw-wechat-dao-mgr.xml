@@ -5,7 +5,11 @@
 	<!-- 公众号管理 数据接口实现 begin-->
 	<!-- 微信关注用户管理 -->
 	<bean id="accountUserDao" class="com.examw.wechat.dao.mgr.impl.AccountUserDaoImpl">
-		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<!-- 资讯文档数据 -->
+	<bean id="articleDao" class="com.examw.wechat.dao.mgr.impl.ArticleDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	<!-- 公众号管理 数据接口实现 end-->
 </beans>
