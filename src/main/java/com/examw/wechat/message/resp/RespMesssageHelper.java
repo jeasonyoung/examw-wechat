@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.util.Map;
 
 import com.examw.wechat.message.Article;
-import com.examw.wechat.message.WeChatContext;
+import com.examw.wechat.message.Context;
 import com.examw.wechat.support.MsgUtil;
 
 /**
@@ -37,13 +37,13 @@ public final class RespMesssageHelper extends MsgUtil {
 			Map<String, String> map = parseXml(new ByteArrayInputStream(xml.getBytes("utf-8")));
 			String type = map.get("MsgType");
 			switch(type){
-				case WeChatContext.REQ_MESSAGE_TYPE_TEXT://文本。
+				case Context.REQ_MESSAGE_TYPE_TEXT://文本。
 					return respXmlToObject(TextRespMessage.class, xml);
-				case WeChatContext.REQ_MESSAGE_TYPE_IMAGE://图片。
+				case Context.REQ_MESSAGE_TYPE_IMAGE://图片。
 					return respXmlToObject(ImageRespMessage.class, xml);
-				case WeChatContext.REQ_MESSAGE_TYPE_VOICE://语音。
+				case Context.REQ_MESSAGE_TYPE_VOICE://语音。
 					return respXmlToObject(VoiceRespMessage.class, xml);
-				case WeChatContext.REQ_MESSAGE_TYPE_VIDEO://视频
+				case Context.REQ_MESSAGE_TYPE_VIDEO://视频
 					return respXmlToObject(VoiceRespMessage.class, xml);
 				case "music"://音乐。
 					return respXmlToObject(MusicRespMessage.class, xml);

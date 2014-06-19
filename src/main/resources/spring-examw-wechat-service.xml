@@ -2,14 +2,21 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- service -->
+	<!-- ehcache 全局缓存 -->
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<!-- ehcache缓存配置文件 -->
+		<property name="configLocation" value="classpath:spring-examw-wechat-ehcache.xml"/>
+		<!-- 是否共享 -->
+		<property name="shared" value="true"/>
+	</bean>
 	<!--  系统管理 服务接口实现-->
 	<import resource="spring-examw-wechat-service-security.xml"/>
 	<!--  公众账号管理 服务接口实现-->
 	<import resource="spring-examw-wechat-service-account.xml"/>
-	<!--  公众账号服务 服务接口实现-->
-	<import resource="spring-examw-wechat-service-server.xml"/>
 	<!--  考试服务 服务接口实现-->
 	<import resource="spring-examw-wechat-service-settings.xml"/>
 	<!--  公众号管理 服务接口实现-->
 	<import resource="spring-examw-wechat-service-mgr.xml"/>
+	<!--  公众账号服务 服务接口实现-->
+	<import resource="spring-examw-wechat-service-server.xml"/>
 </beans>

@@ -71,7 +71,7 @@
 				<!-- ibernate将收集有助于性能调节的统计数据 -->
 				<!-- <prop key="hibernate.generate_statistics">true</prop> -->
 				<!-- ehcache配置文件 -->
-				<prop key="net.sf.ehcache.configurationResourceName">examw-ehcache-hibernate.xml</prop>
+				<prop key="net.sf.ehcache.configurationResourceName">spring-examw-wechat-ehcache-hibernate.xml</prop>
 				<!-- ehcache缓存配置节点 -->
 				<prop key="net.sf.ehcache.cacheManagerName">hibernateCache</prop>
 			</props>

@@ -1,6 +1,6 @@
 package com.examw.wechat.message.events;
 /**
- * 用户未关注时，进行关注后的事件推送消息。
+ * 关注事件。
  * @author yangyong.
  * @since 2014-02-24.
  * */

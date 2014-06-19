@@ -59,7 +59,7 @@
 		<!-- 所属公众号 -->
 		<many-to-one name="account" column="account_id" class="Account"/>
 		<!--票据 -->
-		<property name="accessToken"  type="string" length="256"/>
+		<property name="accessToken"  type="string" length="1024"/>
 		<!-- 创建时间 -->
 		<property name="createTime" type="timestamp"/>
 		<!-- 失效时间 -->

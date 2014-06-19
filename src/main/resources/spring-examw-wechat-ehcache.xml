@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache name="hibernate-ehcache">
+	<diskStore path="java.io.tmpdir" />
+	<!-- 默认配置 -->
+	 <defaultCache
+            	maxEntriesLocalHeap="2000"
+				 eternal="false"
+				 timeToIdleSeconds="3600"
+				 timeToLiveSeconds="0"
+				 overflowToDisk="true"
+				 statistics="true">
+    </defaultCache>
+    <!-- 微信上下文缓存 -->
+    <cache name="wechatContextCache"
+				 maxEntriesLocalHeap="2000"
+				 eternal="false"
+				 timeToIdleSeconds="3600"
+				 timeToLiveSeconds="0"
+				 overflowToDisk="false"
+				 statistics="true">
+	</cache>
+</ehcache>

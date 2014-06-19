@@ -3,6 +3,33 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- service -->
 	<!--  公众号服务 服务接口实现 begin-->
-	
+	<!-- 微信上下文缓存 -->
+	<bean id="contextCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<!-- 缓存管理器 -->
+		<property name="cacheManager"  ref="cacheManager" />
+		<!-- 缓存名称 -->
+		<property name="cacheName" value="wechatContextCache" />
+	</bean>
+	<!-- 微信上下文服务 -->
+	<bean id="contextService" class="com.examw.wechat.service.server.impl.ContextServiceImpl">
+		<!-- 微信用户数据接口 -->
+		<property name="accountUserDao"  ref="accountUserDao" />
+		<!-- 上下文缓存 -->
+		<property name="cache" ref="contextCache" />
+	</bean>
+	<!-- 微信核心服务 -->
+	<bean id="coreService" class="com.examw.wechat.service.server.impl.DefaultCoreServiceImpl">
+		<!-- 公众号服务接口 -->
+		<property name="accountDao" ref="accountDao" />
+		<!-- 上下文服务接口 -->
+		<property name="contextService"  ref="contextService" />
+		<!-- 消息中心接口 -->
+		<property name="messageParse" ref="messageParse" />
+	</bean>
+	<!-- 消息解析服务 -->
+	<bean id="messageParse" class="com.examw.wechat.service.server.impl.MessageParseImpl">
+		<!-- 事件处理 -->
+		<property name="handler"></property>
+	</bean>
 	<!--  公众号服务 服务接口实现 end-->
 </beans>

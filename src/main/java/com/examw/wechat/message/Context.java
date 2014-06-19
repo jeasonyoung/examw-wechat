@@ -7,7 +7,7 @@ import java.util.Date;
  * @author yangyong.
  * @since 2014-04-10.
  * */
-public class WeChatContext implements Serializable {
+public class Context implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * 事件消息请求。
@@ -57,6 +57,10 @@ public class WeChatContext implements Serializable {
 	 * 自定义菜单事件消息。
 	 * */
 	public static final String EVENT_MESSAGE_TYPE_CLICK = "CLICK";
+	/**
+	 * 菜单跳转链接事件。
+	 */
+	public static final String EVENT_MESSAGE_TYPE_VIEW = "VIEW";
 	
 	private String accountId,userId,openId,lastMenuKey;
 	private Date lastActiveTime;
@@ -67,7 +71,7 @@ public class WeChatContext implements Serializable {
 	 * @param openId
 	 * 微信用户OpenId
 	 * */
-	public WeChatContext(String accountId, String openId){
+	public Context(String accountId, String openId){
 		this.accountId = accountId;
 		this.openId = openId;
 	}
