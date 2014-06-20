@@ -1,0 +1,19 @@
+<#--省份编辑-->
+<#include "ftl/comm.ftl"/>
+<#assign module="settings_province"/>
+<#assign form = "${module}_edit_form"/>
+<form id="${form}" method="POST" style="padding:10px;">
+	<div style="float:left;margin-top:2px;width:100%;">
+		<label style="width:75px;">行政编码：</label>
+		<input type="text" name="code" class="easyui-validatebox" style="width:198px;" data-options="required:true"/>
+		<input type="hidden" name="id"/>
+	</div>
+	<div style="float:left;margin-top:12px;width:100%;">
+		<label style="width:75px;">省份名称：</label>
+		<input type="text" name="name" class="easyui-validatebox" data-options="validType:['chinese','length[0,20]']"  style="width:198px;" />
+	</div>
+	<div style="float:left;margin-top:12px;width:100%;">
+		<label style="width:75px;">排序号：</label>
+		<input type="text" name="orderNo" class="easyui-numberspinner" data-options="required:true,min:1,max:100,value:1,editable:false" style="width:80px;" />
+	</div>
+</form>

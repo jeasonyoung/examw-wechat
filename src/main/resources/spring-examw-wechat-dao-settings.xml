@@ -3,6 +3,10 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- dao -->
 	<!-- 考试设置 数据接口实现 begin-->
+	<!-- 省份Dao -->
+	<bean id="provinceDao" class="com.examw.wechat.dao.settings.impl.ProvinceDaoImpl">
+		<property name="sessionFactory"  ref="sessionFactory" />
+	</bean>
 	<!-- 考试类别Dao -->
 	<bean id="catalogDao" class="com.examw.wechat.dao.settings.impl.CatalogDaoImpl">
 		<property name="sessionFactory"  ref="sessionFactory" />

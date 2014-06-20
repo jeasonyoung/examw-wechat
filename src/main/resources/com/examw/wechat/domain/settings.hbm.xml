@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="com.examw.wechat.domain.settings">
-<!-- 考试类别 -->
+	<!-- 省份设置 -->
+	<class name="Province" table="tbl_Examw_WeChat_Province">
+		<!-- 开启二级缓存 -->
+		<cache usage="read-write"/>
+		<!-- 省份设置ID -->
+	    <id name="id" type="string"  length="64"  />
+	    <!-- 行政编码 -->
+	    <property name="code" type="string"  length="32" unique="true" />
+	    <!-- 省份名称 -->
+	    <property name="name" type="string" length="20" not-null="true" />
+	    <!-- 排序号 -->
+	    <property name="orderNo" type="integer" />
+	</class>
+	<!-- 考试类别 -->
 	<class name="Catalog"  table="tbl_Examw_WeChat_ExamCategory">
 		<!-- 开启二级缓存 -->
 		<cache usage="read-write"/>

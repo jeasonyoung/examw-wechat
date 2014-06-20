@@ -1,13 +1,13 @@
-<#--考试类别列表-->
+<#--省份列表-->
 <#include "ftl/comm.ftl"/>
-<#assign module="settings_catalog"/>
-<#assign dg="${module}_list_dg"/>
+<#assign module="settings_province"/>
+<#assign dg="${module}_dg"/>
 <script type="text/javascript">
 <!--
 $(function(){
 	//dg
-	var dg=$("#${dg}").datagrid({
-		url:"<@s.url '/settings/catalog/datagrid'/>",
+	var dg = $("#${dg}").datagrid({
+		url:"<@s.url '/settings/province/datagrid'/>",
 		fit:true,
 		fitColumns:true,
 		rownumbers:true,
@@ -24,36 +24,30 @@ $(function(){
 			field:"id",
 			checkbox:true
 		},{
-			title:"类别名称",
+			title:"行政编码",
+			field:"code",
+			width:15,
+			align:"left",
+			sortable:true
+		},{
+			title:"省份名称",
 			field:"name",
-			width:40,
-			align:"left",
-			sortable:true
-		},{
-			title:"中文简称",
-			field:"abbr_cn",
-			width:20,
-			align:"left",
-			sortable:true
-		},{
-			title:"英文简称",
-			field:"abbr_en",
-			width:20,
+			width:60,
 			align:"left",
 			sortable:true
 		},{
 			title:"排序号",
 			field:"orderNo",
-			width:10,
+			width:5,
 			align:"right",
 			sortable:true
 		}]],
-		toolbar:"#${dg}_toobar",
 		onLoadError:function(e){
 			<@error_dialog "e"/>
 		},
+		toolbar:"#${dg}_toobar",
 		onDblClickRow:function(rowIndex,rowData){
-			edit_window("编辑考试类别",rowIndex,rowData);
+			edit_window("编辑省份",rowIndex,rowData);
 		}
 	});
 	//edit
@@ -61,8 +55,8 @@ $(function(){
 		var d = $("<div/>").dialog({
 			title:title,
 			width:400,
-			height:300,
-			href:"<@s.url '/settings/catalog/edit'/>",
+			height:200,
+			href:"<@s.url '/settings/province/edit'/>",
 			modal:true,
 			buttons:[
 			 /* <shiro.hasPermission name="${PER_UPDATE}"> */
@@ -72,7 +66,7 @@ $(function(){
 				handler:function(){
 					$.messager.progress();
 					$("#${module}_edit_form").form("submit",{
-						url:"<@s.url '/settings/catalog/update'/>",
+						url:"<@s.url '/settings/province/update'/>",
 						onSubmit: function(){
 							var isValid = $(this).form("validate");
 							if (!isValid)$.messager.progress("close");
@@ -125,7 +119,7 @@ $(function(){
 	};
 	//add
 	${dg}_add = function(){
-		edit_window("新增考试类别",0,null);
+		edit_window("新增省份",0,null);
 	};
 	//delete
 	${dg}_delete = function(){
@@ -139,7 +133,7 @@ $(function(){
 					ids.push(rows[i].id);
 				}
 				$.ajax({
-					url:"<@s.url '/settings/catalog/delete'/>",
+					url:"<@s.url '/settings/province/delete'/>",
 					type:"POST",
 					data:{
 						id:ids.join("|")
@@ -167,20 +161,14 @@ $(function(){
 			$.messager.alert("提示","未选中须删除的数据！");
 		}
 	};
-});
+})
 //-->
 </script>
 <table id="${dg}"></table>
 <div id="${dg}_toobar">
-	<!-- <shiro.hasPermission name="${PER_UPDATE}"> -->
 	<a href="#" class="easyui-linkbutton" onclick="${dg}_add()" data-options="iconCls:'icon-add',plain:true" style="float:left;">新增</a>
-	<!-- </shiro.hasPermission> -->
 	<span>|</span>
-	<!-- <shiro.hasPermission name="${PER_DELETE}"> -->
 	<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
-	<!-- </shiro.hasPermission> -->
-	
 	<label>名称：<input name="name" type="text" style="width:198px;"/></label>
-	
 	<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
 </div>

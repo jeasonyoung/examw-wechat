@@ -3,6 +3,11 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- service -->
 	<!--  考试服务 服务接口实现 begin-->
+	<!-- 省份服务 -->
+	<bean id="provinceService" class="com.examw.wechat.service.settings.impl.ProvinceServiceImpl">
+		<!-- 省份数据接口 -->
+		<property name="provinceDao"  ref="provinceDao" />
+	</bean>
 	<!-- 考试类别服务 -->
 	<bean id="catalogService" class="com.examw.wechat.service.settings.impl.CatalogServiceImpl">
 		<!-- 考试类别数据接口 -->
