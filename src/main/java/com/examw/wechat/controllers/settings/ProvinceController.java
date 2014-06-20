@@ -1,5 +1,7 @@
 package com.examw.wechat.controllers.settings;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -55,6 +57,25 @@ public class ProvinceController {
 	@ResponseBody
 	public DataGrid<ProvinceInfo> datagrid(ProvinceInfo info){
 		return this.provinceService.datagrid(info);
+	}
+	/**
+	 * 全部数据。
+	 * @return
+	 */
+	@RequestMapping(value="/all", method = {RequestMethod.GET, RequestMethod.POST})
+	@ResponseBody
+	public List<ProvinceInfo> all(){
+		return this.provinceService.datagrid(new ProvinceInfo(){
+			private static final long serialVersionUID = 1L;
+			@Override
+			public Integer getPage() {return null;}
+			@Override
+			public Integer getRows() {return null;}
+			@Override
+			public String getSort() {return "orderNo";}
+			@Override
+			public String getOrder() {return "asc";}
+		}).getRows();
 	}
 	/**
 	 * 更新数据。

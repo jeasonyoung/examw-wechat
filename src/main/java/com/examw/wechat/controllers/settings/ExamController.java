@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -77,6 +78,28 @@ public class ExamController {
 	@ResponseBody
 	public List<TreeNode> tree(){
 		return this.examService.loadCatalogExams();
+	}
+	/**
+	 * 获取类型下的考试。
+	 * @param catalogId
+	 * @return
+	 */
+	@RequestMapping(value="/all/{catalogId}", method = {RequestMethod.GET,RequestMethod.POST})
+	@ResponseBody
+	public List<ExamInfo> all(final @PathVariable String catalogId){
+		return this.examService.datagrid(new ExamInfo(){
+			private static final long serialVersionUID = 1L;
+			@Override
+			public Integer getPage() {return null;}
+			@Override
+			public Integer getRows() {return null;}
+			@Override
+			public String getCatalogId(){return catalogId;}
+			@Override
+			public String getSort() {return "orderNo";}
+			@Override
+			public String getOrder() {return "asc";}
+		}).getRows();
 	}
 	/**
 	 * 更新数据。

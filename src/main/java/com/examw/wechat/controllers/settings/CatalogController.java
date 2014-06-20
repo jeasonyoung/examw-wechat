@@ -75,9 +75,9 @@ public class CatalogController {
 			@Override
 			public Integer getRows() {return null;}
 			@Override
-			public String getOrder() {return "asc";}
+			public String getSort() {return "orderNo";}
 			@Override
-			public String getSort() {return "orderNo";};
+			public String getOrder() {return "asc";}
 		}).getRows();
 	}
 	/**
