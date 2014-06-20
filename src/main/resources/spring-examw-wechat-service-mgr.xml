@@ -23,8 +23,8 @@
 	<bean id="articleService" class="com.examw.wechat.service.mgr.impl.ArticleServiceImpl">
 		<!-- 资讯文档数据接口 -->
 		<property name="articleDao" ref="articleDao" />
-		<!-- 考试科目数据接口 -->
-		<property name="subjectDao" ref="subjectDao" />
+		<!-- 考试数据接口 -->
+		<property name="examDao" ref="examDao" />
 	</bean>
 	<!--  公众号管理 服务接口实现 end-->
 </beans>

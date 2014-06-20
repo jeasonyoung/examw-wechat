@@ -17,11 +17,11 @@
   	<module id="WeChatMgr0000000000000000000003"  icon="" name="考试设置" uri="" order="3">
   		<module id="WeChatMgr0000000000000000000103" icon="" name="考试类别" uri="/settings/catalog" order="1"/>
   		<module id="WeChatMgr0000000000000000000203" icon="" name="考试" uri="/settings/exam" order="2"/>
-  		<module id="WeChatMgr0000000000000000000303" icon="" name="科目" uri="/settings/subject" order="3"/>
+  		<!-- <module id="WeChatMgr0000000000000000000303" icon="" name="科目" uri="/settings/subject" order="3"/> -->
   	</module>
   	<module id="WeChatMgr0000000000000000000004"  icon="" name="公众号管理" uri="" order="4">
   		<module id="WeChatMgr0000000000000000000104" icon="" name="关注用户" uri="/mgr/usr" order="1"/>
-  		<module id="WeChatMgr0000000000000000000204" icon="" name="资讯管理" uri="" order="2"/>
+  		<module id="WeChatMgr0000000000000000000204" icon="" name="资讯管理" uri="/mgr/article" order="2"/>
   	</module>
   </system>
 </ipower>

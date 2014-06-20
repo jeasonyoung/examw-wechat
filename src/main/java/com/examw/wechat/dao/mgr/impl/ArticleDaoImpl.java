@@ -53,9 +53,9 @@ public class ArticleDaoImpl extends BaseDaoImpl<Article> implements IArticleDao 
 	 * @return HQL。
 	 */
 	protected String addWhere(ArticleInfo info, String hql,Map<String, Object> parameters){
-		if(!StringUtils.isEmpty(info.getSubjectId())){
-			hql += " and (a.subject.id = :subjectId)";
-			parameters.put("subjectId", info.getSubjectId());
+		if(!StringUtils.isEmpty(info.getExamId())){
+			hql += " and (a.exam.id = :examId)";
+			parameters.put("examId", info.getExamId());
 		}
 		if(!StringUtils.isEmpty(info.getTitle())){
 			hql += " and (a.title like :title)";

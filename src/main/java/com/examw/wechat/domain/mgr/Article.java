@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-import com.examw.wechat.domain.settings.Subject;
+import com.examw.wechat.domain.settings.Exam;
 /**
  * 资讯文档。
  * @author yangyong.
@@ -15,7 +15,7 @@ public class Article implements Serializable {
 	private String id,title,type,picUrl,url,description,content;
 	private Date createTime;
 	private Integer orderNo;
-	private Subject subject;
+	private Exam exam;
 	private Article parent;
 	private Set<Article> children;
 	/**
@@ -90,16 +90,16 @@ public class Article implements Serializable {
 	 * 获取所属科目。
 	 * @return 所属科目。
 	 */
-	public Subject getSubject() {
-		return subject;
+	public Exam getExam() {
+		return exam;
 	}
 	/**
 	 * 设置所属科目。
-	 * @param subject
+	 * @param exam
 	 * 所属科目。
 	 */
-	public void setSubject(Subject subject) {
-		this.subject = subject;
+	public void setExam(Exam exam) {
+		this.exam = exam;
 	}
 	/**
 	 * 获取图片链接。

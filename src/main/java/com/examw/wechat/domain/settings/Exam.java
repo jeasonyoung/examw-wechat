@@ -1,7 +1,6 @@
 package com.examw.wechat.domain.settings;
 
 import java.io.Serializable;
-import java.util.Set;
 /**
  * 考试设置.
  * @author fengwei.
@@ -12,7 +11,6 @@ public class Exam implements Serializable {
 	private String id,name,abbr_en,abbr_cn,description;
 	private Integer orderNo;
 	private Catalog catalog;
-	private Set<Subject> subjects;
 	/**
 	 * 获取 考试ID
 	 * @return id
@@ -124,21 +122,5 @@ public class Exam implements Serializable {
 	 */
 	public void setAbbr_cn(String abbr_cn) {
 		this.abbr_cn = abbr_cn;
-	}
-	/**
-	 * 获取 考试科目集合
-	 * @return subjects
-	 * 
-	 */
-	public Set<Subject> getSubjects() {
-		return subjects;
-	}
-	/**
-	 * 设置 考试科目集合
-	 * @param subjects
-	 * 
-	 */
-	public void setSubjects(Set<Subject> subjects) {
-		this.subjects = subjects;
 	}
 }

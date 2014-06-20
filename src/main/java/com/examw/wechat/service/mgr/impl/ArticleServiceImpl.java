@@ -12,9 +12,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
 import com.examw.wechat.dao.mgr.IArticleDao;
-import com.examw.wechat.dao.settings.ISubjectDao;
+import com.examw.wechat.dao.settings.IExamDao;
 import com.examw.wechat.domain.mgr.Article;
-import com.examw.wechat.domain.settings.Subject;
+import com.examw.wechat.domain.settings.Exam;
 import com.examw.wechat.model.mgr.ArticleInfo;
 import com.examw.wechat.service.impl.BaseDataServiceImpl;
 import com.examw.wechat.service.mgr.IArticleService;
@@ -26,7 +26,7 @@ import com.examw.wechat.service.mgr.IArticleService;
  */
 public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo> implements IArticleService {
 	private IArticleDao articleDao;
-	private ISubjectDao subjectDao;
+	private IExamDao examDao;
 	/**
 	 * 设置资讯文档数据接口。
 	 * @param articleDao
@@ -40,8 +40,8 @@ public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo>
 	 * @param subjectDao
 	 * 所属科目数据接口。
 	 */
-	public void setSubjectDao(ISubjectDao subjectDao) {
-		this.subjectDao = subjectDao;
+	public void setExamDao(IExamDao examDao) {
+		this.examDao = examDao;
 	}
 	/*
 	 * 查询数据。
@@ -59,9 +59,9 @@ public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo>
 	protected ArticleInfo changeModel(Article data) {
 		ArticleInfo info = new ArticleInfo();
 		BeanUtils.copyProperties(data, info, new String[]{"children"});
-		if(data.getSubject() != null){
-			info.setSubjectId(data.getSubject().getId());
-			info.setSubjectName(data.getSubject().getName());
+		if(data.getExam() != null){
+			info.setExamId(data.getExam().getId());
+			info.setExamName(data.getExam().getName());
 		}
 		if(data.getChildren() != null && data.getChildren().size() > 0){
 			Set<ArticleInfo> articles = new TreeSet<>(new Comparator<ArticleInfo>(){
@@ -112,8 +112,8 @@ public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo>
 			}
 		}
 		this.copyArticleProperties(info, data);
-		if(data.getSubject() != null){
-			info.setSubjectName(data.getSubject().getName());
+		if(data.getExam() != null){
+			info.setExamName(data.getExam().getName());
 		}
 		if(isAdded)this.articleDao.save(data);
 		return info;
@@ -126,9 +126,9 @@ public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo>
 	private void copyArticleProperties(ArticleInfo source, Article target){
 		if(source == null || target == null) return;
 		BeanUtils.copyProperties(source, target, new String[]{"children", "createTime"});
-		if(!StringUtils.isEmpty(source.getSubjectId()) && (target.getSubject() == null || !target.getSubject().getId().equalsIgnoreCase(source.getSubjectId()))){
-			Subject subject = this.subjectDao.load(Subject.class, source.getSubjectId());
-			if(subject != null) target.setSubject(subject);
+		if(!StringUtils.isEmpty(source.getExamId()) && (target.getExam() == null || !target.getExam().getId().equalsIgnoreCase(source.getExamId()))){
+			Exam exam = this.examDao.load(Exam.class, source.getExamId());
+			if(exam != null) target.setExam(exam);
 		}
 		if(source.getChildren() != null && source.getChildren().size() > 0){
 			Set<Article> children = new HashSet<>();

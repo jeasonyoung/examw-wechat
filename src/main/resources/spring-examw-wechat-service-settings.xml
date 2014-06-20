@@ -15,21 +15,5 @@
 		<!-- 考试类别数据接口 -->
 		<property name="catalogDao"  ref="catalogDao" />
 	</bean>
-	<!-- 考试科目服务 -->
-	<bean id="subjectService" class="com.examw.wechat.service.settings.impl.SubjectServiceImpl">
-		<!-- 科目数据接口 -->
-		<property name="subjectDao" ref="subjectDao" />
-		<!-- 考试数据接口 -->
-		<property name="examDao"  ref="examDao" />
-		<!-- 科目类型名称 -->
-		<property name="typeMap">
-			<map>
-				<!-- 必修 -->
-				<entry key="1" value="${SUBJECT_COMPULSORY}" />
-				<!-- 选修 -->
-				<entry key="0" value="${SUBJECT_ELECTIVE}" />
-			</map>
-		</property>
-	</bean>
 	<!--  考试服务 服务接口实现 end-->
 </beans>

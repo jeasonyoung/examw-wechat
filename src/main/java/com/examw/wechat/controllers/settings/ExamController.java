@@ -1,6 +1,5 @@
 package com.examw.wechat.controllers.settings;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.model.DataGrid;
 import com.examw.model.Json;
+import com.examw.model.TreeNode;
 import com.examw.wechat.model.settings.ExamInfo;
 import com.examw.wechat.service.settings.IExamService;
 
@@ -70,22 +70,13 @@ public class ExamController {
 		return this.examService.datagrid(info);
 	}
 	/**
-	 * 返回考试类别下的所有考试
+	 * 类别下的所有考试树结构。
 	 * @return
 	 */
-	@RequestMapping(value={"/all"}, method = RequestMethod.POST)
+	@RequestMapping(value={"/tree"}, method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
-	public List<ExamInfo> all(final String catalogId){
-		if(StringUtils.isEmpty(catalogId)) return new ArrayList<ExamInfo>();
-		 return this.examService.datagrid(new ExamInfo(){
-			private static final long serialVersionUID = 1L;
-			@Override
-			public Integer getPage(){return null;}
-			@Override
-			public Integer getRows(){return null;}
-			@Override
-			public String getCatalogId(){return catalogId;}
-		 }).getRows();
+	public List<TreeNode> tree(){
+		return this.examService.loadCatalogExams();
 	}
 	/**
 	 * 更新数据。

@@ -43,29 +43,5 @@
 		<property name="description"  type="string"  length="255" />
 		<!-- 所属考试类别 -->
 		<many-to-one name="catalog"  column="category_id"  class="Catalog" />
-		<!-- 科目集合 -->
-		<set name="subjects"  inverse="true"  order-by="orderNo asc">
-			<!-- 开启二级缓存 -->
-			<cache usage="read-write"/>
-			<!-- 考试ID -->
-			<key  column="exam_id"/>
-			<!-- 科目 -->
-			<one-to-many class="Subject"/>
-		</set>
-	</class>
-	<!-- 考试科目 -->
-	<class name="Subject"  table="tbl_Examw_WeChat_Subject">
-		<!-- 开启二级缓存 -->
-		<cache usage="read-write"/>
-		<!--科目ID -->
-		<id name="id"  type="string"  length="64" />
-		<!-- 科目名称 -->
-		<property name="name"  type="string"  length="50"/>
-		<!-- 科目类型 -->
-		<property name="type"  type="integer"  />
-		<!-- 排序 -->
-		<property name="orderNo"  type="integer" />
-		<!-- 所属考试 -->
-		<many-to-one name="exam"  column="exam_id" class="Exam"/>
 	</class>
 </hibernate-mapping>

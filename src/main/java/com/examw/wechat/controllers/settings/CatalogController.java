@@ -1,6 +1,6 @@
 package com.examw.wechat.controllers.settings;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.model.DataGrid;
 import com.examw.model.Json;
-import com.examw.model.TreeNode;
 import com.examw.wechat.model.settings.CatalogInfo;
 import com.examw.wechat.service.settings.ICatalogService;
 
@@ -66,7 +65,7 @@ public class CatalogController {
 	 * 考试类别全部数据。
 	 * @return
 	 */
-	@RequestMapping(value="/all", method = RequestMethod.POST)
+	@RequestMapping(value="/all", method = {RequestMethod.GET, RequestMethod.POST})
 	@ResponseBody
 	public List<CatalogInfo> all(){
 		return this.catalogService.datagrid(new CatalogInfo(){
@@ -80,47 +79,6 @@ public class CatalogController {
 			@Override
 			public String getSort() {return "orderNo";};
 		}).getRows();
-	}
-	/**
-	 * 考试类别树结构数据。
-	 * @return
-	 */
-	@RequestMapping(value = "/tree", method = {RequestMethod.GET,RequestMethod.POST})
-	@ResponseBody
-	public List<TreeNode> tree(){
-		List<TreeNode> result = new ArrayList<>();
-		List<CatalogInfo> list = this.all();
-		if(list != null && list.size() > 0){
-			for(final CatalogInfo info : list){
-				if(info == null) continue;
-				result.add(new TreeNode(){
-					private static final long serialVersionUID = 1L;
-					@Override
-					public String getId(){return info.getId();}
-					@Override
-					public String getText(){return info.getName();}
-				});
-			}
-		}
-		return result;
-	}
-	/**
-	 * 考试类别考试树。
-	 * @return
-	 */
-	@RequestMapping(value = "/exams-tree", method = {RequestMethod.GET,RequestMethod.POST})
-	@ResponseBody
-	public List<TreeNode> allCatalogExams(){
-		return this.catalogService.loadAllCatalogExams();
-	}
-	/**
-	 * 考试科目树。
-	 * @return
-	 */
-	@RequestMapping(value = "/subject-tree", method = { RequestMethod.GET, RequestMethod.POST})
-	@ResponseBody
-	public List<TreeNode> allCatalogExamSubjects(){
-		return this.catalogService.loadAllCatalogExamSubjects();
 	}
 	/**
 	 * 更新数据。

@@ -8,11 +8,20 @@ $(function(){
 	var current_catalog_id = "";
 	//tree
 	var t = $("#${module}_list_catalog_tree").tree({
-		url:"<@s.url '/settings/catalog/tree'/>",
+		url:"<@s.url '/settings/catalog/all'/>",
 		onLoadError:function(e){
 			<@error_dialog "e"/>
 		},
-		onBeforeLoad:function(){
+		loadFilter:function(data){
+			var objs = [];
+			if(data && $.isArray(data)){
+				$.each(data,function(i,n){
+					objs.push({"id":n.id,"text":n.name});
+				});
+			}
+			return objs;
+		},
+		onLoadSuccess:function(n,d){
 			current_catalog_id = "";
 		},
 		onClick:function(node){

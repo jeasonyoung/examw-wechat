@@ -1,11 +1,15 @@
 package com.examw.wechat.service.settings.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
+import com.examw.model.TreeNode;
 import com.examw.wechat.dao.settings.ICatalogDao;
 import com.examw.wechat.dao.settings.IExamDao;
 import com.examw.wechat.domain.settings.Catalog;
@@ -122,5 +126,49 @@ public class ExamServiceImpl extends BaseDataServiceImpl<Exam, ExamInfo> impleme
 		 CatalogInfo info = new CatalogInfo();
 		 BeanUtils.copyProperties(data.getCatalog(), info);
 		 return info;
+	}
+	/*
+	 * 加载类别考试树接口。
+	 * @see com.examw.wechat.service.settings.IExamService#loadCatalogExams()
+	 */
+	@Override
+	public List<TreeNode> loadCatalogExams() {
+		List<TreeNode> treeNodes = new ArrayList<>();
+		List<Catalog> list =  this.catalogDao.findCatalogs(new CatalogInfo(){
+			private static final long serialVersionUID = 1L;
+			@Override
+			public String getSort(){ return "orderNo";}
+			@Override
+			public String getOrder(){return "asc";}
+		});
+		if(list != null && list.size() > 0){
+			Map<String, Object> attributes = null;
+			for(Catalog catalog : list){
+				if(catalog == null) continue;
+				TreeNode node = new TreeNode();
+				node.setId(catalog.getId());
+				node.setText(catalog.getName());
+				attributes = new HashMap<>();
+				attributes.put("type", "catalog");
+				node.setAttributes(attributes);
+				
+				if(catalog.getExams() != null && catalog.getExams().size() > 0){
+					List<TreeNode> childs = new ArrayList<>();
+					for(Exam exam : catalog.getExams()){
+						if(exam == null) continue;
+						TreeNode tn = new TreeNode();
+						tn.setId(exam.getId());
+						tn.setText(exam.getName());
+						attributes = new HashMap<>();
+						attributes.put("type", "exam");
+						tn.setAttributes(attributes);
+						childs.add(tn);
+					}
+					if(childs.size() > 0) node.setChildren(childs);
+				}
+				treeNodes.add(node);
+			}
+		}
+		return treeNodes;
 	}
 }

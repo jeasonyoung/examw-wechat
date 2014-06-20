@@ -15,7 +15,7 @@ import com.examw.model.Paging;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ArticleInfo extends Paging {
 	private static final long serialVersionUID = 1L;
-	private String id,title,type,picUrl,url,description,content,subjectId,subjectName;
+	private String id,title,type,picUrl,url,description,content,examId,examName;
 	private Date createTime;
 	private Integer orderNo;
 	private Set<ArticleInfo> children;
@@ -68,31 +68,31 @@ public class ArticleInfo extends Paging {
 	 * 获取所属科目ID。
 	 * @return 所属科目ID。
 	 */
-	public String getSubjectId() {
-		return subjectId;
+	public String getExamId() {
+		return examId;
 	}
 	/**
 	 * 设置所属科目ID。
-	 * @param subject
+	 * @param examId
 	 * 所属科目ID。
 	 */
-	public void setSubjectId(String subjectId) {
-		this.subjectId = subjectId;
+	public void setExamId(String examId) {
+		this.examId = examId;
 	}
 	/**
 	 * 获取所属科目名称。
 	 * @return 所属科目名称。
 	 */
-	public String getSubjectName() {
-		return subjectName;
+	public String getExamName() {
+		return examName;
 	}
 	/**
 	 * 设置所属科目名称。
-	 * @param subjectName
+	 * @param examName
 	 * 所属科目名称。
 	 */
-	public void setSubjectName(String subjectName) {
-		this.subjectName = subjectName;
+	public void setExamName(String examName) {
+		this.examName = examName;
 	}
 	/**
 	 * 获取图片链接。

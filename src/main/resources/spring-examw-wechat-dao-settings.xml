@@ -11,9 +11,5 @@
 	<bean id="examDao" class="com.examw.wechat.dao.settings.impl.ExamDaoImpl">
 		<property name="sessionFactory"  ref="sessionFactory" />
 	</bean>
-	<!-- 考试科目Dao -->
-	<bean id="subjectDao" class="com.examw.wechat.dao.settings.impl.SubjectDaoImpl">
-		<property name="sessionFactory"  ref="sessionFactory" />
-	</bean>
 	<!-- 考试设置 数据接口实现 end-->
 </beans>

@@ -29,7 +29,11 @@
 	<!-- 消息解析服务 -->
 	<bean id="messageParse" class="com.examw.wechat.service.server.impl.MessageParseImpl">
 		<!-- 事件处理 -->
-		<property name="handler"></property>
+		<property name="handler" ref="messageHandler" />
+	</bean>
+	<!-- 消息处理 -->
+	<bean id="messageHandler" class="com.examw.wechat.service.server.impl.MessageHandlerImpl">
+	
 	</bean>
 	<!--  公众号服务 服务接口实现 end-->
 </beans>
