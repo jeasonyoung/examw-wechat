@@ -5,6 +5,7 @@ import java.util.Date;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.examw.model.Paging;
+import com.examw.wechat.support.CustomDateSerializer;
 /**
  * 微信关注用户信息。
  * @author yangyong.
@@ -143,6 +144,7 @@ public class AccountUserInfo extends Paging {
 	 * 获取首次关注时间。
 	 * @return 首次关注时间。
 	 * */
+	@JsonSerialize(using = CustomDateSerializer.class)
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -158,6 +160,7 @@ public class AccountUserInfo extends Paging {
 	 * 获取最近一次交互时间。
 	 * @return 最近一次交互时间。
 	 * */
+	@JsonSerialize(using = CustomDateSerializer.class)
 	public Date getLastTime() {
 		return lastTime;
 	}

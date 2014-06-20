@@ -1,6 +1,7 @@
 <#--考试设置编辑页面-->
 <#include "ftl/comm.ftl"/>
-<#assign module="settings_exam_edit"/>
+<#assign module="settings_exam"/>
+<#assign form="${module}_edit_form"/>
 <script type="text/javascript">
 <!--
 $(function(){
@@ -21,7 +22,7 @@ $(function(){
 });
 //-->
 </script>
-<form id="${module}_form" method="POST" style="padding:10px;">
+<form id="${form}" method="POST" style="padding:10px;">
 	<div style="float:left;margin-top:2px;width:100%;">
 		<label style="width:75px;">所属类别：</label>
 		<input name="catalogId" style="width:368px;"/>

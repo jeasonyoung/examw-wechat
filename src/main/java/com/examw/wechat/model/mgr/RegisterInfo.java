@@ -1,21 +1,21 @@
-package com.examw.wechat.domain.mgr;
+package com.examw.wechat.model.mgr;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import com.examw.wechat.domain.settings.Exam;
-import com.examw.wechat.domain.settings.Province;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import com.examw.model.Paging;
+import com.examw.wechat.support.CustomDateSerializer;
 
 /**
- * 登记信息。
+ * 用户注册信息。
  * @author yangyong.
  * @since 2014-06-20.
  */
-public class Register implements Serializable {
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+public class RegisterInfo extends Paging {
 	private static final long serialVersionUID = 1L;
-	private String id,name,moblie,qq,ip;
-	private Province province;
-	private Exam exam;
+	private String id,provinceId,provinceName,examId,examName,name,moblie,qq,ip;
 	private Date createTime;
 	/**
 	 * 获取登记ID。
@@ -33,34 +33,64 @@ public class Register implements Serializable {
 		this.id = id;
 	}
 	/**
-	 * 获取所在省份。
-	 * @return 所在省份。
+	 * 获取所属省份ID。
+	 * @return 所属省份ID。
 	 */
-	public Province getProvince() {
-		return province;
+	public String getProvinceId() {
+		return provinceId;
 	}
 	/**
-	 * 设置所在省份。
-	 * @param province
-	 * 所在省份。
+	 * 设置所属省份ID。
+	 * @param provinceId
+	 * 所属省份ID。
 	 */
-	public void setProvince(Province province) {
-		this.province = province;
+	public void setProvinceId(String provinceId) {
+		this.provinceId = provinceId;
 	}
 	/**
-	 * 设置所属考试。
-	 * @return 所属考试。
+	 * 获取所属省份名称。
+	 * @return 所属省份名称。
 	 */
-	public Exam getExam() {
-		return exam;
+	public String getProvinceName() {
+		return provinceName;
 	}
 	/**
-	 * 设置所属考试。
-	 * @param exam
-	 * 所属考试。
+	 * 设置所属省份名称。
+	 * @param provinceName
+	 * 所属省份名称。
 	 */
-	public void setExam(Exam exam) {
-		this.exam = exam;
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
+	/**
+	 * 获取考试ID。
+	 * @return 考试ID。
+	 */
+	public String getExamId() {
+		return examId;
+	}
+	/**
+	 * 设置考试ID。
+	 * @param examId
+	 * 考试ID。
+	 */
+	public void setExamId(String examId) {
+		this.examId = examId;
+	}
+	/**
+	 * 获取考试名称。
+	 * @return 考试名称。
+	 */
+	public String getExamName() {
+		return examName;
+	}
+	/**
+	 * 设置考试名称。
+	 * @param examName
+	 * 考试名称。
+	 */
+	public void setExamName(String examName) {
+		this.examName = examName;
 	}
 	/**
 	 * 获取真实姓名。
@@ -126,6 +156,7 @@ public class Register implements Serializable {
 	 * 获取创建时间。
 	 * @return 创建时间。
 	 */
+	@JsonSerialize(using = CustomDateSerializer.class)
 	public Date getCreateTime() {
 		return createTime;
 	}

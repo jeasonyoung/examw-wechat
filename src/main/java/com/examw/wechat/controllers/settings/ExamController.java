@@ -1,6 +1,7 @@
 package com.examw.wechat.controllers.settings;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -8,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -84,9 +84,10 @@ public class ExamController {
 	 * @param catalogId
 	 * @return
 	 */
-	@RequestMapping(value="/all/{catalogId}", method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value="/all", method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
-	public List<ExamInfo> all(final @PathVariable String catalogId){
+	public List<ExamInfo> all(String catalogId){
+		final String catalog_id = StringUtils.isEmpty(catalogId) ? UUID.randomUUID().toString() : catalogId;
 		return this.examService.datagrid(new ExamInfo(){
 			private static final long serialVersionUID = 1L;
 			@Override
@@ -94,7 +95,7 @@ public class ExamController {
 			@Override
 			public Integer getRows() {return null;}
 			@Override
-			public String getCatalogId(){return catalogId;}
+			public String getCatalogId(){return catalog_id;}
 			@Override
 			public String getSort() {return "orderNo";}
 			@Override

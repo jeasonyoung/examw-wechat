@@ -1,37 +1,29 @@
-<#--考试设置列表-->
+<#--登记用户列表-->
 <#include "ftl/comm.ftl"/>
-<#assign module="settings_exam"/>
-<#assign dg="${module}_dg"/>
+<#assign module="mgr_article"/>
+<#assign dg="${module}_list_dg"/>
 <script type="text/javascript">
 <!--
 $(function(){
-	var current_catalog_id = "";
-	//tree
-	var t = $("#${module}_list_catalog_tree").tree({
-		url:"<@s.url '/settings/catalog/all'/>",
+	var current_exam_id = "",current_is_exam = false;
+	//exam tree
+	var e_t = $("#${module}_list_exam_tree").tree({
+		url:"<@s.url '/settings/exam/tree'/>",
 		onLoadError:function(e){
 			<@error_dialog "e"/>
 		},
-		loadFilter:function(data){
-			var objs = [];
-			if(data && $.isArray(data)){
-				$.each(data,function(i,n){
-					objs.push({"id":n.id,"text":n.name});
-				});
-			}
-			return objs;
-		},
 		onLoadSuccess:function(n,d){
-			current_catalog_id = "";
+			current_exam_id = "";
 		},
 		onClick:function(node){
-			current_catalog_id = node.id;
+			current_is_exam = (node.attributes.type == "exam");
+			current_exam_id = node.id;
 			${dg}_search();
 		}
 	});
 	//dg
-	var dg=$("#${dg}").datagrid({
-		url:"<@s.url '/settings/exam/datagrid'/>",
+	var dg = $("#${dg}").datagrid({
+		url:"<@s.url '/mgr/register/datagrid'/>",
 		fit:true,
 		fitColumns:true,
 		rownumbers:true,
@@ -42,39 +34,51 @@ $(function(){
 		border:true,
 		striped:true,
 		idField:"id",
-		sortName:"orderNo",
-		sortOrder:"asc",
+		sortName:"createTime",
+		sortOrder:"desc",
 		columns:[[{
 			field:"id",
 			checkbox:true
 		},{
-			title:"所属考试类别",
-			field:"catalogName",
-			width:40,
+			title:"所属考试",
+			field:"examName",
+			width:20,
 			align:"left",
 			sortable:true
 		},{
-			title:"考试名称",
+			title:"所在省份",
+			field:"provinceName",
+			width:10,
+			align:"left",
+			sortable:true
+		},{
+			title:"真实姓名",
 			field:"name",
-			width:40,
+			width:15,
 			align:"left",
 			sortable:true
 		},{
-			title:"中文简称",
-			field:"abbr_cn",
+			title:"手机号码",
+			field:"moblie",
+			width:15,
+			align:"left",
+			sortable:true
+		},{
+			title:"QQ号码",
+			field:"qq",
+			width:15,
+			align:"left",
+			sortable:true
+		},{
+			title:"IP",
+			field:"ip",
 			width:20,
 			align:"left",
 			sortable:true
 		},{
-			title:"英文简称",
-			field:"abbr_en",
+			title:"创建时间",
+			field:"createTime",
 			width:20,
-			align:"left",
-			sortable:true
-		},{
-			title:"描述",
-			field:"description",
-			width:40,
 			align:"left",
 			sortable:true
 		}]],
@@ -88,11 +92,21 @@ $(function(){
 	});
 	//edit
 	function edit_window(title,index,row){
+		var catalog_id = "",exam_id = "";
+		if(!row && current_exam_id && current_exam_id.trim() != ""){
+			if(current_is_exam)
+				exam_id = current_exam_id;
+			else
+				catalog_id = current_exam_id;
+		}
+		if(row && row.examId){
+			exam_id = row.examId;
+		}
 		var d = $("<div/>").dialog({
 			title:title,
-			width:550,
-			height:320,
-			href:"<@s.url '/settings/exam/edit'/>?catalogId="+current_catalog_id,
+			width:400,
+			height:300,
+			href:"<@s.url '/mgr/register/edit'/>?catalogId="+catalog_id +"&examId=" + exam_id,
 			modal:true,
 			buttons:[
 			/* <shiro.hasPermission name="${PER_UPDATE}"> */
@@ -102,7 +116,7 @@ $(function(){
 				handler:function(){
 					$.messager.progress();
 					$("#${module}_edit_form").form("submit",{
-						url:"<@s.url '/settings/exam/update'/>",
+						url:"<@s.url '/mgr/register/update'/>",
 						onSubmit: function(){
 							var isValid = $(this).form("validate");
 							if (!isValid)$.messager.progress("close");
@@ -150,13 +164,13 @@ $(function(){
 	//search
 	${dg}_search = function(){
 		dg.datagrid("load",{
-			catalogId:current_catalog_id,
+			examId:current_exam_id,
 			name:$("#${dg}_toobar input[name='name']").val()
 		});
 	};
 	//add
 	${dg}_add = function(){
-		edit_window("新增考试设置",0,null);
+		edit_window("新增登记用户",0,null);
 	};
 	//delete
 	${dg}_delete = function(){
@@ -170,7 +184,7 @@ $(function(){
 					ids.push(rows[i].id);
 				}
 				$.ajax({
-					url:"<@s.url '/settings/exam/delete'/>",
+					url:"<@s.url '/mgr/register/delete'/>",
 					type:"POST",
 					data:{
 						id:ids.join("|")
@@ -202,29 +216,23 @@ $(function(){
 //-->
 </script>
 <div id="${dg}_layout" class="easyui-layout" data-options="fit:true">
-	 <div data-options="region:'west',title:'考试类别',split:true,tools: [{
+	<div data-options="region:'west',title:'考试类别',split:true,tools: [{
 		 	iconCls:'icon-reload',
 		 	handler:function(){
-		 			$('#${module}_list_catalog_tree').tree('reload');
+		 			$('#${module}_list_exam_tree').tree('reload');
 		 			${dg}_search();
 		 	}
 	 	}]" style="padding:5px;width:190px;">
-	 	<ul id="${module}_list_catalog_tree"></ul>
+	 	<ul id="${module}_list_exam_tree"></ul>
 	 </div>
-	 <div data-options="region:'center',title:'考试列表'">
-	 	<table id="${dg}"></table>
+	<div data-options="region:'center',title:'登记用户列表'">
+		<table id="${dg}"></table>
 		<div id="${dg}_toobar">
-			<!-- <shiro.hasPermission name="${PER_UPDATE}"> -->
 			<a href="#" class="easyui-linkbutton" onclick="${dg}_add()" data-options="iconCls:'icon-add',plain:true" style="float:left;">新增</a>
-			<!-- </shiro.hasPermission> -->
 			<span>|</span>
-			<!-- <shiro.hasPermission name="${PER_DELETE}"> -->
 			<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
-			<!-- </shiro.hasPermission> -->
-			
 			<label>名称：<input name="name" type="text" style="width:168px;"/></label>
-	
 			<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
 		</div>
-	 </div>
+	</div>
 </div>

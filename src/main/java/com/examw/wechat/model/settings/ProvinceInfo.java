@@ -1,5 +1,7 @@
 package com.examw.wechat.model.settings;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import com.examw.model.Paging;
 
 /**
@@ -7,6 +9,7 @@ import com.examw.model.Paging;
  * @author yangyong.
  * @since 2014-06-20.
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ProvinceInfo extends Paging {
 	private static final long serialVersionUID = 1L;
 	private String id,code,name;
