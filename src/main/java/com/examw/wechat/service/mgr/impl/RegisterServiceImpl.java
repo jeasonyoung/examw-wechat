@@ -95,9 +95,9 @@ public class RegisterServiceImpl extends BaseDataServiceImpl<Register, RegisterI
 		if(isAdd = (data == null)){
 			if(StringUtils.isEmpty(info.getId())){
 				info.setId(UUID.randomUUID().toString());
+				info.setCreateTime(new Date());
 			}
 			data = new Register();
-			data.setCreateTime(new Date());
 		}
 		if(!isAdd){
 			if(data.getCreateTime() != null) info.setCreateTime(data.getCreateTime());

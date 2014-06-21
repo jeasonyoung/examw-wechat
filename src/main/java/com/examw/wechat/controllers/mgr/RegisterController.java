@@ -1,6 +1,7 @@
 package com.examw.wechat.controllers.mgr;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -75,9 +76,10 @@ public class RegisterController {
 	 */
 	@RequestMapping(value="/update", method = RequestMethod.POST)
 	@ResponseBody
-	public Json update(RegisterInfo info){
+	public Json update(RegisterInfo info, HttpServletRequest request){
 		Json result = new Json();
 		try {
+			info.setIP(request.getRemoteAddr());
 			result.setData(this.registerService.update(info));
 			result.setSuccess(true);
 		} catch (Exception e) {
