@@ -70,10 +70,10 @@ public class ContextServiceImpl implements IContextService {
 		}
 		if(!context.isAuthen()){//未身份认证。
 			logger.info("上下文中没有身份信息，从用户信息表中加载用户信息。");
-			AccountUser user = this.accountUserDao.loadUser(accountId, userOpenId);
-			if(user != null){
-				logger.info("加载关联用户[openid:"+ user.getOpenId() +"]:" + user.getUserName());
-				context.setUserId(user.getUserId());
+			AccountUser accountUser = this.accountUserDao.loadUser(accountId, userOpenId);
+			if(accountUser != null && accountUser.getRegister() != null){
+				logger.info("加载关联用户[openid:"+ accountUser.getOpenId() +"]:" + accountUser.getRegister().getName());
+				context.setUserId(accountUser.getRegister().getId());
 				//更新缓存
 				this.update(context);
 			}else {

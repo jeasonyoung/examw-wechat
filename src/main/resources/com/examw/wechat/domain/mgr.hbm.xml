@@ -19,24 +19,26 @@
 		<property name="qq" type="string" length="20" />
 		<!-- 创建时间 -->
 		<property name="createTime"  type="timestamp" />
+		<!-- 关联的微信用户集合 -->
+		<set name="users" inverse="true" cascade="save-update" order-by="lastTime desc">
+			<!--  微信关注用户ID-->
+			<key column="account_user_id" />
+			<!-- 微信关注用户 -->
+			<one-to-many class="AccountUser"/>
+		</set>
 	</class>
 	<!-- 微信关注用户 -->
 	<class name="AccountUser" table="tbl_Examw_Wechat_AccountUsers">
 		<!-- 开启二级缓存 -->
 		<cache usage="read-write"/>
-		<!-- 联合主键 -->
-		<composite-id>
-			<!-- 微信ID。 -->
-			<key-property name="openId" type="string" length="64"/>
-			<!-- 所属微信公众号 -->
-			<key-many-to-one name="account" column="account_id" class="com.examw.wechat.domain.account.Account"/>
-		</composite-id>
-		<!-- 关联注册用户ID -->
-		<property name="userId" type="string" length="64"/>
-		<!-- 关联注册用户账号 -->
-		<property name="userSign" type="string" length="32"/>
-		<!-- 关联注册用户姓名 -->
-		<property name="userName" type="string" length="20"/>
+		<!-- 关注ID -->
+		<id name="id" type="string" length="64" />
+		<!-- 微信ID -->
+		<property name="openId" type="string" length="128" unique-key="account_account_openid" />
+		<!-- 所属微信公众号 -->
+		<many-to-one name="account" column="account_id" unique-key="account_account_openid" class="com.examw.wechat.domain.account.Account" />
+		 <!-- 关联登记用户ID -->
+		 <many-to-one name="register" column="register_id" class="Register" />
 		<!-- 微信用户首次关注时间 -->
 		<property name="createTime" type="timestamp"/>
 		<!-- 微信用户最近一次交互时间 -->

@@ -12,10 +12,11 @@ import com.examw.wechat.domain.account.Account;
 public class AccountUser implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public final static int USER_STATUS_SUBSCRIBE = 1, USER_STATUS_UNSUBSCRIBE = -1;
+	private String id,openId;
 	private Account account;
-	private String openId,userId,userSign,userName;
-	private Date createTime,lastTime;
+	private Register register;
 	private Integer status;
+	private Date createTime,lastTime;
 	/**
 	 * 构造函数。
 	 * */
@@ -24,19 +25,19 @@ public class AccountUser implements Serializable {
 		this.status = AccountUser.USER_STATUS_SUBSCRIBE;
 	}
 	/**
-	 * 获取所关注的微信公众号。
-	 * @return 所关注的微信公众号。
-	 * */
-	public Account getAccount() {
-		return account;
+	 * 获取关注ID。
+	 * @return 关注ID。
+	 */
+	public String getId() {
+		return id;
 	}
 	/**
-	 * 设置所关注的微信公众号。
-	 * @param account
-	 *	所关注的微信公众号。
-	 * */
-	public void setAccount(Account account) {
-		this.account = account;
+	 * 设置关注ID。
+	 * @param id
+	 * 关注ID。
+	 */
+	public void setId(String id) {
+		this.id = id;
 	}
 	/**
 	 * 获取微信ID。
@@ -54,49 +55,34 @@ public class AccountUser implements Serializable {
 		this.openId = openId;
 	}
 	/**
-	 *  获取用户ID。
-	 *  @return 用户ID。
+	 * 获取所关注的微信公众号。
+	 * @return 所关注的微信公众号。
 	 * */
-	public String getUserId() {
-		return userId;
+	public Account getAccount() {
+		return account;
 	}
 	/**
-	 * 设置用户ID。
-	 * @param userId
-	 * 	用户ID。
+	 * 设置所关注的微信公众号。
+	 * @param account
+	 *	所关注的微信公众号。
 	 * */
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 	/**
-	 * 获取登录帐号。
-	 * @return 登录帐号。
-	 * */
-	public String getUserSign() {
-		return userSign;
+	 * 获取所属登记信息。
+	 * @return 所属登记信息。
+	 */
+	public Register getRegister() {
+		return register;
 	}
 	/**
-	 * 设置登录帐号。
-	 * @param userSign
-	 * 登录帐号。
-	 * */
-	public void setUserSign(String userSign) {
-		this.userSign = userSign;
-	}
-	/**
-	 * 获取用户名。
-	 * @return userName
-	 * */
-	public String getUserName() {
-		return userName;
-	}
-	/**
-	 * 设置用户名。
-	 * @param userName
-	 * 	用户名。
-	 * */
-	public void setUserName(String userName) {
-		this.userName = userName;
+	 * 设置所属登记信息。
+	 * @param register
+	 * 所属登记信息。
+	 */
+	public void setRegister(Register register) {
+		this.register = register;
 	}
 	/**
 	 * 获取用户状态(1-关注，－1-取消关注)。

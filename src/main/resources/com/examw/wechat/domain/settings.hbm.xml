@@ -29,7 +29,7 @@
 	    <!-- 类别下的考试集合 -->
 	    <set name="exams"  inverse="true" order-by="orderNo asc">
 	    	<!-- 开启二级缓存 -->
-			<cache usage="read-write"/>
+			<!-- <cache usage="read-write"/> -->
 			<!-- 类别ID -->
 			<key  column="category_id"/>
 			<!-- 考试设置 -->

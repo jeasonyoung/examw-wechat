@@ -1,15 +1,19 @@
 package com.examw.wechat.service.mgr.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
 import com.examw.wechat.dao.account.IAccountDao;
 import com.examw.wechat.dao.mgr.IAccountUserDao;
+import com.examw.wechat.dao.mgr.IRegisterDao;
 import com.examw.wechat.domain.account.Account;
 import com.examw.wechat.domain.mgr.AccountUser;
+import com.examw.wechat.domain.mgr.Register;
 import com.examw.wechat.model.mgr.AccountUserInfo;
 import com.examw.wechat.service.impl.BaseDataServiceImpl;
 import com.examw.wechat.service.mgr.IAccountUserService;
@@ -21,6 +25,7 @@ import com.examw.wechat.service.mgr.IAccountUserService;
 public class AccountUserServiceImpl extends BaseDataServiceImpl<AccountUser, AccountUserInfo> implements IAccountUserService {
 	private IAccountUserDao accountUserDao;
 	private IAccountDao accountDao;
+	private IRegisterDao registerDao;
 	private Map<Integer, String> statusMap;
 	/**
 	 * 设置微信关注用户数据接口。
@@ -37,6 +42,14 @@ public class AccountUserServiceImpl extends BaseDataServiceImpl<AccountUser, Acc
 	 * */
 	public void setAccountDao(IAccountDao accountDao) {
 		this.accountDao = accountDao;
+	}
+	/**
+	 * 设置登记信息数据接口。
+	 * @param registerDao
+	 * 登记信息数据接口。
+	 */
+	public void setRegisterDao(IRegisterDao registerDao) {
+		this.registerDao = registerDao;
 	}
 	/**
 	 * 设置用户关注状态。
@@ -91,24 +104,37 @@ public class AccountUserServiceImpl extends BaseDataServiceImpl<AccountUser, Acc
 	 */
 	@Override
 	public AccountUserInfo update(AccountUserInfo info) {
-		if(info != null){
-			boolean isAdded = false;
-			AccountUser data = this.accountUserDao.load(AccountUser.class, info);
-			if(isAdded = (data == null)){
-				data = new AccountUser();
+		if(info == null) return null;
+		boolean isAdded = false;
+		AccountUser data = this.accountUserDao.load(AccountUser.class, info);
+		if(isAdded = (data == null)){
+			if(StringUtils.isEmpty(info.getId())){
+				info.setId(UUID.randomUUID().toString());
+				info.setCreateTime(new Date());
+				info.setLastTime(new Date());
 			}
-			BeanUtils.copyProperties(info, data);
-			if(!StringUtils.isEmpty(info.getAccountId()) && (data.getAccount() == null || !data.getAccount().getId().equalsIgnoreCase(info.getAccountId()))){
-				Account account = this.accountDao.load(Account.class, info.getAccountId());
-				if(account != null)data.setAccount(account);
-			}
-			if(data.getAccount() != null){
-				info.setAccountName(data.getAccount().getName());
-			}
-			if(isAdded && data.getAccount() != null){
-				this.accountUserDao.save(data);
-			}
+			data = new AccountUser();
 		}
+		if(!isAdded){
+			if(data.getCreateTime() != null) info.setCreateTime(data.getCreateTime());
+			info.setLastTime(new Date());
+		}
+		BeanUtils.copyProperties(info, data);
+		if(!StringUtils.isEmpty(info.getAccountId()) && (data.getAccount() == null || !data.getAccount().getId().equalsIgnoreCase(info.getAccountId()))){
+			Account account = this.accountDao.load(Account.class, info.getAccountId());
+			if(account != null) data.setAccount(account);
+		}
+		if(!StringUtils.isEmpty(info.getRegisterId()) && (data.getRegister() == null || !data.getRegister().getId().equalsIgnoreCase(info.getRegisterId()))){
+			Register register = this.registerDao.load(Register.class, info.getRegisterId());
+			if(register != null) data.setRegister(register);
+		}
+		if(data.getAccount() != null){
+			info.setAccountName(data.getAccount().getName());
+		}
+		if(data.getRegister() != null){
+			info.setRegisterName(data.getRegister().getName());
+		}
+		if(isAdded)this.accountUserDao.save(data);
 		return info;
 	}
 	/*

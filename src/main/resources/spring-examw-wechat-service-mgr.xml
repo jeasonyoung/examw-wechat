@@ -18,6 +18,8 @@
 		<property name="accountUserDao" ref="accountUserDao"/>
 		<!-- 微信公众号数据访问 -->
 		<property name="accountDao" ref="accountDao"/>
+		<!-- 注册用户数据访问 -->
+		<property name="registerDao" ref="registerDao" />
 		<!-- 公众号用户状态 -->
 		<property name="statusMap">
 			<map>

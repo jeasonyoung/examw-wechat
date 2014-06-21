@@ -2,6 +2,7 @@ package com.examw.wechat.domain.mgr;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import com.examw.wechat.domain.settings.Exam;
 import com.examw.wechat.domain.settings.Province;
@@ -17,6 +18,7 @@ public class Register implements Serializable {
 	private Province province;
 	private Exam exam;
 	private Date createTime;
+	private Set<AccountUser> users;
 	/**
 	 * 获取登记ID。
 	 * @return 登记ID。
@@ -136,5 +138,20 @@ public class Register implements Serializable {
 	 */
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+	/**
+	 * 获取关联的微信用户集合。
+	 * @return 关联的微信用户集合。
+	 */
+	public Set<AccountUser> getUsers() {
+		return users;
+	}
+	/**
+	 * 设置关联的微信用户集合。
+	 * @param users
+	 * 关联的微信用户集合。
+	 */
+	public void setUsers(Set<AccountUser> users) {
+		this.users = users;
 	}
 }

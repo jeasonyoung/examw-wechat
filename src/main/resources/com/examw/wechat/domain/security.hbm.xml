@@ -49,7 +49,7 @@
 		<!-- 所属角色集合 -->
 		<set name="roles"  inverse="true"  table="tbl_Examw_WeChat_Security_RoleRight">
 			<!-- 开启二级缓存 -->
-			<cache usage="read-write"/>
+			<!-- <cache usage="read-write"/> -->
 			<!-- 菜单权限ID -->
 			<key column="menu_right_id" />
 			<!-- 角色ID -->
@@ -70,7 +70,7 @@
      	 <!-- 所属菜单权限集合 -->
      	 <set name="rights"  inverse="false"  cascade="save-update"  table="tbl_Examw_WeChat_Security_RoleRight">
    	 		<!-- 开启二级缓存 -->
-   	 		<cache usage="read-write"/>
+   	 		<!-- <cache usage="read-write"/> -->
      	 	<!-- 角色ID -->
      	 	<key column="role_id" />
      	 	<!-- 菜单权限ID -->
