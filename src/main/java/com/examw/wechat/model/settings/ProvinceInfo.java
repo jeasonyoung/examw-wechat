@@ -3,6 +3,7 @@ package com.examw.wechat.model.settings;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.examw.model.Paging;
+import com.examw.wechat.model.IRemoteTextValue;
 
 /**
  * 省份信息。
@@ -10,7 +11,7 @@ import com.examw.model.Paging;
  * @since 2014-06-20.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class ProvinceInfo extends Paging {
+public class ProvinceInfo extends Paging implements IRemoteTextValue {
 	private static final long serialVersionUID = 1L;
 	private String id,code,name;
 	private Integer orderNo;

@@ -8,9 +8,8 @@ $(function(){
 	//query
 	function query(){
 		return {
-			accountName:$("#${dg}_toolbar input[name='account']").val(),
-			userName:$("#${dg}_toolbar input[name='userName']").val(),
-			openId:$("#${dg}_toolbar input[name='openId']").val(),
+			accountName:$("#${dg}_toolbar input[name='name']").val(),
+			registerName:$("#${dg}_toolbar input[name='name']").val(),
 			status:$("#${dg}_toolbar input[name='status']:checked").val()
 		};
 	}
@@ -31,7 +30,7 @@ $(function(){
 		sortName:"createTime",
 		sortOrder:"desc",
 		columns:[[{
-			field:"accountId",
+			field:"id",
 			checkbox:true
 		},{
 			title:"所属公众号",
@@ -47,7 +46,7 @@ $(function(){
 			sortable:true
 		},{
 			title:"关联注册用户",
-			field:"userName",
+			field:"registerName",
 			width:20,
 			align:"left",
 			sortable:true
@@ -130,16 +129,8 @@ $(function(){
 <table id="${dg}"></table>
 <div id="${dg}_toolbar">
 	<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
-	<span>公众号/名称:</span>
-	<input name="account" type="text" style="width:148px;"/>
-	
-	<span>关联注册用户:</span>
-	<input name="userName" type="text" style="width:148px;"/>
-	
-	<span>微信关注用户:</span>
-	<input name="openId" type="text" style="width:148px;"/>
-	
-	<span style="text-align:right;padding-left:10px;">状态:</span>
+	<label>公众号/用户：<input name="name" type="text" style="width:168px;"/></label>
+	<span style="text-align:right;padding-left:10px;">状态：</span>
 	<label><input name="status" type="radio" value="1" checked="checked"/>${USER_STATUS_SUBSCRIBE}</label>
 	<label><input name="status" type="radio" value="-1" />${USER_STATUS_UNSUBSCRIBE}</label>
 	

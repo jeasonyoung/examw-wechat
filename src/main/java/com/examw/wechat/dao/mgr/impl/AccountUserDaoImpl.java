@@ -70,13 +70,13 @@ public class AccountUserDaoImpl extends BaseDaoImpl<AccountUser> implements IAcc
 		}
 		if(!StringUtils.isEmpty(info.getRegisterName())){
 			hql += " and (a.register.name like :registerName or a.register.moblie like :registerName) ";
-			parameters.put("userName", "%"+ info.getRegisterName() +"%");
+			parameters.put("registerName", "%"+ info.getRegisterName() +"%");
 		}
 		if(!StringUtils.isEmpty(info.getOpenId())){
 			hql += " and (a.openId = :openId)";
 			parameters.put("openId", info.getOpenId());
 		}
-		if(info.getStatus() != null && info.getStatus() != 0){
+		if(info.getStatus() != null){
 			hql += " and (a.status = :status)";
 			parameters.put("status", info.getStatus());
 		}

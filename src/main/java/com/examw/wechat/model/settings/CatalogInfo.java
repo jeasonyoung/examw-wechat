@@ -3,13 +3,14 @@ package com.examw.wechat.model.settings;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.examw.model.Paging;
+import com.examw.wechat.model.IRemoteTextValue;
 /**
  * 考试类别信息。
  * @author yangyong.
  * @since 2014-04-28.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class CatalogInfo extends Paging {
+public class CatalogInfo extends Paging implements IRemoteTextValue {
 	private static final long serialVersionUID = 1L;
 	private String id,name,abbr_en,abbr_cn;
 	private Integer orderNo;

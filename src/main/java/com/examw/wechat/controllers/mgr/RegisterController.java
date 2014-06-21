@@ -85,7 +85,7 @@ public class RegisterController {
 		} catch (Exception e) {
 			result.setSuccess(false);
 			result.setMsg(e.getMessage());
-			logger.error("更新资讯文档数据发生异常", e);
+			logger.error("更新登记用户数据发生异常", e);
 		}
 		return result;
 	}
