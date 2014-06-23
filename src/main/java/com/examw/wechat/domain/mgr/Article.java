@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Set;
 
 import com.examw.wechat.domain.settings.Exam;
+import com.examw.wechat.domain.settings.Province;
 /**
  * 资讯文档。
  * @author yangyong.
@@ -16,6 +17,7 @@ public class Article implements Serializable {
 	private Date createTime;
 	private Integer orderNo;
 	private Exam exam;
+	private Province province;
 	private Article parent;
 	private Set<Article> children;
 	/**
@@ -100,6 +102,21 @@ public class Article implements Serializable {
 	 */
 	public void setExam(Exam exam) {
 		this.exam = exam;
+	}
+	/**
+	 * 获取所属省份。
+	 * @return 所属省份。
+	 */
+	public Province getProvince() {
+		return province;
+	}
+	/**
+	 * 设置所属省份。
+	 * @param province
+	 * 所属省份。
+	 */
+	public void setProvince(Province province) {
+		this.province = province;
 	}
 	/**
 	 * 获取图片链接。

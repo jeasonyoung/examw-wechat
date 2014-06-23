@@ -58,6 +58,8 @@
 		<property name="type" type="string" length="20" />
 		<!-- 所属考试 -->
 		<many-to-one name="exam" column="exam_id" class="com.examw.wechat.domain.settings.Exam" />
+		<!-- 所属省份 -->
+		<many-to-one name="province" column="province_id" class="com.examw.wechat.domain.settings.Province" />
 		<!-- 图片链接 -->
 		<property name="picUrl" type="string" length="512" />
 		<!-- 跳转链接 -->

@@ -15,7 +15,7 @@ import com.examw.model.Paging;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ArticleInfo extends Paging {
 	private static final long serialVersionUID = 1L;
-	private String id,title,type,picUrl,url,description,content,examId,examName;
+	private String id,title,type,picUrl,url,description,content,catalogId,examId,examName,provinceId,provinceName;
 	private Date createTime;
 	private Integer orderNo;
 	private Set<ArticleInfo> children;
@@ -65,6 +65,21 @@ public class ArticleInfo extends Paging {
 		this.type = type;
 	}
 	/**
+	 * 获取所属考试类别ID。
+	 * @return 所属考试类别ID。
+	 */
+	public String getCatalogId() {
+		return catalogId;
+	}
+	/**
+	 * 设置所属考试类别ID。
+	 * @param catalogId
+	 * 所属考试类别ID。
+	 */
+	public void setCatalogId(String catalogId) {
+		this.catalogId = catalogId;
+	}
+	/**
 	 * 获取所属科目ID。
 	 * @return 所属科目ID。
 	 */
@@ -93,6 +108,36 @@ public class ArticleInfo extends Paging {
 	 */
 	public void setExamName(String examName) {
 		this.examName = examName;
+	}
+	/**
+	 * 获取所属省份ID。
+	 * @return 所属省份ID。
+	 */
+	public String getProvinceId() {
+		return provinceId;
+	}
+	/**
+	 * 设置所属省份ID。
+	 * @param provinceId
+	 * 所属省份ID。
+	 */
+	public void setProvinceId(String provinceId) {
+		this.provinceId = provinceId;
+	}
+	/**
+	 * 获取所属省份名称。
+	 * @return 所属省份名称。
+	 */
+	public String getProvinceName() {
+		return provinceName;
+	}
+	/**
+	 * 设置所属省份名称。
+	 * @param provinceName
+	 * 所属省份名称。
+	 */
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
 	}
 	/**
 	 * 获取图片链接。

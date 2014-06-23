@@ -1,11 +1,190 @@
 <#--资讯文档列表-->
 <#include "ftl/comm.ftl"/>
-<#assign module="mgr_article"/>
-<#assign dg="${module}_list_dg"/>
+<#assign module = "mgr_article"/>
+<#assign list = "${module}_list" />
+<#assign dg="${list}_dg"/>
 <script type="text/javascript">
 <!--
 $(function(){
-	
+	var current_catalog_id = "",current_exam_id = "";
+	//exam_tree
+	var e_t = $("#${list}_exam_tree").tree({
+		url:"<@s.url '/settings/exam/tree'/>",
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		onLoadSuccess:function(n,d){
+			current_catalog_id = current_exam_id = "";
+		},
+		onClick:function(node){
+			if(!node) return;
+			current_catalog_id = current_exam_id = "";
+			if(node.attributes.type == "catalog"){
+				current_catalog_id = node.id;
+			}else if(node.attributes.type == "exam"){
+				current_exam_id = node.id;
+				var parent = e_t.tree("getParent",node.target);
+				if(parent && parent.attributes.type == "catalog"){
+					current_catalog_id = parent.id;
+				}
+			}
+			${dg}_search();
+		}
+	});
+	//dg
+	var dg = $("#${dg}").datagrid({
+		url:"<@s.url '/mgr/article/datagrid'/>",
+		fit:true,
+		fitColumns:true,
+		rownumbers:true,
+		pagination:true,
+		pagePosition:"bottom",
+		pageSize:20,
+		pageList:[20,30,40],
+		border:true,
+		striped:true,
+		idField:"id",
+		sortName:"createTime",
+		sortOrder:"desc",
+		columns:[[{
+			field:"id",
+			checkbox:true
+		},{
+			title:"所属考试",
+			field:"examName",
+			width:25,
+			align:"left",
+			sortable:true
+		},{
+			title:"所属省份",
+			field:"provinceName",
+			width:15,
+			align:"left",
+			sortable:true
+		},{
+			title:"标题",
+			field:"title",
+			width:30,
+			align:"left",
+			sortable:true
+		},{
+			title:"类型",
+			field:"type",
+			width:10,
+			align:"center",
+			sortable:true
+		},{
+			title:"内容",
+			field:"content",
+			width:35,
+			align:"left",
+			sortable:true
+		},{
+			title:"创建时间",
+			field:"createTime",
+			width:15,
+			align:"left",
+			sortable:true
+		}]],
+		toolbar:"#${dg}_toobar",
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		},
+		onDblClickRow:function(rowIndex,rowData){
+			edit_window("编辑资讯",rowIndex,rowData,null);
+		}
+	});
+	//edit
+	function edit_window(title,index,row, type){
+		var c_id = current_catalog_id,e_id = current_exam_id;
+		if(row){
+			type = row.type;
+			c_id = row.catalogId;
+			e_id = row.examId;
+		}
+		var d = $("<div/>").dialog({
+			title:title +"["+type+"]",
+			width:800,
+			height:600,
+			href:"<@s.url '/mgr/article/edit'/>/"+type +"?catalogId="+c_id +"&examId=" + e_id,
+			modal:true,
+			buttons:[
+			/* <shiro.hasPermission name="${PER_UPDATE}"> */
+			  {
+				text:"保存",
+				iconCls:"icon-save",
+				handler:function(){
+					$.messager.progress();
+					///TODO:保持提交
+				}
+			},
+			/* </shiro.hasPermission> */
+			{
+				text:"关闭",
+				iconCls:"icon-cancel",
+				handler:function(){
+					d.dialog("close");
+				}
+			}],
+			onClose:function(){
+				$(this).dialog("destroy");
+			},
+			onLoad:function(){
+				if(row) $("#${module}_edit_form").form("load",row); 
+			}
+	  });
+	};
+	//search
+	${dg}_search = function(){
+		dg.datagrid("load",{
+			catalogId:current_catalog_id,
+			examId:current_exam_id,
+			provinceId:$("#${dg}_toobar input[name='provinceId']").val(),
+			title:$("#${dg}_toobar input[name='title']").val()
+		});
+	};
+	//add
+	${dg}_add = function(type){
+		edit_window("新增资讯",0,null,type);
+	};
+	//delete
+	${dg}_delete = function(){
+		
+	};
 });
 //-->
 </script>
+<div id="${list}_layout" class="easyui-layout" data-options="fit:true">
+	<div data-options="region:'west',title:'所属考试',split:true,tools: [{
+		 	iconCls:'icon-reload',
+		 	handler:function(){
+		 			$('#${list}_exam_tree').tree('reload');
+		 			${dg}_search();
+		 	}
+	 	}]" style="padding:5px;width:190px;">
+	 	<ul id="${list}_exam_tree"></ul>
+	 </div>
+	<div data-options="region:'center',title:'资讯列表'">
+		<table id="${dg}"></table>
+		<div id="${dg}_toobar">
+			<a href="#" class="easyui-splitbutton" data-options="text:'新增',iconCls:'icon-add',menu:'#${dg}_toobar_menu'" style="float:left;"></a>
+			<span>|</span>
+			<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+			<label>所属省份：<input name="provinceId" type="text" class="easyui-combobox" data-options="
+				url:'<@s.url '/settings/province/all'/>',
+				valueField:'id',
+				textField:'name',
+				onLoadError:function(e){
+					<@error_dialog 'e'/>
+				}
+			" style="width:168px;"/></label>
+			<label>标题：<input name="title" type="text" style="width:168px;"/></label>
+			
+			<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
+		</div>
+		<div id="${dg}_toobar_menu" style="width:100px;">
+			<div data-options="iconCls:'icon-edit'" onClick="${dg}_add('text');">单图文消息</div>
+			<div data-options="iconCls:'icon-add'" onClick="${dg}_add('news');">多图文消息</div>
+		</div>
+	</div>
+</div>

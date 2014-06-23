@@ -13,8 +13,10 @@ import org.springframework.util.StringUtils;
 
 import com.examw.wechat.dao.mgr.IArticleDao;
 import com.examw.wechat.dao.settings.IExamDao;
+import com.examw.wechat.dao.settings.IProvinceDao;
 import com.examw.wechat.domain.mgr.Article;
 import com.examw.wechat.domain.settings.Exam;
+import com.examw.wechat.domain.settings.Province;
 import com.examw.wechat.model.mgr.ArticleInfo;
 import com.examw.wechat.service.impl.BaseDataServiceImpl;
 import com.examw.wechat.service.mgr.IArticleService;
@@ -27,6 +29,7 @@ import com.examw.wechat.service.mgr.IArticleService;
 public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo> implements IArticleService {
 	private IArticleDao articleDao;
 	private IExamDao examDao;
+	private IProvinceDao provinceDao;
 	/**
 	 * 设置资讯文档数据接口。
 	 * @param articleDao
@@ -42,6 +45,14 @@ public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo>
 	 */
 	public void setExamDao(IExamDao examDao) {
 		this.examDao = examDao;
+	}
+	/**
+	 * 设置所属省份数据接口。
+	 * @param provinceDao
+	 * 所属省份数据接口。
+	 */
+	public void setProvinceDao(IProvinceDao provinceDao) {
+		this.provinceDao = provinceDao;
 	}
 	/*
 	 * 查询数据。
@@ -62,6 +73,9 @@ public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo>
 		if(data.getExam() != null){
 			info.setExamId(data.getExam().getId());
 			info.setExamName(data.getExam().getName());
+			if(data.getExam().getCatalog() != null){
+				info.setCatalogId(data.getExam().getCatalog().getId());
+			}
 		}
 		if(data.getChildren() != null && data.getChildren().size() > 0){
 			Set<ArticleInfo> articles = new TreeSet<>(new Comparator<ArticleInfo>(){
@@ -99,13 +113,16 @@ public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo>
 		if(isAdded = (data == null)){
 			if(StringUtils.isEmpty(info.getId())){
 				info.setId(UUID.randomUUID().toString());
+				info.setCreateTime(new Date());
 			}
 			data = new Article();
-			data.setCreateTime(new Date());
 		}
 		if(!isAdded){
 			while(data.getParent() != null){
 				data = data.getParent();
+			}
+			if(data.getCreateTime() != null){
+				info.setCreateTime(data.getCreateTime());
 			}
 			if(data.getChildren() != null && data.getChildren().size() > 0){
 				data.getChildren().clear();
@@ -125,10 +142,14 @@ public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo>
 	 */
 	private void copyArticleProperties(ArticleInfo source, Article target){
 		if(source == null || target == null) return;
-		BeanUtils.copyProperties(source, target, new String[]{"children", "createTime"});
+		BeanUtils.copyProperties(source, target, new String[]{"children"});
 		if(!StringUtils.isEmpty(source.getExamId()) && (target.getExam() == null || !target.getExam().getId().equalsIgnoreCase(source.getExamId()))){
-			Exam exam = this.examDao.load(Exam.class, source.getExamId());
-			if(exam != null) target.setExam(exam);
+			Exam e = this.examDao.load(Exam.class, source.getExamId());
+			if(e != null) target.setExam(e);
+		}
+		if(!StringUtils.isEmpty(source.getProvinceId()) && (target.getProvince() == null || !target.getProvince().getId().equalsIgnoreCase(source.getProvinceId()))){
+			Province p = this.provinceDao.load(Province.class, source.getProvinceId());
+			if(p != null)target.setProvince(p);
 		}
 		if(source.getChildren() != null && source.getChildren().size() > 0){
 			Set<Article> children = new HashSet<>();
