@@ -1,0 +1,95 @@
+<#--单图文消息-->
+<#include "mgr/article_edit.ftl"/>
+<#--javascript-->
+<@script>
+//upload
+var upload = $("#${form}_file_upload").uploadify({
+	swf:"<@s.url '/resources/uploadify/uploadify.swf'/>",
+	uploader:"<@s.url '/uploads/upload'/>",
+	method:"POST",
+	fileObjName:"file",
+	buttonText:"上传图片",
+	height:20,
+	multi:false,
+	fileExt:"*.jpg",
+	fileDesc:"请选择jpg图片文件上传",
+	uploadLimit:1024000,//10M
+	auto:true,
+	queueID:"${form}_file_queue",
+	onUploadError : function(file, errorCode, errorMsg){
+		$.messager.show({
+			title:"上传文件异常",
+			msg:errorCode + "|" + errorMsg
+		});
+	},
+	onUploadSuccess:function(file, data, response){
+		if(!data){
+			$.messager.alert("上传文件失败","服务器端发生异常，未反馈数据！");
+			return;
+		}
+		var result = $.parseJSON(data)
+		if(result){
+			if(result.error == 1){
+				$.messager.alert("上传文件失败",result.message);
+				return;
+			}
+			$("#${form} input[name='picUrl']").val(result.url);
+		}
+	}
+});
+//preview img
+var is_preview_img = false;
+$("#${form} input[name='picUrl']").bind("mouseenter",function(){
+	if(is_preview_img)return;
+	var url = $(this).val();
+	if(!url || url.trim() == "") return;
+	is_preview_img = true;
+	var d = $("<div/>").dialog({
+		title:"预览",
+		width:380,
+		height:276,
+		content:"<img alt='预览'  style='width:360px;height:200px;'  src='"+url +"'/>",
+		modal:true,
+		buttons:[{
+				text:"关闭",
+				iconCls:"icon-cancel",
+				handler:function(){
+					d.dialog("close");
+				}
+			}],
+		onClose:function(){
+			is_preview_img = false;
+			$(this).dialog("destroy");
+		}
+	});
+});
+</@script>
+<#--form-->
+<@edit_frm>
+<div style="float:left;margin-top:12px;width:100%;">
+	<div style="float:left;">
+		<label style="width:75px;">标题：</label>
+		<input name="title" type="text" class="easyui-validatebox" data-options="required:true" style="width:396px;"/>
+	</div>
+	<div style="float:left;" title="(选填)" class="easyui-tooltip" data-options="position:'right'">
+		<label style="width:75px;">作者：</label>
+		<input name="description" type="text" style="width:196px;"/>
+	</div>
+</div>
+<div  style="float:left;margin-top:12px;width:100%;">
+	<label style="width:75px;">封面：</label>
+	<div title="(大图片建议尺寸：360像素 * 200像素)" class="easyui-tooltip" data-options="position:'right'" style="float:left;">
+		<input id="${form}_file_upload" name="file" type="file" style="float:left;"/>
+		<div id="${form}_file_queue"  style="position:absolute;"/>
+	</div>
+	<input type="text" name="picUrl"  readonly="true" style="float:left;margin-left:5px;width:546px;">
+</div>
+<div style="float:left;margin-top:12px;width:100%;">
+	<textarea name="content" class="easyui-kindeditor" data-options="
+			uploadJson:'<@s.url '/uploads/upload'/>',
+			fileManagerJson:'<@s.url '/uploads/manager'/>',
+			allowImageUpload:true,
+			allowFileManager:true
+			" rows="10" cols="20" style="width:100%;height:360px;"></textarea>
+</div>
+</@edit_frm>

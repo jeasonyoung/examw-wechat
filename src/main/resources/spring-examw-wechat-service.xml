@@ -9,6 +9,11 @@
 		<!-- 是否共享 -->
 		<property name="shared" value="true"/>
 	</bean>
+	<!-- 文件上传服务接口 -->
+	<bean id="fileUploadService" class="com.examw.wechat.service.impl.FileUploadServiceImpl">
+		<!-- 文件存储路径 -->
+		<property name="storagePath" value="${UPLOADFOLDER}" />
+	</bean>
 	<!--  系统管理 服务接口实现-->
 	<import resource="spring-examw-wechat-service-security.xml"/>
 	<!--  公众账号管理 服务接口实现-->

@@ -96,17 +96,22 @@ $(function(){
 	});
 	//edit
 	function edit_window(title,index,row, type){
-		var c_id = current_catalog_id,e_id = current_exam_id;
+		var c_id = current_catalog_id,e_id = current_exam_id,t_value = "",t_name;
+		if(type){
+			t_value = type[0];
+			t_name = type[1];
+		}
 		if(row){
-			type = row.type;
+			t_value = row.type;
+			t_name = row.typeName;
 			c_id = row.catalogId;
 			e_id = row.examId;
 		}
 		var d = $("<div/>").dialog({
-			title:title +"["+type+"]",
+			title:title +"["+t_name+"]",
 			width:800,
 			height:600,
-			href:"<@s.url '/mgr/article/edit'/>/"+type +"?catalogId="+c_id +"&examId=" + e_id,
+			href:"<@s.url '/mgr/article/edit'/>/"+t_value +"?catalogId="+c_id +"&examId=" + e_id,
 			modal:true,
 			buttons:[
 			/* <shiro.hasPermission name="${PER_UPDATE}"> */
@@ -183,8 +188,9 @@ $(function(){
 			<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
 		</div>
 		<div id="${dg}_toobar_menu" style="width:100px;">
-			<div data-options="iconCls:'icon-edit'" onClick="${dg}_add('text');">单图文消息</div>
-			<div data-options="iconCls:'icon-add'" onClick="${dg}_add('news');">多图文消息</div>
+			<div data-options="iconCls:'icon-edit'" onClick="${dg}_add([${ARTICLE_TYPE_TEXT_VALUE},'${ARTICLE_TYPE_TEXT_NAME}']);">${ARTICLE_TYPE_TEXT_NAME}</div>
+			<div data-options="iconCls:'icon-add'" onClick="${dg}_add([${ARTICLE_TYPE_NEWS_VALUE},'${ARTICLE_TYPE_NEWS_NAME}']);">${ARTICLE_TYPE_NEWS_NAME}</div>
+			<div data-options="iconCls:'icon-edit'" onClick="${dg}_add([${ARTICLE_TYPE_ARTICLE_VALUE},'${ARTICLE_TYPE_ARTICLE_NAME}']);">${ARTICLE_TYPE_ARTICLE_NAME}</div>
 		</div>
 	</div>
 </div>

@@ -55,7 +55,7 @@
 		<!-- 资讯标题 -->
 		<property name="title"  type="string" length="255" not-null="true" />
 		<!-- 资讯类型 -->
-		<property name="type" type="string" length="20" />
+		<property name="type" type="integer" />
 		<!-- 所属考试 -->
 		<many-to-one name="exam" column="exam_id" class="com.examw.wechat.domain.settings.Exam" />
 		<!-- 所属省份 -->

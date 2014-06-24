@@ -15,9 +15,9 @@ import com.examw.model.Paging;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ArticleInfo extends Paging {
 	private static final long serialVersionUID = 1L;
-	private String id,title,type,picUrl,url,description,content,catalogId,examId,examName,provinceId,provinceName;
+	private String id,title,picUrl,url,description,content,catalogId,examId,examName,provinceId,provinceName,typeName;
 	private Date createTime;
-	private Integer orderNo;
+	private Integer type,orderNo;
 	private Set<ArticleInfo> children;
 	/**
 	 * 获取资讯ID。
@@ -53,7 +53,7 @@ public class ArticleInfo extends Paging {
 	 * 获取资讯类型。
 	 * @return 资讯类型。
 	 */
-	public String getType() {
+	public Integer getType() {
 		return type;
 	}
 	/**
@@ -61,8 +61,23 @@ public class ArticleInfo extends Paging {
 	 * @param type
 	 * 资讯类型。
 	 */
-	public void setType(String type) {
+	public void setType(Integer type) {
 		this.type = type;
+	}
+	/**
+	 * 获取资讯类型名称。
+	 * @return 资讯类型名称。
+	 */
+	public String getTypeName() {
+		return typeName;
+	}
+	/**
+	 * 设置资讯类型名称。
+	 * @param typeName
+	 * 资讯类型名称。
+	 */
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
 	/**
 	 * 获取所属考试类别ID。

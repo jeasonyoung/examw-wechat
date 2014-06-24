@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -30,6 +31,7 @@ public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo>
 	private IArticleDao articleDao;
 	private IExamDao examDao;
 	private IProvinceDao provinceDao;
+	private Map<Integer, String> types;
 	/**
 	 * 设置资讯文档数据接口。
 	 * @param articleDao
@@ -54,6 +56,23 @@ public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo>
 	public void setProvinceDao(IProvinceDao provinceDao) {
 		this.provinceDao = provinceDao;
 	}
+	/**
+	 * 设置文档类型集合。
+	 * @param types
+	 * 文档类型集合。
+	 */
+	public void setTypes(Map<Integer, String> types) {
+		this.types = types;
+	}
+	/*
+	 * 加载类型名称。
+	 * @see com.examw.wechat.service.mgr.IArticleService#loadTypeName(java.lang.Integer)
+	 */
+	@Override
+	public String loadTypeName(Integer type) {
+		if(this.types == null || type == null) return null;
+		return this.types.get(type);
+	}
 	/*
 	 * 查询数据。
 	 * @see com.examw.wechat.service.impl.BaseDataServiceImpl#find(java.lang.Object)
@@ -77,6 +96,7 @@ public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo>
 				info.setCatalogId(data.getExam().getCatalog().getId());
 			}
 		}
+		info.setTypeName(this.loadTypeName(data.getType()));
 		if(data.getChildren() != null && data.getChildren().size() > 0){
 			Set<ArticleInfo> articles = new TreeSet<>(new Comparator<ArticleInfo>(){
 				@Override

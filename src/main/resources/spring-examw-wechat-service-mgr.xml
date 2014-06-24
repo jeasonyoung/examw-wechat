@@ -38,6 +38,17 @@
 		<property name="examDao" ref="examDao" />
 		<!-- 所属省份接口 -->
 		<property name="provinceDao" ref="provinceDao" />
+		<!-- 资讯文档类型集合 -->
+		<property name="types">
+			<map>
+				<!-- 单图文消息 -->
+				<entry key="1" value="${ARTICLE_TYPE_TEXT}" />
+				<!-- 多图文消息 -->
+				<entry key="2" value="${ARTICLE_TYPE_NEWS}" />
+				<!-- 文章 -->
+				<entry key="3" value="${ARTICLE_TYPE_ARTICLE}" />
+			</map>
+		</property>
 	</bean>
 	<!--  公众号管理 服务接口实现 end-->
 </beans>

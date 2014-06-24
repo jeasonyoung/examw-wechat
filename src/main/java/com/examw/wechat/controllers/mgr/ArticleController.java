@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.model.DataGrid;
 import com.examw.model.Json;
+import com.examw.wechat.domain.mgr.Article;
 import com.examw.wechat.model.mgr.ArticleInfo;
 import com.examw.wechat.service.mgr.IArticleService;
 
@@ -34,6 +35,14 @@ public class ArticleController {
 	 */
 	@RequestMapping(value = {"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
+		model.addAttribute("ARTICLE_TYPE_TEXT_VALUE", Article.TYPE_TEXT);
+		model.addAttribute("ARTICLE_TYPE_TEXT_NAME", this.articleService.loadTypeName(Article.TYPE_TEXT));
+		
+		model.addAttribute("ARTICLE_TYPE_NEWS_VALUE", Article.TYPE_NEWS);
+		model.addAttribute("ARTICLE_TYPE_NEWS_NAME", this.articleService.loadTypeName(Article.TYPE_NEWS));
+		
+		model.addAttribute("ARTICLE_TYPE_ARTICLE_VALUE", Article.TYPE_ARTICLE);
+		model.addAttribute("ARTICLE_TYPE_ARTICLE_NAME", this.articleService.loadTypeName(Article.TYPE_ARTICLE));
 		return "/mgr/article_list";
 	}
 	/**

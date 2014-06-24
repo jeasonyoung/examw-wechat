@@ -13,21 +13,25 @@ import com.examw.wechat.domain.settings.Province;
  */
 public class Article implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String id,title,type,picUrl,url,description,content;
+	private String id,title,picUrl,url,description,content;
 	private Date createTime;
-	private Integer orderNo;
+	private Integer type,orderNo;
 	private Exam exam;
 	private Province province;
 	private Article parent;
 	private Set<Article> children;
 	/**
-	 * 文本类型。
+	 * 类型-单图文。
 	 */
-	public static final String MSG_TYPE_TEXT = "text";
+	public static final Integer TYPE_TEXT = 1;
 	/**
-	 * 图文类型。
+	 * 类型－多图文。
 	 */
-	public static final String MSG_TYPE_NEWS = "news";
+	public static final Integer TYPE_NEWS = 2;
+	/**
+	 * 类型－文章。
+	 */
+	public static final Integer TYPE_ARTICLE = 3;
 	/**
 	 * 获取父级资讯。
 	 * @return 父级资讯。
@@ -77,7 +81,7 @@ public class Article implements Serializable {
 	 * 获取资讯类型。
 	 * @return 资讯类型。
 	 */
-	public String getType() {
+	public Integer getType() {
 		return type;
 	}
 	/**
@@ -85,7 +89,7 @@ public class Article implements Serializable {
 	 * @param type
 	 * 资讯类型。
 	 */
-	public void setType(String type) {
+	public void setType(Integer type) {
 		this.type = type;
 	}
 	/**

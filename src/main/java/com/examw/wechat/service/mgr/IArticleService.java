@@ -9,5 +9,12 @@ import com.examw.wechat.service.IBaseDataService;
  * @since 2014-06-19.
  */
 public interface IArticleService extends IBaseDataService<ArticleInfo> {
-
+	/**
+	 * 加载文档类型名称。
+	 * @param type
+	 * 资讯类型。
+	 * @return
+	 * 文档类型名称。
+	 */
+	String loadTypeName(Integer type);
 }
