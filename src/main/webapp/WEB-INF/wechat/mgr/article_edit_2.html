@@ -1,8 +1,242 @@
 <#--多图文消息-->
 <#include "mgr/article_edit.ftl"/>
+<#--javascript-->
 <@script>
-
+//upload
+var upload = $("#${form}_file_upload").uploadify({
+	swf:"<@s.url '/resources/uploadify/uploadify.swf'/>",
+	uploader:"<@s.url '/uploads/upload'/>",
+	method:"POST",
+	fileObjName:"file",
+	buttonText:"上传图片",
+	height:20,
+	multi:false,
+	fileExt:"*.jpg",
+	fileDesc:"请选择jpg图片文件上传",
+	uploadLimit:1024000,//10M
+	auto:true,
+	queueID:"${form}_file_queue",
+	onUploadError : function(file, errorCode, errorMsg){
+		$.messager.show({
+			title:"上传文件异常",
+			msg:errorCode + "|" + errorMsg
+		});
+	},
+	onUploadSuccess:function(file, data, response){
+		if(!data){
+			$.messager.alert("上传文件失败","服务器端发生异常，未反馈数据！");
+			return;
+		}
+		var result = $.parseJSON(data)
+		if(result){
+			if(result.error == 1){
+				$.messager.alert("上传文件失败",result.message);
+				return;
+			}
+			$("#${form} input[name='picUrl']").val(result.url);
+		}
+	}
+});
+//preview img
+var is_preview_img = false;
+$("#${form} input[name='picUrl']").bind("mouseenter",function(){
+	if(is_preview_img)return;
+	var url = $(this).val();
+	if(!url || url.trim() == "") return;
+	is_preview_img = true;
+	var d = $("<div/>").dialog({
+		title:"预览",
+		width:380,
+		height:276,
+		content:"<img alt='预览'  style='width:360px;height:200px;'  src='"+url +"'/>",
+		modal:true,
+		buttons:[{
+				text:"关闭",
+				iconCls:"icon-cancel",
+				handler:function(){
+					d.dialog("close");
+				}
+			}],
+		onClose:function(){
+			is_preview_img = false;
+			$(this).dialog("destroy");
+		}
+	});
+});
+//dg
+var dg = $("#${form}_opts_dg").datagrid({
+	width:740,
+	height:180,
+	fitColumns:true,
+	rownumbers:true,
+	border:true,
+	striped:true,
+	idField:"id",
+	columns:[[{
+		field:"id",
+		checkbox:true
+	},{
+		title:"标题",
+		field:"title",
+		width:100,
+		align:"left"
+	}]],
+	toolbar:[{
+		iconCls:"icon-add",
+		text:"添加图文消息",
+		handler:function(){
+			 edit_window("添加图文消息",0,null);
+		}
+	},"-",{
+		iconCls:"icon-remove",
+		text:"删除图文消息",
+		handler:function(){
+			var rows = dg.datagrid("getChecked");
+			if(rows && rows.length > 0){
+				$.messager.confirm("确认","您是否确认删除选中的数据?",function(r){
+					if(!r)return;
+					for(var i = 0; i < rows.length; i++){
+						var index = dg.datagrid("getRowIndex",rows[i]);
+						if(index > -1){
+							dg.datagrid("deleteRow",index);
+						}
+					}
+				});
+			}
+		}
+	}],
+	onLoadError:function(e){
+			<@error_dialog "e"/>
+	},
+	onDblClickRow:function(rowIndex,rowData){
+		edit_window("编辑图文消息",rowIndex,rowData);
+	}
+});
+//edit
+function edit_window(title,index,row){
+	var d = $("<div/>").dialog({
+		title:title,
+		width:600,
+		height:400,
+		href:"<@s.url '/mgr/article/opt'/>",
+		modal:true,
+		buttons:[{
+			text:"保存",
+			iconCls:"icon-save",
+			handler:function(){
+				var data = $("#${module}_opt_form").form("serialize");
+				if($.trim(data["content"]) == ""){
+					$.messager.alert("警告","请输入选项内容！");
+					return;
+				}
+				if(!row) {
+					dg.datagrid("appendRow",data);
+				}else{
+					dg.datagrid("updateRow",{
+						index:index,
+						row:data
+					});
+				}
+				d.dialog("close");
+			}
+		},{
+			text:"关闭",
+			iconCls:"icon-cancel",
+			handler:function(){
+				d.dialog("close");
+			}
+		}],
+		onClose:function(){
+			$(this).dialog("destroy");
+		},
+		onLoad:function(){
+			if(row){
+				 $("#${module}_opt_form").form("load",row);
+				 $("#${module}_opt_form textarea").kindeditor("setValue",row.content);
+			}
+		}
+	});
+};
+//validate
+var post = {};
+${module}_validate = function(){
+	if($("#${form}").form("validate")){
+		 post = $("#${form}").form("serialize");
+		 if(dg){
+		 	var rows = dg.datagrid("getRows");
+		 	if(!rows || !$.isArray(rows) || rows.length == 0){
+		 		$.messager.alert("提示","未添加子消息图文！");
+		 		return false;
+		 	}
+		 	if(rows.length < 2){
+		 		$.messager.alert("提示","添加子消息图文数目["+rows.length+"]小于< 2！");
+		 		return false;
+		 	}
+		 }
+		 return true;
+	}
+	return false;
+};
+//save
+${module}_update = function(){
+	var rows = dg.datagrid("getRows");
+	if(rows && $.isArray(rows)){
+		post["children"] = [];
+		$.each(rows,function(i,n){
+			n["orderNo"] = i + 1;
+			post["children"].push(n);
+		});
+	}
+	return post;
+};
+//load
+${module}_load = function(row){
+	if(row){
+		$("#${form}").form("load",row);
+		$("#${form} textarea").kindeditor("setValue",row.content);
+		if(row.children){
+			$.each(row.children,function(i,n){
+				dg.datagrid("appendRow",n);
+			});
+		}
+	}
+};
 </@script>
+<#--form-->
 <@edit_frm>
-
+<div  style="float:left;margin-top:12px;width:100%;">
+	<label style="width:75px;">封面：</label>
+	<div title="(大图片建议尺寸：360像素 * 200像素)" class="easyui-tooltip" data-options="position:'right'" style="float:left;">
+		<input id="${form}_file_upload" name="file" type="file" style="float:left;"/>
+		<div id="${form}_file_queue"  style="position:absolute;"/>
+	</div>
+	<input type="text" name="picUrl"  readonly="true" style="float:left;margin-left:5px;width:546px;">
+</div>
+<div style="float:left;margin-top:5px;width:100%;">
+	<textarea name="content" class="easyui-kindeditor" data-options="
+			uploadJson:'<@s.url '/uploads/upload'/>',
+			fileManagerJson:'<@s.url '/uploads/manager'/>',
+			allowImageUpload:true,
+			allowFileManager:true
+			" rows="10" cols="20" style="width:100%;height:150px;">
+	</textarea>
+</div>
+<div style="float:left;margin-top:12px;width:100%;">
+	<label style="width:75px;">原文链接：</label>
+	<input type="text" name="url" class="easyui-combobox" data-options="
+		url:'<@s.url '/mgr/article/articles'/>?type=3&catalogId=${CURRENT_CATALOG_ID}&examId=${CURRENT_EXAM_ID}',
+		valueField:'id',
+		textField:'title',
+		onLoadError:function(e){
+			<@error_dialog 'e'/>
+		},
+		formatter:function(row){
+			return '['+row.catalogName+']['+row.examName+']['+row.provinceName+']' + row.title;
+		}
+	" style="float:left;width:675px;">
+</div>
+<fieldset style="float:left;margin-top:12px;border:solid 1px #ccc;">
+	<legend>子消息集合</legend>
+	<table id="${form}_opts_dg"></table>
+</fieldset>
 </@edit_frm>

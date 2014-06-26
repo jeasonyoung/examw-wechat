@@ -94,9 +94,14 @@ public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo>
 			info.setExamName(data.getExam().getName());
 			if(data.getExam().getCatalog() != null){
 				info.setCatalogId(data.getExam().getCatalog().getId());
+				info.setCatalogName(data.getExam().getCatalog().getName());
 			}
 		}
-		info.setTypeName(this.loadTypeName(data.getType()));
+		if(data.getType() != null) info.setTypeName(this.loadTypeName(data.getType()));
+		if(data.getProvince() != null){
+			info.setProvinceId(data.getProvince().getId());
+			info.setProvinceName(data.getProvince().getName());
+		}
 		if(data.getChildren() != null && data.getChildren().size() > 0){
 			Set<ArticleInfo> articles = new TreeSet<>(new Comparator<ArticleInfo>(){
 				@Override
@@ -202,5 +207,16 @@ public class ArticleServiceImpl extends BaseDataServiceImpl<Article,ArticleInfo>
 			Article data = this.articleDao.load(Article.class, ids[i]);
 			if(data != null)this.articleDao.delete(data);
 		}
+	}
+	/*
+	 * 加载资讯文档。
+	 * @see com.examw.wechat.service.mgr.IArticleService#loadArticle(java.lang.String)
+	 */
+	@Override
+	public ArticleInfo loadArticle(String articleId) {
+		if(StringUtils.isEmpty(articleId)) return null;
+		Article data = this.articleDao.load(Article.class, articleId);
+		if(data == null) return null;
+		return this.changeModel(data);
 	}
 }

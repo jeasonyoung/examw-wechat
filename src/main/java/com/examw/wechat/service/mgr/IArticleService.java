@@ -17,4 +17,11 @@ public interface IArticleService extends IBaseDataService<ArticleInfo> {
 	 * 文档类型名称。
 	 */
 	String loadTypeName(Integer type);
+	/**
+	 * 加载资讯文档。
+	 * @param articleId
+	 * 资讯文档ID。
+	 * @return
+	 */
+	ArticleInfo loadArticle(String articleId);
 }

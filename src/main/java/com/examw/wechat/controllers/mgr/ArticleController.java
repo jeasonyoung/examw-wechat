@@ -1,5 +1,8 @@
 package com.examw.wechat.controllers.mgr;
 
+import java.util.List;
+import java.util.UUID;
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -53,7 +56,53 @@ public class ArticleController {
 	public String edit(@PathVariable String type, String catalogId,String examId, Model model){
 		model.addAttribute("CURRENT_CATALOG_ID", StringUtils.isEmpty(catalogId) ? "" : catalogId);
 		model.addAttribute("CURRENT_EXAM_ID", StringUtils.isEmpty(examId) ? "" : examId);
+		
+		model.addAttribute("CURRENT_TYPE_VALUE", StringUtils.isEmpty(type) ? "": type);
 		return "/mgr/article_edit_"+ type;
+	}
+	/**
+	 * 获取资讯子图文选项。
+	 * @return
+	 */
+	@RequestMapping(value = "/opt", method = RequestMethod.GET)
+	public String options(String catalogId,String examId,Model model){
+		model.addAttribute("CURRENT_ID", UUID.randomUUID().toString());
+		
+		model.addAttribute("CURRENT_CATALOG_ID", StringUtils.isEmpty(catalogId) ? "" : catalogId);
+		model.addAttribute("CURRENT_EXAM_ID", StringUtils.isEmpty(examId) ? "" : examId);
+		return "/mgr/article_opt";
+	}
+	/**
+	 * 加载资讯集合。
+	 * @param catalogId
+	 * @param examId
+	 * @param type
+	 * @return
+	 */
+	@RequestMapping(value = "/articles", method = {RequestMethod.GET, RequestMethod.POST})
+	@ResponseBody
+	public List<ArticleInfo> loadArticles(final String catalogId,final String examId,final Integer type){
+		return this.articleService.datagrid(new ArticleInfo(){
+			private static final long serialVersionUID = 1L;
+			@Override
+			public String getCatalogId() { return catalogId;}
+			@Override
+			public String getExamId() {return examId;}
+			@Override
+			public Integer getType() { return type;}
+		}).getRows();
+	}
+	/**
+	 * 加载资讯文档。
+	 * @param id
+	 * 资讯文档ID。
+	 * @return
+	 */
+	@RequestMapping(value = "/articles/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+	@ResponseBody
+	public ArticleInfo loadArticle(@PathVariable String id){
+		if(StringUtils.isEmpty(id)) return null;
+		return this.articleService.loadArticle(id);
 	}
 	/**
 	 * 查询数据。

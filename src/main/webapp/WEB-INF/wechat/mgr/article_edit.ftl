@@ -65,6 +65,18 @@ $(function(){
 			<input name="provinceId" type="text" class="easyui-combobox"  data-options="url:'<@s.url '/settings/province/all'/>',valueField:'id',textField:'name',required:true" style="width:198px;"/>
 		</div>
 	</div>
+	<div style="float:left;margin-top:12px;width:100%;">
+		<div style="float:left;">
+			<label style="width:75px;">标题：</label>
+			<input name="title" type="text" class="easyui-validatebox" data-options="required:true" style="width:396px;"/>
+			<input type="hidden" name="id" />
+			<input type="hidden" name="type" value="${CURRENT_TYPE_VALUE}"/>
+		</div>
+		<div style="float:left;" title="(选填)" class="easyui-tooltip" data-options="position:'right'">
+			<label style="width:75px;">作者：</label>
+			<input name="description" type="text" style="width:196px;"/>
+		</div>
+	</div>
 	<#nested/>
 </form>
 </#macro>

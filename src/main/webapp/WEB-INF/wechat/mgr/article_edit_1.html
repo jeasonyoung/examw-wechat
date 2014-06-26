@@ -42,7 +42,7 @@ var is_preview_img = false;
 $("#${form} input[name='picUrl']").bind("mouseenter",function(){
 	if(is_preview_img)return;
 	var url = $(this).val();
-	if(!url || url.trim() == "") return;
+	if(!url || $.trim(url) == "") return;
 	is_preview_img = true;
 	var d = $("<div/>").dialog({
 		title:"预览",
@@ -63,19 +63,29 @@ $("#${form} input[name='picUrl']").bind("mouseenter",function(){
 		}
 	});
 });
+var post = {};
+//validate
+${module}_validate = function(){
+	if($("#${form}").form("validate")){
+		 post = $("#${form}").form("serialize");
+		 return true;
+	}
+	return false;
+};
+//save
+${module}_update = function(){
+	return post;
+};
+//load
+${module}_load = function(row){
+	if(row){
+		$("#${form}").form("load",row);
+		$("#${form} textarea").kindeditor("setValue",row.content);
+	}
+};
 </@script>
 <#--form-->
 <@edit_frm>
-<div style="float:left;margin-top:12px;width:100%;">
-	<div style="float:left;">
-		<label style="width:75px;">标题：</label>
-		<input name="title" type="text" class="easyui-validatebox" data-options="required:true" style="width:396px;"/>
-	</div>
-	<div style="float:left;" title="(选填)" class="easyui-tooltip" data-options="position:'right'">
-		<label style="width:75px;">作者：</label>
-		<input name="description" type="text" style="width:196px;"/>
-	</div>
-</div>
 <div  style="float:left;margin-top:12px;width:100%;">
 	<label style="width:75px;">封面：</label>
 	<div title="(大图片建议尺寸：360像素 * 200像素)" class="easyui-tooltip" data-options="position:'right'" style="float:left;">
@@ -84,12 +94,27 @@ $("#${form} input[name='picUrl']").bind("mouseenter",function(){
 	</div>
 	<input type="text" name="picUrl"  readonly="true" style="float:left;margin-left:5px;width:546px;">
 </div>
-<div style="float:left;margin-top:12px;width:100%;">
+<div style="float:left;margin-top:2px;width:100%;">
 	<textarea name="content" class="easyui-kindeditor" data-options="
 			uploadJson:'<@s.url '/uploads/upload'/>',
 			fileManagerJson:'<@s.url '/uploads/manager'/>',
 			allowImageUpload:true,
 			allowFileManager:true
-			" rows="10" cols="20" style="width:100%;height:360px;"></textarea>
+			" rows="10" cols="20" style="width:100%;height:360px;">
+	</textarea>
+</div>
+<div style="float:left;margin-top:12px;width:100%;">
+	<label style="width:75px;">原文链接：</label>
+	<input type="text" name="url" class="easyui-combobox" data-options="
+		url:'<@s.url '/mgr/article/articles'/>?type=3&catalogId=${CURRENT_CATALOG_ID}&examId=${CURRENT_EXAM_ID}',
+		valueField:'id',
+		textField:'title',
+		onLoadError:function(e){
+			<@error_dialog 'e'/>
+		},
+		formatter:function(row){
+			return '['+row.catalogName+']['+row.examName+']['+row.provinceName+']' + row.title;
+		}
+	" style="float:left;width:690px;">
 </div>
 </@edit_frm>

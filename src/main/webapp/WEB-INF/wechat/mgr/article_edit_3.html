@@ -1,8 +1,36 @@
 <#--文章消息-->
 <#include "mgr/article_edit.ftl"/>
+<#--javascript-->
 <@script>
-
+//validate
+var post = {};
+${module}_validate = function(){
+	if($("#${form}").form("validate")){
+		 post = $("#${form}").form("serialize");
+		 return true;
+	}
+	return false;
+};
+//save
+${module}_update = function(){
+	return post;
+};
+//load
+${module}_load = function(row){
+	if(row){
+		$("#${form}").form("load",row);
+		$("#${form} textarea").kindeditor("setValue",row.content);
+	}
+};
 </@script>
+<#--form-->
 <@edit_frm>
-
+<div style="float:left;margin-top:12px;width:100%;">
+	<textarea name="content" class="easyui-kindeditor" data-options="
+			uploadJson:'<@s.url '/uploads/upload'/>',
+			fileManagerJson:'<@s.url '/uploads/manager'/>',
+			allowImageUpload:true,
+			allowFileManager:true
+			" rows="10" cols="20" style="width:100%;height:440px;"></textarea>
+</div>
 </@edit_frm>

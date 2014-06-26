@@ -6,6 +6,7 @@ import java.util.Set;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.examw.model.Paging;
+import com.examw.wechat.support.CustomDateSerializer;
 
 /**
  * 资讯文档信息。
@@ -15,7 +16,7 @@ import com.examw.model.Paging;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ArticleInfo extends Paging {
 	private static final long serialVersionUID = 1L;
-	private String id,title,picUrl,url,description,content,catalogId,examId,examName,provinceId,provinceName,typeName;
+	private String id,title,picUrl,url,description,content,catalogId,catalogName,examId,examName,provinceId,provinceName,typeName;
 	private Date createTime;
 	private Integer type,orderNo;
 	private Set<ArticleInfo> children;
@@ -93,6 +94,21 @@ public class ArticleInfo extends Paging {
 	 */
 	public void setCatalogId(String catalogId) {
 		this.catalogId = catalogId;
+	}
+	/**
+	 * 获取所属考试类别名称。
+	 * @return 考试类别名称。
+	 */
+	public String getCatalogName() {
+		return catalogName;
+	}
+	/**
+	 * 设置考试类别名称。
+	 * @param catalogName
+	 * 考试类别名称。
+	 */
+	public void setCatalogName(String catalogName) {
+		this.catalogName = catalogName;
 	}
 	/**
 	 * 获取所属科目ID。
@@ -226,6 +242,7 @@ public class ArticleInfo extends Paging {
 	 * @param createTime
 	 * 创建时间。
 	 */
+	@JsonSerialize(using = CustomDateSerializer.class)
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
