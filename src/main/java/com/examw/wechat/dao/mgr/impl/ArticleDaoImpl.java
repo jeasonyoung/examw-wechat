@@ -23,7 +23,7 @@ public class ArticleDaoImpl extends BaseDaoImpl<Article> implements IArticleDao 
 	 */
 	@Override
 	public List<Article> findArticles(ArticleInfo info) {
-		String hql = "from Article a where 1 = 1 ";
+		String hql = "from Article a where (a.parent is null) ";
 		Map<String, Object> parameters = new HashMap<>();
 		hql = this.addWhere(info, hql, parameters);
 		if(!StringUtils.isEmpty(info.getSort())){
