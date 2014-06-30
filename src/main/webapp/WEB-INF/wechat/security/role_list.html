@@ -74,7 +74,7 @@ $(function(){
 			href:"<@s.url '/security/role/edit'/>",
 			modal:true,
 			buttons:[
-			/* <shiro.hasPermission name="${PER_UPDATE}"> */
+			<@shiro.hasPermission name="${PER_UPDATE}">
 			{
 				text:"保存",
 				iconCls:"icon-save",
@@ -111,7 +111,7 @@ $(function(){
 					});
 				}
 			},
-			/* </shiro.hasPermission> */
+			</@shiro.hasPermission>
 			{
 				text:"关闭",
 				iconCls:"icon-cancel",
@@ -145,7 +145,7 @@ $(function(){
 			href:"<@s.url '/security/role/right'/>?roleId="+roleId,
 			modal:true,
 			buttons:[
-			/* <shiro.hasPermission name="${PER_UPDATE}"> */
+			<@shiro.hasPermission name="${PER_UPDATE}">
 			{
 				text:"保存",
 				iconCls:"icon-save",
@@ -153,7 +153,7 @@ $(function(){
 					${module}_right_save(d);
 				}
 			},
-			/* </shiro.hasPermission> */
+			</@shiro.hasPermission>
 			{
 				text:"关闭",
 				iconCls:"icon-cancel",
@@ -166,7 +166,7 @@ $(function(){
 			}
 	  });
 	};
-	/* <shiro.hasPermission name="${PER_DELETE}"> */
+	<@shiro.hasPermission name="${PER_DELETE}">
 	//delete
 	${dg}_delete = function(){
 		var rows = dg.datagrid("getChecked");
@@ -207,19 +207,19 @@ $(function(){
 			$.messager.alert("提示","未选中须删除的数据！");
 		}
 	};
-	/* </shiro.hasPermission> */
+	</@shiro.hasPermission>
 });
 //-->
 </script>
 <table id="${dg}"></table>
 <div id="${dg}_toobar">
-	<!-- <shiro.hasPermission name="${PER_UPDATE}"> -->
+	<@shiro.hasPermission name="${PER_UPDATE}">
 	<a href="#" class="easyui-linkbutton" onclick="${dg}_add()" data-options="iconCls:'icon-add',plain:true" style="float:left;">新增</a>
-	<!-- </shiro.hasPermission> -->
+	</@shiro.hasPermission>
 	<span>|</span>
-	<!-- <shiro.hasPermission name="${PER_DELETE}"> -->
+	<@shiro.hasPermission name="${PER_DELETE}">
 	<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
-	<!-- </shiro.hasPermission> -->
+	</@shiro.hasPermission>
 	
 	<label>角色名称：<input name="name" type="text" style="width:198px;"/></label>
 	

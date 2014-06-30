@@ -3,6 +3,7 @@ package com.examw.wechat.controllers.security;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +14,7 @@ import com.examw.model.DataGrid;
 import com.examw.model.Json;
 import com.examw.wechat.model.security.LoginLogInfo;
 import com.examw.wechat.service.security.ILoginLogService;
-
+import com.examw.wechat.domain.security.Right;
 /**
  * 登录日志管理控制器。
  * @author yangyong.
@@ -29,17 +30,17 @@ public class LogController {
 	 * 获取列表页面。
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SECURITY_LOGIN_LOG + ":" + Right.VIEW})
+	@RequiresPermissions({ModuleConstant.SECURITY_LOGIN_LOG + ":" + Right.VIEW})
 	@RequestMapping(value={"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
-		//model.addAttribute("PER_DELETE", ModuleConstant.SECURITY_LOGIN_LOG + ":" + Right.DELETE);
+		model.addAttribute("PER_DELETE", ModuleConstant.SECURITY_LOGIN_LOG + ":" + Right.DELETE);
 		return "security/log_list";
 	}
 	/**
 	 * 查询数据。
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SECURITY_LOGIN_LOG + ":" + Right.VIEW})
+	@RequiresPermissions({ModuleConstant.SECURITY_LOGIN_LOG + ":" + Right.VIEW})
 	@RequestMapping(value="/datagrid", method = RequestMethod.POST)
 	@ResponseBody
 	public DataGrid<LoginLogInfo> datagrid(LoginLogInfo info){
@@ -50,7 +51,7 @@ public class LogController {
 	 * @param id
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SECURITY_LOGIN_LOG + ":" + Right.DELETE})
+	@RequiresPermissions({ModuleConstant.SECURITY_LOGIN_LOG + ":" + Right.DELETE})
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Json delete(String id){

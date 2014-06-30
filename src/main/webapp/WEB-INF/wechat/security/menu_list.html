@@ -46,7 +46,7 @@ $(function(){
 			<@error_dialog "e"/>
 		},
 		toolbar:[
-		/* <shiro.hasPermission name="${PER_UPDATE}"> */
+		<@shiro.hasPermission name="${PER_UPDATE}">
 		{
 			iconCls:"icon-add",
 			text:"初始化菜单数据",
@@ -78,9 +78,9 @@ $(function(){
 				});
 			}
 		},
-		/* </shiro.hasPermission> */
+		</@shiro.hasPermission>
 		"-"
-		/* <shiro.hasPermission name="${PER_DELETE}"> */
+	   <@shiro.hasPermission name="${PER_DELETE}">
 		,{
 			iconCls:"icon-remove",
 			text:"删除",
@@ -124,7 +124,7 @@ $(function(){
 				}
 			}
 		}
-		/* </shiro.hasPermission> */
+		</@shiro.hasPermission>
 		]
 	});
 });

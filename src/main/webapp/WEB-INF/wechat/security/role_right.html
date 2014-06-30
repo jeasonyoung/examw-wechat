@@ -54,6 +54,7 @@ $(function(){
 	};
 	//add role right to save
 	${right}_save = function(d){
+		<@shiro.hasPermission name="${PER_UPDATE}">
 		var menuRightIds = [];
 		createMenuRightIds(t.tree("getChecked"),menuRightIds);
 		$.messager.confirm("确认","您是否确认保存角色权限数据?",function(r){
@@ -84,6 +85,7 @@ $(function(){
 				}
 			});
 		});
+		</@shiro.hasPermission>
 	};
 	//split tree menu id.
 	function createMenuRightIds(nodes,result){

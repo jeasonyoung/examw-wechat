@@ -58,7 +58,7 @@ $(function(){
 			account:$("#${dg}_toobar input[name='account']").val()
 		});
 	};
-	/* <shiro.hasPermission name="${PER_DELETE}"> */
+	<@shiro.hasPermission name="${PER_DELETE}">
 	//delete
 	${dg}_delete = function(){
 		var rows = dg.datagrid("getChecked");
@@ -99,15 +99,15 @@ $(function(){
 			$.messager.alert("提示","未选中须删除的数据！");
 		}
 	};
-	/* </shiro.hasPermission> */
+	</@shiro.hasPermission>
 });
 //-->
 </script> 
 <table id="${dg}"></table>
 <div id="${dg}_toobar">
-	<!-- <shiro.hasPermission name="${PER_DELETE}"> -->
+	<@shiro.hasPermission name="${PER_DELETE}">
 	<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
-	<!-- </shiro.hasPermission> -->
+	</@shiro.hasPermission>
 	<label>用户账号：<input name="account" type="text" style="width:198px;"/></label>
 	<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
 </div>

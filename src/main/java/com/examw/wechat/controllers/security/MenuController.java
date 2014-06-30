@@ -6,6 +6,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.authz.annotation.RequiresGuest;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.model.Json;
 import com.examw.model.TreeNode;
+import com.examw.wechat.domain.security.Right;
 import com.examw.wechat.model.security.MenuInfo;
 import com.examw.wechat.service.security.IMenuService;
 /**
@@ -26,25 +29,24 @@ import com.examw.wechat.service.security.IMenuService;
 @RequestMapping(value = "/security/menu")
 public class MenuController {
 	private static Logger logger = Logger.getLogger(MenuController.class);
-	
 	@Resource
 	private IMenuService menuService;
 	/**
 	 * 菜单列表页面。
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SECURITY_MENU + ":" + Right.VIEW})
+	@RequiresPermissions({ModuleConstant.SECURITY_MENU + ":" + Right.VIEW})
 	@RequestMapping(value = {"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
-		//model.addAttribute("PER_UPDATE", ModuleConstant.SECURITY_MENU + ":" + Right.UPDATE);
-		//model.addAttribute("PER_DELETE", ModuleConstant.SECURITY_MENU + ":" + Right.DELETE);
+		model.addAttribute("PER_UPDATE", ModuleConstant.SECURITY_MENU + ":" + Right.UPDATE);
+		model.addAttribute("PER_DELETE", ModuleConstant.SECURITY_MENU + ":" + Right.DELETE);
 		return "security/menu_list";
 	}
 	/**
 	 * 列表数据。
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SECURITY_MENU + ":" + Right.VIEW})
+	@RequiresPermissions({ModuleConstant.SECURITY_MENU + ":" + Right.VIEW})
 	@RequestMapping(value = "/datagrid", method = RequestMethod.POST)
 	@ResponseBody
 	public List<MenuInfo> datagrid(){
@@ -54,6 +56,7 @@ public class MenuController {
 	 * 菜单树结构数据。
 	 * @return
 	 */
+	@RequiresGuest
 	@RequestMapping(value = "/tree", method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
 	public synchronized List<TreeNode> tree(){
@@ -93,7 +96,7 @@ public class MenuController {
 	 * 初始化菜单数据。
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SECURITY_MENU + ":" + Right.UPDATE})
+	@RequiresPermissions({ModuleConstant.SECURITY_MENU + ":" + Right.UPDATE})
 	@RequestMapping(value = "/init", method = RequestMethod.POST)
 	@ResponseBody
 	public Json init(){
@@ -113,7 +116,7 @@ public class MenuController {
 	 * @param id
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SECURITY_MENU + ":" + Right.DELETE})
+	@RequiresPermissions({ModuleConstant.SECURITY_MENU + ":" + Right.DELETE})
 	@RequestMapping(value= "/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Json delete(String id){

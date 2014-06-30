@@ -1,4 +1,4 @@
-<#--菜单权限编辑-->
+<#--菜单权限添加-->
 <#include "ftl/comm.ftl"/>
 <#assign module="security_menuright"/>
 <script type="text/javascript">
@@ -29,9 +29,10 @@ $(function(){
 				}
 			});
 		}
-	}
+	};
 	//save
 	${module}_add_save = function(d,dg){
+		<@shiro.hasPermission name="${PER_UPDATE}">
 		var menuIds = [],rightIds = [];
 		create_menu_ids(menu.tree("getChecked"),menuIds);
 		if(menuIds.length == 0){
@@ -75,7 +76,8 @@ $(function(){
 				}
 			});
 		});
-	}
+	 </@shiro.hasPermission>
+	};
 });
 //-->
 </script>

@@ -3,6 +3,7 @@ package com.examw.wechat.controllers.security;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.model.DataGrid;
 import com.examw.model.Json; 
+import com.examw.wechat.domain.security.Right;
 import com.examw.wechat.model.security.MenuRightInfo;
 import com.examw.wechat.model.security.RightInfo;
 import com.examw.wechat.service.security.IMenuRightService;
@@ -25,34 +27,31 @@ import com.examw.wechat.service.security.IRightService;
 @RequestMapping(value = "/security/menu/right")
 public class MenuRightController {
 	private static Logger logger = Logger.getLogger(MenuRightController.class);
-	/**
-	 * 权限服务。
-	 */
+	//权限服务。
 	@Resource
 	private IRightService rightService;
-	/**
-	 * 菜单权限服务。
-	 */
+	//菜单权限服务。
 	@Resource
 	private IMenuRightService menuRightService;
 	/**
 	 * 列表页面。
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.VIEW})
+	@RequiresPermissions({ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.VIEW})
 	@RequestMapping(value = {"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
-		//model.addAttribute("PER_UPDATE", ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.UPDATE);
-		//model.addAttribute("PER_DELETE", ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.DELETE);
+		model.addAttribute("PER_UPDATE", ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.UPDATE);
+		model.addAttribute("PER_DELETE", ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.DELETE);
 		return "security/menuright_list";
 	}
 	/**
 	 * 添加页面。
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.UPDATE})
+	@RequiresPermissions({ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.UPDATE})
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String edit(String menuId, Model model){
+		model.addAttribute("PER_UPDATE", ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.UPDATE);
 		 model.addAttribute("rights", this.rightService.datagrid(new RightInfo(){
 				private static final long serialVersionUID = 1L;
 				@Override
@@ -67,7 +66,7 @@ public class MenuRightController {
 	 * 查询数据。
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.VIEW})
+	@RequiresPermissions({ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.VIEW})
 	@RequestMapping(value="/datagrid", method = RequestMethod.POST)
 	@ResponseBody
 	public DataGrid<MenuRightInfo> datagrid(MenuRightInfo info){
@@ -80,7 +79,7 @@ public class MenuRightController {
 	 * @return
 	 * 更新后数据。
 	 */
-	//@RequiresPermissions({ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.UPDATE})
+	@RequiresPermissions({ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.UPDATE})
 	@RequestMapping(value="/update", method = RequestMethod.POST)
 	@ResponseBody
 	public Json update(MenuRightInfo info){
@@ -96,7 +95,6 @@ public class MenuRightController {
 				result.setMsg("未获取权限ID数据！");
 				return result;
 			}
-			
 			String[] menuIds = info.getMenuId().split("\\|"), rightIds = info.getRightId().split("\\|");
 			for(int i = 0; i < menuIds.length; i++){
 				if(StringUtils.isEmpty(menuIds[i])) 
@@ -124,7 +122,7 @@ public class MenuRightController {
 	 * @param id
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.DELETE})
+	@RequiresPermissions({ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.DELETE})
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Json delete(String id){
