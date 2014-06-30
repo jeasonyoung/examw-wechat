@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
@@ -19,6 +20,7 @@ import com.examw.wechat.service.security.IRightService;
  * @since 2014-05-03.
  */
 public class RightServiceImpl extends BaseDataServiceImpl<Right,RightInfo> implements IRightService {
+	private static Logger logger = Logger.getLogger(RightServiceImpl.class);
 	private IRightDao rightDao;
 	private Map<Integer, String> rightNameMap;
 	/**
@@ -92,7 +94,10 @@ public class RightServiceImpl extends BaseDataServiceImpl<Right,RightInfo> imple
 		if(ids == null || ids.length == 0) return;
 		for(int i = 0; i < ids.length; i++){
 			Right data = this.rightDao.load(Right.class, ids[i]);
-			if(data != null) this.rightDao.delete(data);
+			if(data != null) {
+				if(logger.isDebugEnabled()) logger.debug("删除数据：" + data.getName());
+				this.rightDao.delete(data);
+			}
 		}
 	}
 	/*
@@ -101,11 +106,15 @@ public class RightServiceImpl extends BaseDataServiceImpl<Right,RightInfo> imple
 	 */
 	@Override
 	public void init() throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("初始化权限数据...");
 		//查看
+		if(logger.isDebugEnabled()) logger.debug("初始化查看权限.");
 		this.update(new RightInfo(((Integer)Right.VIEW).toString(), this.getRightName(Right.VIEW), Right.VIEW));
 		//修改
+		if(logger.isDebugEnabled()) logger.debug("初始化修改权限.");
 		this.update(new RightInfo(((Integer)Right.UPDATE).toString(), this.getRightName(Right.UPDATE), Right.UPDATE));
 		//删除
+		if(logger.isDebugEnabled()) logger.debug("初始化删除权限.");
 		this.update(new RightInfo(((Integer)Right.DELETE).toString(), this.getRightName(Right.DELETE), Right.DELETE));
 	}
 	/*

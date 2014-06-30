@@ -112,10 +112,6 @@
 		<property name="email"  type="string"  length="45" />
 		<!-- 用户创建时间 -->
 		<property name="createTime"  type="timestamp" />
-		<!-- 最后登录IP -->
-		<property name="lastLoginIP"  type="string"  length="45" />
-		<!-- 最后登录时间 -->
-		<property name="lastLoginTime"  type="timestamp" />
 		<!-- 所属角色集合 -->
 		<set name="roles"  inverse="false" cascade="save-update"  table="tbl_Examw_WeChat_Security_UserRoles" >
 			<!-- <cache usage="read-write"/> -->

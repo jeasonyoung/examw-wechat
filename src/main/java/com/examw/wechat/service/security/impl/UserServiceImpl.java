@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
@@ -27,6 +28,7 @@ import com.examw.wechat.support.PasswordHelper;
  * @since 2014-05-08.
  */
 public class UserServiceImpl extends BaseDataServiceImpl<User, UserInfo> implements IUserService {
+	private static Logger logger = Logger.getLogger(UserServiceImpl.class);
 	private IUserDao userDao;
 	private IRoleDao roleDao; 
 	private Map<Integer, String> genderNames,statusNames;
@@ -117,6 +119,7 @@ public class UserServiceImpl extends BaseDataServiceImpl<User, UserInfo> impleme
 	 */
 	@Override
 	public UserInfo update(UserInfo info) {
+		if(logger.isDebugEnabled()) logger.debug("更新数据...");
 		if(info == null) return null;
 		boolean isAdded = false;
 		User  data = StringUtils.isEmpty(info.getId()) ?  null : this.userDao.load(User.class, info.getId());
@@ -156,11 +159,15 @@ public class UserServiceImpl extends BaseDataServiceImpl<User, UserInfo> impleme
 	 */
 	@Override
 	public void delete(String[] ids) {
+		if(logger.isDebugEnabled()) logger.debug("删除数据...");
 		 if(ids == null || ids.length == 0) return;
 		 for(int i = 0; i  < ids.length; i++){
 			 if(StringUtils.isEmpty(ids[i])) continue;
 			 User data = this.userDao.load(User.class, ids[i]);
-			 if(data != null) this.userDao.delete(data);
+			 if(data != null){
+				 logger.debug("删除数据：" + ids[i]);
+				 this.userDao.delete(data);
+			 }
 		 }
 	}
 	/*
@@ -242,5 +249,48 @@ public class UserServiceImpl extends BaseDataServiceImpl<User, UserInfo> impleme
 	    	}
 	    }
 	    return rights;
+	}
+	/*
+	 * 初始化用户。
+	 * @see com.examw.wechat.service.security.IUserService#init(java.lang.String)
+	 */
+	@Override
+	public void init(String roleId,String account, String password) throws Exception {
+		if(logger.isDebugEnabled())logger.debug("初始化用户...");
+		String err = null;
+		if(StringUtils.isEmpty(roleId)){
+			err = "角色ID为空！";
+			if(logger.isDebugEnabled()) logger.debug(err);
+			throw new Exception(err);
+		}
+		if(this.userDao.total(new UserInfo(){ private static final long serialVersionUID = 1L;}) > 0){
+			err = "已有用户存在！";
+			if(logger.isDebugEnabled()) logger.debug(err);
+			throw new Exception(err);
+		}
+		Role role = this.roleDao.load(Role.class, roleId);
+		if(role == null){
+			err = "角色ID［"+roleId +"］不存在！";
+			if(logger.isDebugEnabled()) logger.debug(err);
+			throw new Exception(err);
+		}
+		if(StringUtils.isEmpty(account)) account = "admin";
+		if(StringUtils.isEmpty(password)) password = "123456";
+		User data = new User();
+		data.setId(UUID.randomUUID().toString());
+		data.setAccount(account);
+		data.setPassword(password);
+		UserInfo info = new UserInfo();
+		BeanUtils.copyProperties(data, info);
+		data.setPassword(this.passwordHelper.encryptAESPassword(info));
+		data.setCreateTime(new Date());
+		data.setGender(User.GENDER_MALE);
+		data.setName(data.getAccount());
+		data.setNickName(data.getAccount());
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+		data.setRoles(roles);
+		data.setStatus(User.STATUS_ENABLED);
+		this.userDao.save(data);
 	}
 }

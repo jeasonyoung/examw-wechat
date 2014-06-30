@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
@@ -18,6 +19,7 @@ import com.examw.wechat.dao.security.IRoleDao;
 import com.examw.wechat.domain.security.Menu;
 import com.examw.wechat.domain.security.MenuRight;
 import com.examw.wechat.domain.security.Role;
+import com.examw.wechat.model.security.MenuRightInfo;
 import com.examw.wechat.model.security.RoleInfo;
 import com.examw.wechat.service.impl.BaseDataServiceImpl;
 import com.examw.wechat.service.security.IRoleService;
@@ -27,6 +29,7 @@ import com.examw.wechat.service.security.IRoleService;
  * @since 2014-05-06.
  */
 public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> implements IRoleService {
+	private static Logger logger = Logger.getLogger(RoleServiceImpl.class);
 	private IRoleDao roleDao;
 	private IMenuDao menuDao;
 	private IMenuRightDao menuRightDao;
@@ -106,6 +109,7 @@ public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> impleme
 	 */
 	@Override
 	public RoleInfo update(RoleInfo info) {
+		if(logger.isDebugEnabled()) logger.debug("更新数据...");
 		if(info == null) return null;
 		boolean isAdded = false;
 		Role data = StringUtils.isEmpty(info.getId()) ? null : this.roleDao.load(Role.class, info.getId());
@@ -129,11 +133,13 @@ public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> impleme
 	 */
 	@Override
 	public void delete(String[] ids) {
+		if(logger.isDebugEnabled()) logger.debug("删除数据...");
 		if(ids == null || ids.length == 0) return;
 		for(int i = 0; i < ids.length; i++){
 			if(StringUtils.isEmpty(ids[i])) continue;
 			Role data = this.roleDao.load(Role.class, ids[i]);
 			if(data != null){
+				if(logger.isDebugEnabled()) logger.debug("更新数据：" + ids[i]);
 				this.roleDao.delete(data);
 			}
 		}
@@ -233,5 +239,37 @@ public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> impleme
 		}
 		role.setRights(rights);
 		this.roleDao.update(role);
+	}
+	/*
+	 * 初始化角色。
+	 * @see com.examw.wechat.service.security.IRoleService#init()
+	 */
+	@Override
+	public void init(String roleId) throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("初始化角色...");
+		String err = null;
+		if(StringUtils.isEmpty(roleId)){
+			err = "RoleID 为空!";
+			if(logger.isDebugEnabled()) logger.debug(err);
+			throw new Exception(err);
+		}
+		List<MenuRight> menuRights = this.menuRightDao.findMenuRights(new MenuRightInfo(){private static final long serialVersionUID = 1L;});
+		if(menuRights == null || menuRights.size() == 0){
+			err = "未找到菜单权限！";
+			if(logger.isDebugEnabled()) logger.debug(err);
+			throw new Exception(err);
+		}
+		boolean isAdded = false;
+		Role data = this.roleDao.load(Role.class, roleId);
+		if(isAdded = (data == null)){
+			data = new Role();
+			data.setId(roleId);
+		}
+		data.setName("administrators");
+		data.setDescription("系统初始化角色");
+		data.setStatus(Role.STATUS_ENABLED);
+		data.setRights(new HashSet<MenuRight>(menuRights));
+		if(isAdded)this.roleDao.save(data);
+		if(logger.isDebugEnabled()) logger.debug("初始化角色成功！");
 	}
 }

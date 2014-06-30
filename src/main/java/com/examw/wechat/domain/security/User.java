@@ -10,9 +10,9 @@ import java.util.Set;
  */
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String id,name,account,password,nickName,imgUrl,phone,qq,email,lastLoginIP;
+	private String id,name,account,password,nickName,imgUrl,phone,qq,email;
 	private Integer gender,status;
-	private Date createTime,lastLoginTime;
+	private Date createTime;
 	private Set<Role> roles;
 	/**
 	 * 男性。
@@ -30,11 +30,6 @@ public class User implements Serializable {
 	 * 停用状态。
 	 */
 	public static final int STATUS_DISABLE = 0;
-	/**
-	 * 1-平台用户,2-机构用户
-	 */
-	public static final int USER_TYPE_PLAT = 1,USER_TYPE_AGENCY = 2;
-	
 	/**
 	 * 获取用户ID。
 	 * @return 用户ID。
@@ -239,37 +234,5 @@ public class User implements Serializable {
 	 */
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
-	}
-	/**
-	 * 获取用户最后登录IP。
-	 * @return
-	 * 用户最后登录IP。
-	 */
-	public String getLastLoginIP() {
-		return lastLoginIP;
-	}
-	/**
-	 * 设置用户最后登录IP。
-	 * @param lastLoginIP
-	 * 用户最后登录IP。
-	 */
-	public void setLastLoginIP(String lastLoginIP) {
-		this.lastLoginIP = lastLoginIP;
-	}
-	/**
-	 * 获取用户最后登录时间。
-	 * @return
-	 * 用户最后登录时间。
-	 */
-	public Date getLastLoginTime() {
-		return lastLoginTime;
-	}
-	/**
-	 * 设置用户最后登录时间。
-	 * @param lastLoginTime
-	 * 用户最后登录时间。
-	 */
-	public void setLastLoginTime(Date lastLoginTime) {
-		this.lastLoginTime = lastLoginTime;
 	}
 }

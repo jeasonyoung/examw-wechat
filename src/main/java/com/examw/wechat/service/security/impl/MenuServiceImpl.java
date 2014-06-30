@@ -70,7 +70,7 @@ public class MenuServiceImpl  implements IMenuService {
 	 */
 	private synchronized ModuleSystemCollection loadFileToParse(){
 		if(StringUtils.isEmpty(this.menuFile)){
-			logger.info("菜单文件为空！");
+			if(logger.isDebugEnabled()) logger.debug("菜单文件为空！");
 			return null;
 		}
 		Resource rs = new ClassPathResource(this.menuFile, ClassUtils.getDefaultClassLoader());
@@ -92,7 +92,7 @@ public class MenuServiceImpl  implements IMenuService {
 	@Override
 	public synchronized ModuleSystem loadSystem() {
 		if(StringUtils.isEmpty(this.systemId)){
-			logger.info("系统ID为空！");
+			if(logger.isDebugEnabled()) logger.debug("系统ID为空！");
 			return null;
 		}
 		ModuleSystem ms = mapSystemCache.get(this.systemId);
@@ -148,7 +148,7 @@ public class MenuServiceImpl  implements IMenuService {
 			Menu data = this.menuDao.load(Menu.class, ids[i]);
 			if(data != null && (data.getChildren() == null || data.getChildren().size() == 0)){
 				this.menuDao.delete(data); 
-				logger.info("删除数据:" + data.getName());
+				if(logger.isDebugEnabled()) logger.debug("删除数据:" + data.getName());
 			}
 		}
 	}
@@ -196,18 +196,19 @@ public class MenuServiceImpl  implements IMenuService {
 	 */
 	@Override
 	public void init() throws Exception {
-		logger.info("开始初始化菜单数据...");
-		String msg = null;
+		if(logger.isDebugEnabled()) logger.debug("开始初始化菜单数据...");
+		String err = null;
 		ModuleSystem system = this.loadSystem();
 		if(system == null || system.getModules() == null || system.getModules().size() == 0){
-			logger.info(msg = "菜单文件中没有系统信息或菜单数据信息！");
-			throw new Exception(msg);
+			err = "菜单文件中没有系统信息或菜单数据信息！";
+			if(logger.isDebugEnabled()) logger.debug(err);
+			throw new Exception(err);
 		}
 		
 		for(ModuleDefine module : system.getModules()){
 			this.initModuleToMenu(null, module);
 		}
-		logger.info("初始化完成！");
+		if(logger.isDebugEnabled()) logger.debug("初始化完成！");
 	}
 	/**
 	 * 初始化菜单模块到菜单数据。

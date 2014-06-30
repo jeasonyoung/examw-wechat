@@ -1,6 +1,8 @@
 package com.examw.wechat.dao.security.impl;
  
+import java.util.HashMap;
 import java.util.List; 
+import java.util.Map;
 
 import com.examw.wechat.dao.impl.BaseDaoImpl;
 import com.examw.wechat.dao.security.IMenuDao;
@@ -18,8 +20,19 @@ public class MenuDaoImpl  extends BaseDaoImpl<Menu> implements IMenuDao{
 	 */
 	@Override
 	public List<Menu> findMenus() {
-		String hql =  "from Menu m  where m.parent = null order by m.orderNo";
+		final String hql =  "from Menu m  where m.parent = null order by m.orderNo";
 		return this.find(hql, null, null, null);
+	}
+	/*
+	 * 加载子菜单集合。
+	 * @see com.examw.wechat.dao.security.IMenuDao#loadChildren(java.lang.String)
+	 */
+	@Override
+	public List<Menu> loadChildren(String pid) {
+		final String hql =  "from Menu m  where m.parent.id = :pid order by m.orderNo";
+		Map<String,Object> parameters = new HashMap<String, Object>();
+		parameters.put("pid", pid);
+		return this.find(hql, parameters, null, null); 
 	}
 	/*
 	 * 删除菜单。

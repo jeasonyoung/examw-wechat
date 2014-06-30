@@ -60,4 +60,15 @@ public interface IUserService extends IBaseDataService<UserInfo> {
 	 * 权限集合。
 	 */
 	Set<String> findPermissions(String account);
+	/**
+	 * 初始化用户。
+	 * @param roleId
+	 * 角色ID。
+	 * @param account
+	 * 账号。
+	 * @param password
+	 * 密码。
+	 * @throws Exception
+	 */
+	void init(String roleId,String account, String password) throws Exception;
 }

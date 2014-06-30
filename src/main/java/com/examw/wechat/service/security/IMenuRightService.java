@@ -9,5 +9,9 @@ import com.examw.wechat.service.IBaseDataService;
  * @since 2014-05-04.
  */
 public interface IMenuRightService extends IBaseDataService<MenuRightInfo> {
-	
+	/**
+	 * 菜单权限初始化。
+	 * @throws Exception
+	 */
+	void init() throws Exception;
 }

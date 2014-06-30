@@ -35,4 +35,11 @@ public interface IRoleService extends IBaseDataService<RoleInfo> {
 	 * 菜单权限ID数组。
 	 */
 	void addRoleRight(String roleId,String[] menuRightIds);
+	/**
+	 * 初始化角色。
+	 * @param roleId
+	 * 角色ID。
+	 * @throws Exception
+	 */
+	void init(String roleId) throws Exception;
 }
