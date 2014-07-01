@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.model.Json;
 import com.examw.model.TreeNode;
+import com.examw.wechat.domain.security.Right;
 import com.examw.wechat.model.account.AccountMenuInfo;
 import com.examw.wechat.service.account.IAccountMenuService;
 
@@ -27,25 +29,27 @@ import com.examw.wechat.service.account.IAccountMenuService;
 @RequestMapping(value = "/accounts/menu")
 public class AccountMenuController {
 	private static Logger logger = Logger.getLogger(AccountMenuController.class);
-	/**
-	 * 微信公众号菜单服务接口。
-	 */
+	//微信公众号菜单服务接口。 
 	@Resource
 	private IAccountMenuService accountMenuService;
 	/**
 	 * 列表页面。
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.ACCOUNTS_MENU + ":" + Right.VIEW})
 	@RequestMapping(value = {"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
+		model.addAttribute("PER_UPDATE", ModuleConstant.ACCOUNTS_MENU + ":" + Right.UPDATE);
+		model.addAttribute("PER_DELETE", ModuleConstant.ACCOUNTS_MENU + ":" + Right.DELETE);
 		return "/accounts/menu_list";
 	}
 	/**
 	 * 编辑页面。
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.ACCOUNTS_MENU + ":" + Right.VIEW})
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public String edit(Model model){
+	public String edit(){
 		return "/accounts/menu_edit";
 	}
 	/**
@@ -53,6 +57,7 @@ public class AccountMenuController {
 	 * @param info
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.ACCOUNTS_MENU + ":" + Right.VIEW})
 	@RequestMapping(value = "/datagrid", method = RequestMethod.POST)
 	@ResponseBody
 	public List<AccountMenuInfo>  datagrid(AccountMenuInfo info){
@@ -102,6 +107,7 @@ public class AccountMenuController {
 	 * @param info
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.ACCOUNTS_MENU + ":" + Right.UPDATE})
 	@RequestMapping(value="/update", method = RequestMethod.POST)
 	@ResponseBody
 	public Json update(AccountMenuInfo info){
@@ -121,6 +127,7 @@ public class AccountMenuController {
 	 * @param id
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.ACCOUNTS_MENU + ":" + Right.DELETE})
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Json delete(String id){
@@ -140,6 +147,7 @@ public class AccountMenuController {
 	 * @param accountId
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.ACCOUNTS_MENU + ":" + Right.VIEW})
 	@RequestMapping(value="/query/{accountId}", method = RequestMethod.POST)
 	@ResponseBody
 	public String query(@PathVariable String accountId){
@@ -150,6 +158,7 @@ public class AccountMenuController {
 	 * @param accountId
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.ACCOUNTS_MENU + ":" + Right.UPDATE})
 	@RequestMapping(value="/create/{accountId}", method = RequestMethod.POST)
 	@ResponseBody
 	public String create(@PathVariable String accountId){
@@ -160,6 +169,7 @@ public class AccountMenuController {
 	 * @param accountId
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.ACCOUNTS_MENU + ":" + Right.DELETE})
 	@RequestMapping(value="/remove/{accountId}", method = RequestMethod.POST)
 	@ResponseBody
 	public String remove(@PathVariable String accountId){

@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.examw.model.DataGrid;
 import com.examw.model.Json;
 import com.examw.wechat.domain.mgr.Article;
+import com.examw.wechat.domain.security.Right;
 import com.examw.wechat.model.mgr.ArticleInfo;
 import com.examw.wechat.service.mgr.IArticleService;
 
@@ -30,14 +32,19 @@ import com.examw.wechat.service.mgr.IArticleService;
 @RequestMapping(value = "/mgr/article")
 public class ArticleController {
 	private static Logger logger = Logger.getLogger(ArticleController.class);
+	//资讯文档服务。
 	@Resource
 	private IArticleService articleService;
 	/**
 	 * 列表页面。
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.MGR_ARTICLE + ":" + Right.VIEW})
 	@RequestMapping(value = {"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
+		model.addAttribute("PER_UPDATE", ModuleConstant.MGR_ARTICLE + ":" + Right.UPDATE);
+		model.addAttribute("PER_DELETE", ModuleConstant.MGR_ARTICLE + ":" + Right.DELETE);
+		
 		model.addAttribute("ARTICLE_TYPE_TEXT_VALUE", Article.TYPE_TEXT);
 		model.addAttribute("ARTICLE_TYPE_TEXT_NAME", this.articleService.loadTypeName(Article.TYPE_TEXT));
 		
@@ -52,6 +59,7 @@ public class ArticleController {
 	 * 编辑页面。
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.MGR_ARTICLE + ":" + Right.UPDATE})
 	@RequestMapping(value = "/edit/{type}", method = RequestMethod.GET)
 	public String edit(@PathVariable String type, String catalogId,String examId, Model model){
 		model.addAttribute("CURRENT_CATALOG_ID", StringUtils.isEmpty(catalogId) ? "" : catalogId);
@@ -64,6 +72,7 @@ public class ArticleController {
 	 * 获取资讯子图文选项。
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.MGR_ARTICLE + ":" + Right.UPDATE})
 	@RequestMapping(value = "/opt", method = RequestMethod.GET)
 	public String options(String catalogId,String examId,Model model){
 		model.addAttribute("CURRENT_ID", UUID.randomUUID().toString());
@@ -109,6 +118,7 @@ public class ArticleController {
 	 * @param info
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.MGR_ARTICLE + ":" + Right.VIEW})
 	@RequestMapping(value = "/datagrid", method = RequestMethod.POST)
 	@ResponseBody
 	public DataGrid<ArticleInfo> datagrid(ArticleInfo info){
@@ -119,6 +129,7 @@ public class ArticleController {
 	 * @param info
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.MGR_ARTICLE + ":" + Right.UPDATE})
 	@RequestMapping(value="/update", method = RequestMethod.POST)
 	@ResponseBody
 	public Json update(@RequestBody ArticleInfo info){
@@ -138,6 +149,7 @@ public class ArticleController {
 	 * @param id
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.MGR_ARTICLE + ":" + Right.DELETE})
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Json delete(String id){

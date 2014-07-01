@@ -60,6 +60,7 @@ $(function(){
 			accessToken:$("#${dg}_toolbar input[name='accessToken']").val()
 		});
 	};
+	<@shiro.hasPermission name="${PER_DELETE}">
 	//delete
 	${dg}_delete = function(){
 		var rows = dg.datagrid("getChecked");
@@ -100,12 +101,15 @@ $(function(){
 			$.messager.alert("提示","未选中须删除的数据！");
 		}
 	};
+	</@shiro.hasPermission>
 });
 //-->
 </script>
 <table id="${dg}"></table>
 <div id="${dg}_toolbar">
+	<@shiro.hasPermission name="${PER_DELETE}">
 	<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+	</@shiro.hasPermission>
 	<span>公众号/名称:</span>
 	<input name="account" type="text" style="width:198px;"/>
 	<span>票据:</span>

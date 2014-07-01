@@ -83,6 +83,7 @@ $(function(){
 	${dg}_search = function(){
 		dg.datagrid("load",query());
 	};
+	<@shiro.hasPermission name="${PER_DELETE}">
 	//delete
 	${dg}_delete = function(){
 		var rows = dg.datagrid("getChecked");
@@ -123,12 +124,15 @@ $(function(){
 			$.messager.alert("提示","未选中须删除的数据！");
 		}
 	};
+	</@shiro.hasPermission>
 });
 //-->
 </script>
 <table id="${dg}"></table>
 <div id="${dg}_toolbar">
+	<@shiro.hasPermission name="${PER_DELETE}">
 	<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+	</@shiro.hasPermission>
 	<label>公众号/用户：<input name="name" type="text" style="width:168px;"/></label>
 	<span style="text-align:right;padding-left:10px;">状态：</span>
 	<label><input name="status" type="radio" value="1" checked="checked"/>${USER_STATUS_SUBSCRIBE}</label>

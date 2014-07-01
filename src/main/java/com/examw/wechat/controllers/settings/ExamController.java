@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.examw.model.DataGrid;
 import com.examw.model.Json;
 import com.examw.model.TreeNode;
+import com.examw.wechat.domain.security.Right;
 import com.examw.wechat.model.settings.ExamInfo;
 import com.examw.wechat.service.settings.IExamService;
 
@@ -34,27 +36,25 @@ import com.examw.wechat.service.settings.IExamService;
 @RequestMapping(value = "/settings/exam")
 public class ExamController {
 	private static Logger logger  = Logger.getLogger(ExamController.class);
-	/**
-	 * 考试数据接口
-	 */
+	//考试数据接口
 	@Resource
 	private IExamService examService;
 	/**
 	 * 考试列表页面。
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SETTINGS_EXAM + ":" + Right.VIEW})
+	@RequiresPermissions({ModuleConstant.SETTINGS_EXAM + ":" + Right.VIEW})
 	@RequestMapping(value={"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
-		//model.addAttribute("PER_UPDATE", ModuleConstant.SETTINGS_EXAM + ":" + Right.UPDATE);
-		//model.addAttribute("PER_DELETE", ModuleConstant.SETTINGS_EXAM + ":" + Right.DELETE);
+		model.addAttribute("PER_UPDATE", ModuleConstant.SETTINGS_EXAM + ":" + Right.UPDATE);
+		model.addAttribute("PER_DELETE", ModuleConstant.SETTINGS_EXAM + ":" + Right.DELETE);
 		return "settings/exam_list";
 	}
 	/**
 	 * 考试编辑页面。
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SETTINGS_EXAM + ":" + Right.UPDATE})
+	@RequiresPermissions({ModuleConstant.SETTINGS_EXAM + ":" + Right.UPDATE})
 	@RequestMapping(value="/edit", method = RequestMethod.GET)
 	public String edit(String catalogId, Model model){
 		model.addAttribute("CURRENT_CATALOG_ID", StringUtils.isEmpty(catalogId) ? "" : catalogId);
@@ -64,7 +64,7 @@ public class ExamController {
 	 * 查询数据。
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SETTINGS_EXAM + ":" + Right.VIEW})
+	@RequiresPermissions({ModuleConstant.SETTINGS_EXAM + ":" + Right.VIEW})
 	@RequestMapping(value="/datagrid", method = RequestMethod.POST)
 	@ResponseBody
 	public DataGrid<ExamInfo> datagrid(ExamInfo info){
@@ -109,7 +109,7 @@ public class ExamController {
 	 * @return
 	 * 更新后数据。
 	 */
-	//@RequiresPermissions({ModuleConstant.SETTINGS_EXAM + ":" + Right.UPDATE})
+	@RequiresPermissions({ModuleConstant.SETTINGS_EXAM + ":" + Right.UPDATE})
 	@RequestMapping(value="/update", method = RequestMethod.POST)
 	@ResponseBody
 	public Json update(ExamInfo info){
@@ -129,7 +129,7 @@ public class ExamController {
 	 * @param id
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SETTINGS_EXAM + ":" + Right.DELETE})
+	@RequiresPermissions({ModuleConstant.SETTINGS_EXAM + ":" + Right.DELETE})
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Json delete(String id){

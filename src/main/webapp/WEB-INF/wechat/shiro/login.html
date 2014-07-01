@@ -1,0 +1,114 @@
+<#include "ftl/comm.ftl"/>
+<#assign module="shiro_login"/>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cn">
+<head>
+			<title>${systemName}-系统登录</title>
+			<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+			<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+			<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+			<!-- easyui css -->
+			<link rel="stylesheet" href="<@s.url "/resources/themes/icon.css"/>" type="text/css"/>
+			<link rel="stylesheet" href="<@s.url "/resources/themes/bootstrap/easyui.css"/>" type="text/css"/>
+			<!-- custom css -->
+			<link rel="stylesheet" href="<@s.url "/resources/default.css"/>" type="text/css"/>
+			<!-- jquery -->
+			<script type="text/javascript" src="<@s.url "/resources/jquery.min.js"/>"></script>
+			<!-- easyui -->
+			<script type="text/javascript" src="<@s.url "/resources/jquery.easyui.min.js"/>"></script>
+			<script type="text/javascript" src="<@s.url "/resources/locale/easyui-lang-zh_CN.js"/>"></script>
+			 
+			<!-- easyui扩展 -->
+			<script type="text/javascript" src="<@s.url "/resources/easyui-ext.js"/>"></script>
+		</head>
+		<body >
+		 	<div id="${module}_dialog">
+				 	<form method="POST" style="padding:5px;">
+				 		<div style="float:left;margin-top:7px;">
+				 			<label style="width:65px;">用户账号：</label>
+				 			<input type="text" name="account" class="easyui-validatebox" data-options="required:true" style="width:168px;"/>
+				 		</div>
+				 		<div style="float:left;margin-top:5px;">
+				 			<label style="width:65px;">用户密码：</label>
+				 			<input type="password" name="password" class="easyui-validatebox" data-options="required:true" style="width:168px;"/>
+				 		</div>
+				 		<div style="float:left;margin-top:5px;">
+				 			<label style="width:65px;">验证码：</label>
+				 			<div style="float:left;">
+				 				<input type="text" name="verifycode" class="easyui-validatebox" data-options="required:true,tipPosition:'left'" style="width:60px;"/>
+				 			</div>
+				 			<div class="easyui-tooltip"  title="看不清楚？换一个" style="float:left;margin-left:12px;width:90px;height:30px;cursor:pointer;text-align:right;border:solid 1px #cfd7e2;">
+				 				<img src="<@s.url '/verifyCodeImage'/>" alt="验证码" />
+				 			</div>
+				 		</div>
+				 	</form>
+			</div>
+			<script type="text/javascript">
+			<!--
+			$(function(){
+				//render
+				$.parser.parse("#${module}_dialog");
+				//refresh
+				$("#${module}_dialog img").bind("click",function(){
+					 $(this).attr("src","<@s.url '/verifyCodeImage? _='/>"+ Math.random());
+				});
+				//dialog
+				var d = $("#${module}_dialog").dialog({
+					title:"${systemName}-用户登录",
+					width:300,
+					height:200,
+					resizable:false,
+					closable:false,
+					modal:true,
+					onClose:function(){
+						$(this).dialog("destroy");
+					},
+					buttons:[{
+						text:'登录',
+		 				iconCls:"icon-save",
+		 				handler:function(){
+		 					form_submit();
+		 				}
+					}]
+				});
+				//submit
+				function form_submit(){
+					$.messager.progress();
+ 					var f = $("#${module}_dialog form").form("submit",{
+ 						url:"<@s.url '/login'/>",
+ 						onSubmit:function(){
+ 							var isValid = $(this).form("validate");
+							if (!isValid){
+								$.messager.progress("close");
+							}
+							return isValid;
+ 						},
+ 						onLoadError:function(e){
+ 							<@error_dialog "e"/>
+ 						},
+ 						success: function(data){
+							$.messager.progress("close");
+							//alert(data);
+							var o = $.parseJSON(data);
+							if(o.success){
+								window.location.href="<@s.url '/index'/>";
+							}else{
+								$("#${module}_form img").click();
+								$.messager.alert("登录失败",o.msg);
+								$("#${module}_form input[name=verifycode]").val("");
+								$("#${module}_form input[name=password]").val("");
+							}
+						}
+ 					});
+				};
+				//enter
+				$(window).keydown(function(e){
+					if(e.keyCode == 13){
+						form_submit();
+					}
+				});
+			});
+			//-->
+			</script>
+		</body>
+</html>

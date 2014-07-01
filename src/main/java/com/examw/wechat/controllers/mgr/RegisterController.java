@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.model.DataGrid;
 import com.examw.model.Json;
+import com.examw.wechat.domain.security.Right;
 import com.examw.wechat.model.mgr.RegisterInfo;
 import com.examw.wechat.model.settings.CatalogInfo;
 import com.examw.wechat.service.mgr.IRegisterService;
@@ -27,28 +29,28 @@ import com.examw.wechat.service.settings.IExamService;
 @RequestMapping(value = "/mgr/register")
 public class RegisterController {
 	private static Logger logger = Logger.getLogger(RegisterController.class);
-	/**
-	 * 登记用户服务。
-	 */
+	//登记用户服务。
 	@Resource
 	private IRegisterService registerService;
-	/**
-	 * 考试服务。
-	 */
+	//考试服务。
 	@Resource
 	private IExamService examService;
 	/**
 	 * 列表页面。
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.MGR_REGISTER + ":" + Right.VIEW})
 	@RequestMapping(value = {"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
+		model.addAttribute("PER_UPDATE", ModuleConstant.MGR_REGISTER + ":" + Right.UPDATE);
+		model.addAttribute("PER_DELETE", ModuleConstant.MGR_REGISTER + ":" + Right.DELETE);
 		return "/mgr/register_list";
 	}
 	/**
 	 * 编辑页面。
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.MGR_REGISTER + ":" + Right.UPDATE})
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(String catalogId,String examId, Model model){
 		if(!StringUtils.isEmpty(examId)){
@@ -57,6 +59,7 @@ public class RegisterController {
 		}
 		model.addAttribute("CURRENT_CATALOG_ID", StringUtils.isEmpty(catalogId) ? "" : catalogId);
 		model.addAttribute("CURRENT_EXAM_ID", StringUtils.isEmpty(examId) ? "" : examId);
+		
 		return "/mgr/register_edit";
 	}
 	/**
@@ -64,6 +67,7 @@ public class RegisterController {
 	 * @param info
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.MGR_REGISTER + ":" + Right.VIEW})
 	@RequestMapping(value = "/datagrid", method = RequestMethod.POST)
 	@ResponseBody
 	public DataGrid<RegisterInfo> datagrid(RegisterInfo info){
@@ -74,6 +78,7 @@ public class RegisterController {
 	 * @param info
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.MGR_REGISTER + ":" + Right.UPDATE})
 	@RequestMapping(value="/update", method = RequestMethod.POST)
 	@ResponseBody
 	public Json update(RegisterInfo info, HttpServletRequest request){
@@ -94,6 +99,7 @@ public class RegisterController {
 	 * @param id
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.MGR_REGISTER + ":" + Right.DELETE})
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Json delete(String id){

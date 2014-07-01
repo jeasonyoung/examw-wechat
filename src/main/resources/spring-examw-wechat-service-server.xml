@@ -6,7 +6,7 @@
 	<!-- 微信上下文缓存 -->
 	<bean id="contextCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
 		<!-- 缓存管理器 -->
-		<property name="cacheManager"  ref="cacheManager" />
+		<property name="cacheManager"  ref="globalCacheManager" />
 		<!-- 缓存名称 -->
 		<property name="cacheName" value="wechatContextCache" />
 	</bean>

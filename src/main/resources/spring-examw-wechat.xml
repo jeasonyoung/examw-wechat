@@ -3,7 +3,6 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-		
 		<!--引入参数属性文件 -->
 		<context:property-placeholder location="classpath:config.properties" />
 		<!-- hibernate 配置 -->
@@ -13,5 +12,5 @@
 		<!-- service -->
 		<import resource="spring-examw-wechat-service.xml" />
 		<!-- shiro -->
-		<!--<import resource="spring-examw-oa-shiro.xml" />-->
+		<import resource="spring-examw-wechat-shiro.xml" />
 </beans>

@@ -114,7 +114,7 @@ $(function(){
 			href:"<@s.url '/mgr/article/edit'/>/"+t_value +"?catalogId="+c_id +"&examId=" + e_id,
 			modal:true,
 			buttons:[
-			/* <shiro.hasPermission name="${PER_UPDATE}"> */
+			<@shiro.hasPermission name="${PER_UPDATE}">
 			  {
 				text:"保存",
 				iconCls:"icon-save",
@@ -157,7 +157,7 @@ $(function(){
 					});
 				}
 			},
-			/* </shiro.hasPermission> */
+			</@shiro.hasPermission>
 			{
 				text:"关闭",
 				iconCls:"icon-cancel",
@@ -186,6 +186,7 @@ $(function(){
 	${dg}_add = function(type){
 		edit_window("新增资讯",0,null,type);
 	};
+	<@shiro.hasPermission name="${PER_DELETE}">
 	//delete
 	${dg}_delete = function(){
 		var rows = dg.datagrid("getChecked");
@@ -226,6 +227,7 @@ $(function(){
 			$.messager.alert("提示","未选中须删除的数据！");
 		}
 	};
+	</@shiro.hasPermission>
 });
 //-->
 </script>
@@ -242,9 +244,13 @@ $(function(){
 	<div data-options="region:'center',title:'资讯列表'">
 		<table id="${dg}"></table>
 		<div id="${dg}_toobar">
+			<@shiro.hasPermission name="${PER_UPDATE}">
 			<a href="#" class="easyui-splitbutton" data-options="text:'新增',iconCls:'icon-add',menu:'#${dg}_toobar_menu'" style="float:left;"></a>
+			</@shiro.hasPermission>
 			<span>|</span>
+			<@shiro.hasPermission name="${PER_DELETE}">
 			<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+			</@shiro.hasPermission>
 			<label>所属省份：<input name="provinceId" type="text" class="easyui-combobox" data-options="
 				url:'<@s.url '/settings/province/all'/>',
 				valueField:'id',
@@ -257,10 +263,12 @@ $(function(){
 			
 			<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
 		</div>
+		<@shiro.hasPermission name="${PER_UPDATE}">
 		<div id="${dg}_toobar_menu" style="width:100px;">
 			<div data-options="iconCls:'icon-edit'" onClick="${dg}_add([${ARTICLE_TYPE_TEXT_VALUE},'${ARTICLE_TYPE_TEXT_NAME}']);">${ARTICLE_TYPE_TEXT_NAME}</div>
 			<div data-options="iconCls:'icon-add'" onClick="${dg}_add([${ARTICLE_TYPE_NEWS_VALUE},'${ARTICLE_TYPE_NEWS_NAME}']);">${ARTICLE_TYPE_NEWS_NAME}</div>
 			<div data-options="iconCls:'icon-edit'" onClick="${dg}_add([${ARTICLE_TYPE_ARTICLE_VALUE},'${ARTICLE_TYPE_ARTICLE_NAME}']);">${ARTICLE_TYPE_ARTICLE_NAME}</div>
 		</div>
+		</@shiro.hasPermission>
 	</div>
 </div>

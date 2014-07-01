@@ -96,7 +96,9 @@ $(function(){
 			height:400,
 			href:"<@s.url '/accounts/account/edit'/>",
 			modal:true,
-			buttons:[{
+			buttons:[
+			<@shiro.hasPermission name="${PER_UPDATE}">
+			{
 				text:"保存",
 				iconCls:"icon-save",
 				handler:function(){
@@ -130,7 +132,9 @@ $(function(){
 						}
 					});
 				}
-			},{
+			},
+			</@shiro.hasPermission>
+			{
 				text:"关闭",
 				iconCls:"icon-cancel",
 				handler:function(){
@@ -153,6 +157,7 @@ $(function(){
 	${dg}_add = function(){
 		edit_window("新增公众号",0,null);
 	};
+	<@shiro.hasPermission name="${PER_DELETE}">
 	//delete
 	${dg}_delete = function(){
 		var rows = dg.datagrid("getChecked");
@@ -193,14 +198,19 @@ $(function(){
 			$.messager.alert("提示","未选中须删除的数据！");
 		}
 	};
+	</@shiro.hasPermission>
 });
 //-->
 </script>
 <table id="${dg}"></table>
 <div id="${dg}_toolbar">
+	<@shiro.hasPermission name="${PER_UPDATE}">
 	<a href="#" class="easyui-linkbutton" onclick="${dg}_add()" data-options="iconCls:'icon-add',plain:true" style="float:left;">新增</a>
+	</@shiro.hasPermission>
 	<span>|</span>
+	<@shiro.hasPermission name="${PER_DELETE}">
 	<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+	</@shiro.hasPermission>
 	<span>公众号/名称:</span>
 	<input name="account" type="text" style="width:198px;"/>
 	

@@ -109,7 +109,7 @@ $(function(){
 			href:"<@s.url '/mgr/register/edit'/>?catalogId="+catalog_id +"&examId=" + exam_id,
 			modal:true,
 			buttons:[
-			/* <shiro.hasPermission name="${PER_UPDATE}"> */
+			<@shiro.hasPermission name="${PER_UPDATE}">
 			  {
 				text:"保存",
 				iconCls:"icon-save",
@@ -145,7 +145,7 @@ $(function(){
 					});
 				}
 			},
-			/* </shiro.hasPermission> */
+			</@shiro.hasPermission>
 			{
 				text:"关闭",
 				iconCls:"icon-cancel",
@@ -172,6 +172,7 @@ $(function(){
 	${dg}_add = function(){
 		edit_window("新增登记用户",0,null);
 	};
+	<@shiro.hasPermission name="${PER_DELETE}">
 	//delete
 	${dg}_delete = function(){
 		var rows = dg.datagrid("getChecked");
@@ -212,6 +213,7 @@ $(function(){
 			$.messager.alert("提示","未选中须删除的数据！");
 		}
 	};
+	</@shiro.hasPermission>
 });
 //-->
 </script>
@@ -228,9 +230,13 @@ $(function(){
 	<div data-options="region:'center',title:'登记用户列表'">
 		<table id="${dg}"></table>
 		<div id="${dg}_toobar">
+			<@shiro.hasPermission name="${PER_UPDATE}">
 			<a href="#" class="easyui-linkbutton" onclick="${dg}_add()" data-options="iconCls:'icon-add',plain:true" style="float:left;">新增</a>
+			</@shiro.hasPermission>
 			<span>|</span>
+			<@shiro.hasPermission name="${PER_DELETE}">
 			<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+			</@shiro.hasPermission>
 			<label>名称：<input name="name" type="text" style="width:168px;"/></label>
 			<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
 		</div>

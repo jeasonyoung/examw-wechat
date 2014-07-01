@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.model.DataGrid;
 import com.examw.model.Json;
+import com.examw.wechat.domain.security.Right;
 import com.examw.wechat.model.settings.CatalogInfo;
 import com.examw.wechat.service.settings.ICatalogService;
 
@@ -26,27 +28,25 @@ import com.examw.wechat.service.settings.ICatalogService;
 @RequestMapping(value = "/settings/catalog")
 public class CatalogController {
 	private static Logger logger  = Logger.getLogger(CatalogController.class);
-	/**
-	 * 考试类别数据接口
-	 */
+	// 考试类别数据接口
 	@Resource
 	private ICatalogService catalogService;
 	/**
 	 * 考试类别列表页面。
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SETTINGS_CATALOG + ":" + Right.VIEW})
+	@RequiresPermissions({ModuleConstant.SETTINGS_CATALOG + ":" + Right.VIEW})
 	@RequestMapping(value={"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
-		//model.addAttribute("PER_UPDATE", ModuleConstant.SETTINGS_CATALOG + ":" + Right.UPDATE);
-		//model.addAttribute("PER_DELETE", ModuleConstant.SETTINGS_CATALOG + ":" + Right.DELETE);
+		model.addAttribute("PER_UPDATE", ModuleConstant.SETTINGS_CATALOG + ":" + Right.UPDATE);
+		model.addAttribute("PER_DELETE", ModuleConstant.SETTINGS_CATALOG + ":" + Right.DELETE);
 		return "settings/catalog_list";
 	}
 	/**
 	 * 考试类别编辑页面。
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SETTINGS_CATALOG + ":" + Right.UPDATE})
+	@RequiresPermissions({ModuleConstant.SETTINGS_CATALOG + ":" + Right.UPDATE})
 	@RequestMapping(value="/edit", method = RequestMethod.GET)
 	public String edit(){
 		return "settings/catalog_edit";
@@ -55,7 +55,7 @@ public class CatalogController {
 	 * 查询数据。
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SETTINGS_CATALOG + ":" + Right.VIEW})
+	@RequiresPermissions({ModuleConstant.SETTINGS_CATALOG + ":" + Right.VIEW})
 	@RequestMapping(value="/datagrid", method = RequestMethod.POST)
 	@ResponseBody
 	public DataGrid<CatalogInfo> datagrid(CatalogInfo info){
@@ -87,7 +87,7 @@ public class CatalogController {
 	 * @return
 	 * 更新后数据。
 	 */
-	//@RequiresPermissions({ModuleConstant.SETTINGS_CATALOG + ":" + Right.UPDATE})
+	@RequiresPermissions({ModuleConstant.SETTINGS_CATALOG + ":" + Right.UPDATE})
 	@RequestMapping(value="/update", method = RequestMethod.POST)
 	@ResponseBody
 	public Json update(CatalogInfo info){
@@ -107,7 +107,7 @@ public class CatalogController {
 	 * @param id
 	 * @return
 	 */
-	//@RequiresPermissions({ModuleConstant.SETTINGS_CATALOG + ":" + Right.DELETE})
+	@RequiresPermissions({ModuleConstant.SETTINGS_CATALOG + ":" + Right.DELETE})
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Json delete(String id){

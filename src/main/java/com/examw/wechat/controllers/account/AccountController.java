@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import com.examw.model.DataGrid;
 import com.examw.model.Json;
 import com.examw.model.TreeNode;
 import com.examw.wechat.domain.account.Account;
+import com.examw.wechat.domain.security.Right;
 import com.examw.wechat.model.account.AccountInfo;
 import com.examw.wechat.service.account.IAccountService;
 
@@ -28,17 +30,19 @@ import com.examw.wechat.service.account.IAccountService;
 @RequestMapping(value = "/accounts/account")
 public class AccountController {
 	private static Logger logger = Logger.getLogger(AccountController.class);
-	/**
-	 * 公众号管理服务。
-	 */
+	//公众号管理服务。
 	@Resource
 	private IAccountService accountService;
 	/**
 	 * 列表页面。
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.ACCOUNTS_ACCOUNT + ":" + Right.VIEW})
 	@RequestMapping(value = {"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
+		model.addAttribute("PER_UPDATE", ModuleConstant.ACCOUNTS_ACCOUNT + ":" + Right.UPDATE);
+		model.addAttribute("PER_DELETE", ModuleConstant.ACCOUNTS_ACCOUNT + ":" + Right.DELETE);
+		
 		model.addAttribute("STATUS_DISABLE", this.accountService.loadStatusName(Account.ACCOUNT_STATUS_DISABLE));
 		model.addAttribute("STATUS_ENABLE", this.accountService.loadStatusName(Account.ACCOUNT_STATUS_ENABLE));
 		
@@ -50,6 +54,7 @@ public class AccountController {
 	 * 编辑页面。
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.ACCOUNTS_ACCOUNT + ":" + Right.UPDATE})
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Model model){
 		model.addAttribute("STATUS_DISABLE", this.accountService.loadStatusName(Account.ACCOUNT_STATUS_DISABLE));
@@ -64,6 +69,7 @@ public class AccountController {
 	 * @param info
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.ACCOUNTS_ACCOUNT + ":" + Right.VIEW})
 	@RequestMapping(value = "/datagrid", method = RequestMethod.POST)
 	@ResponseBody
 	public DataGrid<AccountInfo> datagrid(AccountInfo info){
@@ -95,6 +101,7 @@ public class AccountController {
 	 * @param info
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.ACCOUNTS_ACCOUNT + ":" + Right.UPDATE})
 	@RequestMapping(value="/update", method = RequestMethod.POST)
 	@ResponseBody
 	public Json update(AccountInfo info){
@@ -114,6 +121,7 @@ public class AccountController {
 	 * @param id
 	 * @return
 	 */
+	@RequiresPermissions({ModuleConstant.ACCOUNTS_ACCOUNT + ":" + Right.DELETE})
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Json delete(String id){

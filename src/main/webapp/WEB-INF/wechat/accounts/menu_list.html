@@ -101,7 +101,9 @@ $(function(){
 			height:300,
 			href:"<@s.url '/accounts/menu/edit'/>",
 			modal:true,
-			buttons:[{
+			buttons:[
+			<@shiro.hasPermission name="${PER_UPDATE}">
+			{
 				text:"保存",
 				iconCls:"icon-save",
 				handler:function(){
@@ -133,7 +135,9 @@ $(function(){
 						}
 					});
 				}
-			},{
+			},
+			</@shiro.hasPermission>
+			{
 				text:"关闭",
 				iconCls:"icon-cancel",
 				handler:function(){
@@ -176,6 +180,7 @@ $(function(){
 			}
 		}
 	};
+	<@shiro.hasPermission name="${PER_UPDATE}">
 	//tree create
 	${tree}_context_create = function(){
 		if(t){
@@ -201,6 +206,8 @@ $(function(){
 			}
 		}
 	};
+	</@shiro.hasPermission>
+	<@shiro.hasPermission name="${PER_DELETE}">
 	//tree remove
 	${tree}_context_remove = function(){
 		if(t){
@@ -226,10 +233,12 @@ $(function(){
 			}
 		}
 	};
+	</@shiro.hasPermission>
 	//add
 	${dg}_add = function(){
 		edit_window("新增公众号菜单",null);
 	};
+	<@shiro.hasPermission name="${PER_DELETE}">
 	//delete
 	${dg}_delete = function(){
 		var rows = dg.treegrid("getChecked");
@@ -270,6 +279,7 @@ $(function(){
 			$.messager.alert("提示","未选中须删除的数据！");
 		}
 	};
+	</@shiro.hasPermission>
 });
 //-->
 </script>
@@ -278,16 +288,24 @@ $(function(){
 	 	    <ul id="${tree}"></ul>
 	 	    <div id="${tree}_context" class="easyui-menu" style="width:120px;">
 	 	    	<div onclick="${tree}_context_query()" data-options="iconCls:'icon-search'">查询公众号上的菜单</div>
+	 	    	<@shiro.hasPermission name="${PER_UPDATE}">
 				<div onclick="${tree}_context_create()" data-options="iconCls:'icon-save'">创建公众号的菜单</div>
+				</@shiro.hasPermission>
+				<@shiro.hasPermission name="${PER_DELETE}">
 				<div onclick="${tree}_context_remove()" data-options="iconCls:'icon-remove'">删除公众号的菜单</div>
+				</@shiro.hasPermission>
 	 	    </div>
 	 </div>
 	 <div data-options="region:'center',border:false">
 	 	<table id="${dg}"></table>
 	 	<div id="${dg}_toolbar">
+	 		<@shiro.hasPermission name="${PER_UPDATE}">
 	 		<a href="#" class="easyui-linkbutton" onclick="${dg}_add()" data-options="iconCls:'icon-add',plain:true" style="float:left;">新增</a>
+			</@shiro.hasPermission>
 			<span>|</span>
+			<@shiro.hasPermission name="${PER_DELETE}">
 			<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+	 		</@shiro.hasPermission>
 	 	</div>
 	 </div>
 </div>
