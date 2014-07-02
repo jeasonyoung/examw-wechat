@@ -23,6 +23,7 @@
   		<module id="WeChatMgr0000000000000000000104" icon="" name="登记用户" uri="/mgr/register" order="1"/>
   		<module id="WeChatMgr0000000000000000000204" icon="" name="关注用户" uri="/mgr/usr" order="2"/>
   		<module id="WeChatMgr0000000000000000000304" icon="" name="资讯管理" uri="/mgr/article" order="3"/>
+  		<module id="WeChatMgr0000000000000000000404" icon="" name="消息记录" uri="/mgr/record" order="4"/>
   	</module>
   </system>
 </ipower>

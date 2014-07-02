@@ -1,0 +1,133 @@
+<#--消息记录列表-->
+<#include "ftl/comm.ftl"/>
+<#assign module="mgr_record"/>
+<#assign dg="${module}_list_dg"/>
+<script type="text/javascript">
+<!--
+$(function(){
+	//dg
+	var dg = $("#${dg}").datagrid({
+		url:"<@s.url '/mgr/record/datagrid'/>",
+		fit:true,
+		fitColumns:true,
+		rownumbers:true,
+		pagination:true,
+		pagePosition:"bottom",
+		pageSize:20,
+		pageList:[20,30,40],
+		border:true,
+		striped:true,
+		idField:"id",
+		sortName:"createTime",
+		sortOrder:"desc",
+		columns:[[{
+			field:"id",
+			checkbox:true
+		},{
+			title:"所属公众号",
+			field:"accountName",
+			width:20,
+			align:"left",
+			sortable:true
+		},{
+			title:"微信关注用户",
+			field:"openId",
+			width:20,
+			align:"left",
+			sortable:true
+		},{
+			title:"关联注册用户",
+			field:"userName",
+			width:20,
+			align:"left",
+			sortable:true
+		},{
+			title:"消息内容",
+			field:"content",
+			width:40,
+			align:"left",
+			sortable:true
+		},{
+			title:"消息时间",
+			field:"createTime",
+			width:15,
+			align:"center",
+			sortable:true
+		}]],
+		toolbar:"#${dg}_toolbar",
+		onLoadError:function(e){
+			<@error_dialog "e"/>
+		}
+	});
+	//search
+	${dg}_search = function(){
+		dg.datagrid("load",{
+			accountId:$("#${dg}_toolbar input[name='accountId']").combobox("getValue"),
+			openId:$("#${dg}_toolbar input[name='name']").val(),
+			userName:$("#${dg}_toolbar input[name='name']").val()
+		});
+	};
+	
+	<@shiro.hasPermission name="${PER_DELETE}">
+	//delete
+	${dg}_delete = function(){
+		var rows = dg.datagrid("getChecked");
+		if(rows && rows.length > 0){
+			$.messager.confirm("确认","您是否确认删除选中的数据?",function(r){
+				if(!r)return;
+				$.messager.progress();
+				var ids = [];
+				for(var i = 0; i < rows.length; i++){
+					ids.push(rows[i].accountId + "," + rows[i].openId);
+				}
+				$.ajax({
+					url:"<@s.url '/mgr/record/delete'/>",
+					type:"POST",
+					data:{
+						openId:ids.join("|")
+					},
+					dataType:"json",
+					error:function(e){
+						$.messager.progress("close");
+						<@error_dialog "e"/>
+					},
+					success:function(data,textStatus){
+						$.messager.progress("close");
+						if(data.success){
+							dg.datagrid("load");
+							dg.datagrid("unselectAll");
+						}else{
+							$.messager.show({
+								title:"提示",
+								msg:data.msg
+							});
+						}
+					}
+				});
+			});
+		}else{
+			$.messager.alert("提示","未选中须删除的数据！");
+		}
+	};
+	</@shiro.hasPermission>
+});
+//-->
+</script>
+<table id="${dg}"></table>
+<div id="${dg}_toolbar">
+	<@shiro.hasPermission name="${PER_DELETE}">
+	<a href="#" class="easyui-linkbutton" onclick="${dg}_delete()" data-options="iconCls:'icon-remove',plain:true">删除</a>
+	</@shiro.hasPermission>
+	<label>所属公众号：<input name="accountId" type="text" class="easyui-combobox" data-options="
+		url:'<@s.url '/accounts/account/all'/>',
+		valueField:'id',
+		textField:'name',
+		onLoadError:function(e){
+			<@error_dialog 'e'/>
+		}
+	" style="width:198px;"/></label>
+	
+	<label>关注用户：<input name="name" type="text" style="width:168px;"/></label>
+	
+	<a href="#" class="easyui-linkbutton" style="margin-left:10px;"  onclick="${dg}_search()" data-options="iconCls:'icon-search',plain:true">查询</a>
+</div>

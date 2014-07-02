@@ -19,4 +19,13 @@
 				 overflowToDisk="false"
 				 statistics="true">
 	</cache>
+	<!-- 处理器缓存 -->
+	<cache name="msgHandlersCache"
+				 maxEntriesLocalHeap="2000"
+				 eternal="false"
+				 timeToIdleSeconds="3600"
+				 timeToLiveSeconds="0"
+				 overflowToDisk="false"
+				 statistics="true">
+	</cache>
 </ehcache>

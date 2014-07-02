@@ -14,11 +14,11 @@
 		<!--接入令牌 -->
 		<property name="token" type="string" not-null="true" length="32"/>
 		<!-- 公众号OpenId -->
-		<property name="openId" type="string" length="32"/>
+		<property name="openId" type="string" length="512"/>
 		<!-- 第三方用户唯一凭证 -->
-		<property name="appId" type="string" length="64"/>
+		<property name="appId" type="string" length="512"/>
 		<!-- 第三方用户唯一凭证密钥 -->
-		<property name="appSecret" type="string" length="128"/>
+		<property name="appSecret" type="string" length="512"/>
 		<!-- 业务接口URL -->
 		<property name="businessURL" type="string" length="64"/>
 		<!-- 当前账号状态  0-停用， 1-启用-->

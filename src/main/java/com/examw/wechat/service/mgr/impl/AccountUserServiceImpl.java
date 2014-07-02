@@ -14,6 +14,7 @@ import com.examw.wechat.dao.mgr.IRegisterDao;
 import com.examw.wechat.domain.account.Account;
 import com.examw.wechat.domain.mgr.AccountUser;
 import com.examw.wechat.domain.mgr.Register;
+import com.examw.wechat.message.Context;
 import com.examw.wechat.model.mgr.AccountUserInfo;
 import com.examw.wechat.service.impl.BaseDataServiceImpl;
 import com.examw.wechat.service.mgr.IAccountUserService;
@@ -152,5 +153,16 @@ public class AccountUserServiceImpl extends BaseDataServiceImpl<AccountUser, Acc
 				if(data != null) this.accountUserDao.delete(data);
 			}
 		}
+	}
+	/*
+	 * 取消关注。
+	 * @see com.examw.wechat.service.mgr.IAccountUserService#removeUnsubscribe(com.examw.wechat.message.Context)
+	 */
+	@Override
+	public void removeUnsubscribe(Context context) {
+		if(context == null) return;
+		AccountUser data = this.accountUserDao.loadUser(context.getAccountId(), context.getOpenId());
+		if(data == null) return;
+		data.setStatus(AccountUser.USER_STATUS_UNSUBSCRIBE);
 	}
 }

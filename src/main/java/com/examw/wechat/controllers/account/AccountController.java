@@ -97,6 +97,15 @@ public class AccountController {
 		return results;
 	}
 	/**
+	 * 加载全部微信公众号数据。
+	 * @return
+	 */
+	@RequestMapping(value = "/all", method = {RequestMethod.GET, RequestMethod.POST})
+	@ResponseBody
+	public List<AccountInfo> all(){
+		return this.accountService.loadAllAccounts();
+	}
+	/**
 	 * 更新数据。
 	 * @param info
 	 * @return

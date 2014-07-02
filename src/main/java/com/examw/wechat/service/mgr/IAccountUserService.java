@@ -1,5 +1,6 @@
 package com.examw.wechat.service.mgr;
 
+import com.examw.wechat.message.Context;
 import com.examw.wechat.model.mgr.AccountUserInfo;
 import com.examw.wechat.service.IBaseDataService;
 
@@ -15,4 +16,10 @@ public interface IAccountUserService extends IBaseDataService<AccountUserInfo> {
 	 * @return
 	 */
 	String loadStatusName(Integer status);
+	/**
+	 * 取消关注。
+	 * @param context
+	 * 上下文。
+	 */
+	void  removeUnsubscribe(Context context);
 }

@@ -15,5 +15,9 @@
 	<bean id="articleDao" class="com.examw.wechat.dao.mgr.impl.ArticleDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+	<!-- 消息记录数据访问 -->
+	<bean id="recordDao" class="com.examw.wechat.dao.mgr.impl.RecordDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
 	<!-- 公众号管理 数据接口实现 end-->
 </beans>

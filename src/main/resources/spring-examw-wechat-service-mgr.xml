@@ -50,5 +50,12 @@
 			</map>
 		</property>
 	</bean>
+	<!-- 消息记录服务 -->
+	<bean id="recordService" class="com.examw.wechat.service.mgr.impl.RecordServiceImpl">
+		<!-- 消息记录数据接口-->
+		<property name="recordDao" ref="recordDao" />
+		<!-- 关注用户数据接口 -->
+		<property name="accountUserDao" ref="accountUserDao" />
+	</bean>
 	<!--  公众号管理 服务接口实现 end-->
 </beans>

@@ -14,7 +14,11 @@ public final class ModuleConstant {
 	 */
 	public static final String MGR_USR = "WeChatMgr0000000000000000000204";
 	/**
-	 * 公众号票据ID。
+	 * 资讯管理ID。
 	 */
 	public static final String MGR_ARTICLE = "WeChatMgr0000000000000000000304";
+	/**
+	 * 消息记录ID。
+	 */
+	public static final String MGR_RECORD = "WeChatMgr0000000000000000000404";
 }
