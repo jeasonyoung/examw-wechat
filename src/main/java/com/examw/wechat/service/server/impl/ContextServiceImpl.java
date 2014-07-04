@@ -18,7 +18,7 @@ import com.examw.wechat.service.server.IContextService;
  * @since 2014-04-12.
  * */
 public class ContextServiceImpl implements IContextService {
-	private static Logger logger = Logger.getLogger(ContextServiceImpl.class);
+	private static final Logger logger = Logger.getLogger(ContextServiceImpl.class);
 	private IAccountUserDao accountUserDao;
 	private Cache cache;
 	/**
@@ -62,22 +62,22 @@ public class ContextServiceImpl implements IContextService {
 		String key = this.loadCacheKey(accountId, userOpenId);
 		Context context = this.loadContextCache(key);
 		if(context == null){
-			logger.info("未找到上下文缓存，重新构建。");
+			if(logger.isDebugEnabled())logger.debug("未找到上下文缓存，重新构建。");
 			context = new Context(accountId, userOpenId);
 			context.setLastActiveTime(new Date());
 			//更新缓存。
 			this.update(context);
 		}
 		if(!context.isAuthen()){//未身份认证。
-			logger.info("上下文中没有身份信息，从用户信息表中加载用户信息。");
+			if(logger.isDebugEnabled())logger.debug("上下文中没有身份信息，从用户信息表中加载用户信息。");
 			AccountUser accountUser = this.accountUserDao.loadUser(accountId, userOpenId);
 			if(accountUser != null && accountUser.getRegister() != null){
-				logger.info("加载关联用户[openid:"+ accountUser.getOpenId() +"]:" + accountUser.getRegister().getName());
+				if(logger.isDebugEnabled())logger.debug("加载关联用户[openid:"+ accountUser.getOpenId() +"]:" + accountUser.getRegister().getName());
 				context.setUserId(accountUser.getRegister().getId());
 				//更新缓存
 				this.update(context);
 			}else {
-				logger.info("该用户未身份验证过，找不到用户信息！");
+				if(logger.isDebugEnabled())logger.debug("该用户未身份验证过，找不到用户信息！");
 			}
 		}
 		return context;
@@ -103,7 +103,7 @@ public class ContextServiceImpl implements IContextService {
  		String key = this.loadCacheKey(context.getAccountId(), context.getOpenId());
  		if(StringUtils.isEmpty(key)) return;
  		this.cache.put(new Element(key, context));
-		logger.info("["+key +"]加入到缓存：" + this.cache.getName());
+ 		if(logger.isDebugEnabled())logger.debug("["+key +"]加入到缓存：" + this.cache.getName());
 	}
 	/*
 	 * 移除上下文。

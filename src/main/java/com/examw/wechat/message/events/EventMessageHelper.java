@@ -105,4 +105,14 @@ public final class EventMessageHelper {
 		
 		return clickEventMessage;
 	}
+	/**
+	 * 菜单链接跳转事件解析成对象。
+	 * @param data
+	 * 	消息数据。
+	 * @return
+	 *  事件消息对象。
+	 */
+	public static ViewEventMessage parseViewEventMessage(Map<String, String> data){
+		return (ViewEventMessage)parseClickEventMessage(data);
+	}
 }

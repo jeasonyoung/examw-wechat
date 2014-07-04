@@ -2,6 +2,8 @@ package com.examw.wechat.message;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.springframework.util.StringUtils;
 /**
  * 微信用户消息上下文。
  * @author yangyong.
@@ -148,6 +150,6 @@ public class Context implements Serializable {
 	 * 已身份认证为true，否则返回false.
 	 * */
 	public boolean isAuthen(){
-		return !(this.getUserId() == null || this.getUserId().trim().isEmpty());
+		return !(StringUtils.isEmpty(this.getUserId()));
 	}
 }

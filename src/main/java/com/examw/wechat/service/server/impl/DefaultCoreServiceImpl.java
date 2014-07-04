@@ -14,6 +14,7 @@ import com.examw.wechat.domain.account.Account;
 import com.examw.wechat.message.Context;
 import com.examw.wechat.message.events.ClickEventMessage;
 import com.examw.wechat.message.events.EventMessageHelper;
+import com.examw.wechat.message.events.ViewEventMessage;
 import com.examw.wechat.message.req.BaseReqMessage;
 import com.examw.wechat.message.req.ReqMessageHelper;
 import com.examw.wechat.message.req.TextReqMessage;
@@ -210,6 +211,16 @@ public class DefaultCoreServiceImpl implements ICoreService {
 				this.contextService.update(context);
 				if(logger.isDebugEnabled()) logger.debug("交付消息工厂处理。");
 				return this.messageParse.messageHandler(context,clickEvent);
+			}
+			//菜单链接跳转事件。
+			case  Context.EVENT_MESSAGE_TYPE_VIEW:{
+				if(logger.isDebugEnabled()) logger.debug("解析为菜单链接跳转事件处理。");
+				ViewEventMessage viewEvent =  EventMessageHelper.parseViewEventMessage(req);
+				context.setLastMenuKey(viewEvent.getEventKey());
+				if(logger.isDebugEnabled()) logger.debug("更新上下文菜单记录，并更新上下文");
+				this.contextService.update(context);
+				if(logger.isDebugEnabled()) logger.debug("交付消息工厂处理。");
+				return this.messageParse.messageHandler(context,viewEvent);
 			}
 			//上传地理位置事件。
 			case Context.EVENT_MESSAGE_TYPE_LOCATION:{

@@ -17,6 +17,11 @@ public interface IAccountUserService extends IBaseDataService<AccountUserInfo> {
 	 */
 	String loadStatusName(Integer status);
 	/**
+	 * 添加关注用户。
+	 * @param context
+	 */
+	void addSubscribe(Context context);
+	/**
 	 * 取消关注。
 	 * @param context
 	 * 上下文。

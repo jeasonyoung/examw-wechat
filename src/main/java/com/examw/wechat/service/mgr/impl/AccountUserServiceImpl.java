@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
@@ -24,6 +25,7 @@ import com.examw.wechat.service.mgr.IAccountUserService;
  * @since 2014-04-08.
  * */
 public class AccountUserServiceImpl extends BaseDataServiceImpl<AccountUser, AccountUserInfo> implements IAccountUserService {
+	private static final Logger logger = Logger.getLogger(AccountUserServiceImpl.class);
 	private IAccountUserDao accountUserDao;
 	private IAccountDao accountDao;
 	private IRegisterDao registerDao;
@@ -105,6 +107,7 @@ public class AccountUserServiceImpl extends BaseDataServiceImpl<AccountUser, Acc
 	 */
 	@Override
 	public AccountUserInfo update(AccountUserInfo info) {
+		if(logger.isDebugEnabled())logger.debug("更新数据...");
 		if(info == null) return null;
 		boolean isAdded = false;
 		AccountUser data = this.accountUserDao.load(AccountUser.class, info);
@@ -144,14 +147,54 @@ public class AccountUserServiceImpl extends BaseDataServiceImpl<AccountUser, Acc
 	 */
 	@Override
 	public void delete(String[] ids) {
+		if(logger.isDebugEnabled())logger.debug("删除关注用户记录...");
 		if(ids == null || ids.length == 0) return;
 		for(int i = 0; i < ids.length; i++){
 			if(StringUtils.isEmpty(ids[i])) continue;
 			String[] prs = ids[i].split(",");
 			if(prs != null && prs.length >= 2){
 				AccountUser data = this.accountUserDao.load(AccountUser.class, new AccountUserInfo(prs[0], prs[1]));
-				if(data != null) this.accountUserDao.delete(data);
+				if(data != null){
+					if(logger.isDebugEnabled())logger.debug("删除数据：" + ids[i]);
+					this.accountUserDao.delete(data);
+				}
 			}
+		}
+	}
+	/*
+	 * 关注
+	 * @see com.examw.wechat.service.mgr.IAccountUserService#addSubscribe(com.examw.wechat.message.Context)
+	 */
+	@Override
+	public synchronized void addSubscribe(Context context) {
+		if(logger.isDebugEnabled())logger.debug("添加关注...");
+		if(context == null){
+			if(logger.isDebugEnabled())logger.debug("上下文为空！");
+			return;
+		}
+		boolean isAdded = false;
+		AccountUser data = this.accountUserDao.loadUser(context.getAccountId(), context.getOpenId());
+		if(isAdded = (data == null)){
+			Account account = this.accountDao.load(Account.class, context.getAccountId());
+			if(account == null){
+				if(logger.isDebugEnabled())logger.debug("未找到公众号［"+context.getAccountId()+"］记录！");
+				return;
+			}
+			data = new AccountUser();
+			data.setId(UUID.randomUUID().toString());
+			data.setCreateTime(new Date());
+			data.setAccount(account);
+			data.setOpenId(context.getOpenId());
+			data.setRegister(null);
+		}
+		data.setStatus(AccountUser.USER_STATUS_SUBSCRIBE);
+		data.setLastTime(new Date());
+		if(!isAdded){
+			if(logger.isDebugEnabled())logger.debug("[公众号ID："+context.getAccountId()+"，openId："+context.getOpenId()+"]被关注过，更新状态！");
+		}
+		if(isAdded) {
+			if(logger.isDebugEnabled())logger.debug("[公众号ID："+context.getAccountId()+"，openId："+context.getOpenId()+"]被关注，写入数据库！");
+			this.accountUserDao.save(data);
 		}
 	}
 	/*
@@ -160,9 +203,17 @@ public class AccountUserServiceImpl extends BaseDataServiceImpl<AccountUser, Acc
 	 */
 	@Override
 	public void removeUnsubscribe(Context context) {
-		if(context == null) return;
+		if(logger.isDebugEnabled())logger.debug("取消关注...");
+		if(context == null){
+			if(logger.isDebugEnabled())logger.debug("上下文为空！");
+			return;
+		}
 		AccountUser data = this.accountUserDao.loadUser(context.getAccountId(), context.getOpenId());
-		if(data == null) return;
+		if(data == null){
+			if(logger.isDebugEnabled())logger.debug("[公众号ID："+context.getAccountId()+"，openId："+context.getOpenId()+"]未找到关注！");
+			return;
+		}
 		data.setStatus(AccountUser.USER_STATUS_UNSUBSCRIBE);
+		data.setLastTime(new Date());
 	}
 }

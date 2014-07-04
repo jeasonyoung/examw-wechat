@@ -33,25 +33,97 @@
 		<!-- 事件处理 -->
 		<property name="handler" ref="messageHandlerFactory" />
 	</bean>
+	<!-- 默认消息处理 -->
+	<bean id="defaultMsgHandler" class="com.examw.wechat.service.server.impl.DefaultMessageHandler">
+		<!-- 是否用户认证 -->
+		<property name="authen" value="true" />
+		<!-- 用户认证菜单key -->
+		<property name="authenMenuKey" value="authen" />
+		<!-- 设置认证提示信息 -->
+		<property name="authenMsg" value="${DefaultMsgHandler_AuthenMsg}" />
+		<!-- 设置菜单点击提示信息 -->
+		<property name="clickMsg" value="${DefaultMsgHandler_ClickMsg}" />
+	</bean>
 	<!-- 消息处理 -->
 	<bean id="messageHandlerFactory" class="com.examw.wechat.service.server.impl.MessageHandlerFactory">
 		<!-- 处理器缓存 -->
 		<property name="cache">
-			<bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-				<!-- 缓存管理器 -->
-				<property name="cacheManager"  ref="globalCacheManager" />
-				<!-- 缓存名称 -->
-				<property name="cacheName" value="msgHandlersCache" />
-			</bean>
+			<!-- 缓存管理器 -->
+			<property name="cacheManager"  ref="globalCacheManager" />
+			<!-- 缓存名称 -->
+			<property name="cacheName" value="msgHandlersCache" />
 		</property>
 		<!-- 消息处理器 -->
 		<property name="handlers">
 			<map>
-				<!-- 默认处理器 -->
+				<!-- 默认处理器-->
 				<entry key="default">
-					<bean class="com.examw.wechat.service.server.impl.DefaultMessageHandler" />
+					<ref local="defaultMsgHandler"/>
+				</entry>
+				<!-- 关注事件处理 -->
+				<entry key="subscribe">
+					<bean class="com.examw.wechat.service.server.impl.SubscribeMessageHandler">
+						<!-- 关注用户服务接口 -->
+						<property name="accountUserService" ref="accountUserService" />
+						<!-- 欢迎信息 -->
+						<property name="welcome" value="${SubscribeMsgHandler_Welcome}" />
+					</bean>
+				</entry>
+				<!-- 取消关注事件处理 -->
+				<entry key="unsubscribe">
+					<bean class="com.examw.wechat.service.server.impl.UnSubscribeMessageHandler">
+						<!-- 关注用户服务接口 -->
+						<property name="accountUserService" ref="accountUserService" />
+						<!-- 取消关注欢迎信息 -->
+						<property name="welcome" value="${UnSubscribeMsgHandler_Welcome}" />
+					</bean>
+				</entry>
+				<!-- 菜单链接跳转事件 -->
+				<!-- <entry key="VIEW"></entry> -->
+				<!-- 菜单点击事件处理 -->
+				<entry key="CLICK">
+					<ref local="menuClickHandlerFactory"/>
+				</entry>
+				<!-- 文本输入消息处理 -->
+				<entry key="text">
+					<ref local="textMessageHandlerFactory"/>
 				</entry>
 			</map>
+		</property>
+	</bean>
+	<!-- 消息事件处理缓存 -->
+	<bean id="msgEventHandlerCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<!-- 缓存管理器 -->
+		<property name="cacheManager"  ref="globalCacheManager" />
+		<!-- 缓存名称 -->
+		<property name="cacheName" value="msgEventHandlersCache" />
+	</bean>
+	<!--  菜单点击事件服务工厂 -->
+	<bean id="menuClickHandlerFactory" class="com.examw.wechat.service.server.impl.MenuClickHandlerFactory">
+		<!-- 处理器缓存 -->
+		<property name="cache" ref="msgEventHandlerCache"/>
+		<!-- 消息处理器 -->
+		<property name="handlers">
+				<!-- 默认处理器-->
+				<entry key="default">
+					<ref local="defaultMsgHandler"/>
+				</entry>
+		</property>
+	</bean>
+	<!-- 文本消息处理服务工厂 -->
+	<bean id="textMessageHandlerFactory" class="com.examw.wechat.service.server.impl.TextMessageHandlerFactory">
+		<!-- 处理器缓存 -->
+		<property name="cache" ref="msgEventHandlerCache"/>
+		<!-- 消息处理器 -->
+		<property name="handlers">
+				<!-- 默认处理器-->
+				<entry key="default">
+					<ref local="defaultMsgHandler"/>
+				</entry>
+				<!-- 认证处理 -->
+				<entry key="auth">
+					
+				</entry>
 		</property>
 	</bean>
 	<!--  公众号服务 服务接口实现 end-->

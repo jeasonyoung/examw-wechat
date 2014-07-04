@@ -1,6 +1,6 @@
 package com.examw.wechat.message.events;
 /**
- * 菜单跳转链接事件。
+ * 菜单链接跳转事件。
  * @author yangyong.
  * @since 2014-06-19.
  */
