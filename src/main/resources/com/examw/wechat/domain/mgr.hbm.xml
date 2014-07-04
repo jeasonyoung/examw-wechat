@@ -34,9 +34,9 @@
 		<!-- 关注ID -->
 		<id name="id" type="string" length="64" />
 		<!-- 微信ID -->
-		<property name="openId" type="string" length="512" unique-key="account_account_openid" />
+		<property name="openId" type="string" length="512" />
 		<!-- 所属微信公众号 -->
-		<many-to-one name="account" column="account_id" unique-key="account_account_openid" class="com.examw.wechat.domain.account.Account" />
+		<many-to-one name="account" column="account_id" class="com.examw.wechat.domain.account.Account" />
 		 <!-- 关联登记用户ID -->
 		 <many-to-one name="register" column="register_id" class="Register" />
 		<!-- 微信用户首次关注时间 -->
