@@ -19,7 +19,6 @@ public class UserInfo extends Paging {
 	private Integer gender,status;
 	private String genderName,statusName;
 	private String[] roleId;
-	
 	private Date createTime,lastLoginTime;
 	/**
 	 * 获取用户ID。

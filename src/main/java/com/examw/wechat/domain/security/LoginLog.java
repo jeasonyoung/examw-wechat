@@ -2,11 +2,6 @@ package com.examw.wechat.domain.security;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import com.examw.wechat.support.CustomDateSerializer;
-
 /**
  * 登录日志。
  * @author yangyong.
@@ -14,7 +9,6 @@ import com.examw.wechat.support.CustomDateSerializer;
  */
 public class LoginLog implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
 	private String id,account,ip,browser;
 	private Date time;
 	/**
@@ -86,7 +80,6 @@ public class LoginLog implements Serializable {
 	 * @return
 	 * 登录时间。
 	 */
-	@JsonSerialize(using = CustomDateSerializer.class)
 	public Date getTime() {
 		return time;
 	}

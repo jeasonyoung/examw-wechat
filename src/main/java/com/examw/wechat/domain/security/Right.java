@@ -1,16 +1,11 @@
 package com.examw.wechat.domain.security;
 
 import java.io.Serializable;
-
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-
 /**
  * 基础权限。
  * @author yangyong.
  * @since 2014-05-03.
  */
-@JsonSerialize(include = Inclusion.NON_NULL)
 public class Right implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private String id,name;
