@@ -48,10 +48,12 @@
 	<bean id="messageHandlerFactory" class="com.examw.wechat.service.server.impl.MessageHandlerFactory">
 		<!-- 处理器缓存 -->
 		<property name="cache">
-			<!-- 缓存管理器 -->
-			<property name="cacheManager"  ref="globalCacheManager" />
-			<!-- 缓存名称 -->
-			<property name="cacheName" value="msgHandlersCache" />
+			<bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+				<!-- 缓存管理器 -->
+				<property name="cacheManager"  ref="globalCacheManager" />
+				<!-- 缓存名称 -->
+				<property name="cacheName" value="msgHandlersCache" />
+			</bean>
 		</property>
 		<!-- 消息处理器 -->
 		<property name="handlers">
@@ -104,6 +106,7 @@
 		<property name="cache" ref="msgEventHandlerCache"/>
 		<!-- 消息处理器 -->
 		<property name="handlers">
+			<map>
 				<!-- 默认处理器-->
 				<entry key="default">
 					<ref local="defaultMsgHandler"/>
@@ -116,6 +119,7 @@
 				<entry key="article">
 					<ref local="articleHandler" />
 				</entry>
+			</map>
 		</property>
 	</bean>
 	<!-- 文本消息处理服务工厂 -->
@@ -124,6 +128,7 @@
 		<property name="cache" ref="msgEventHandlerCache"/>
 		<!-- 消息处理器 -->
 		<property name="handlers">
+			<map>
 				<!-- 默认处理器-->
 				<entry key="default">
 					<ref local="defaultMsgHandler"/>
@@ -132,6 +137,7 @@
 				<entry key="authen">
 					<ref local="authenHandler"/>
 				</entry>
+			</map>
 		</property>
 	</bean>
 	<!-- 认证消息事件处理 -->

@@ -15,8 +15,8 @@
 	</head>
 <body>
 <#if ARTICLE ??>
-	<div class="easyui-panel" title="${content.title}" data-options="fit:true">
-		${ARTICLE.content}
+	<div class="easyui-panel" title="${ARTICLE.title}" data-options="fit:true">
+		<pre>${ARTICLE.content}</pre>
 	</div>
 </#if>
 </body>
