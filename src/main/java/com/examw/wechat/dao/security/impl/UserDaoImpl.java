@@ -41,18 +41,8 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements IUserDao {
 		hql = this.addWhere(info, hql, parameters);
 		return this.count(hql, parameters);
 	}
-	/**
-	 * 添加查询条件到HQL。
-	 * @param info
-	 * 查询条件。
-	 * @param hql
-	 * HQL
-	 * @param parameters
-	 * 参数。
-	 * @return
-	 * HQL
-	 */
-	protected String addWhere(UserInfo info, String hql, Map<String, Object> parameters){
+	//添加查询条件到HQL。
+	private String addWhere(UserInfo info, String hql, Map<String, Object> parameters){
 		if(!StringUtils.isEmpty(info.getRoleId())){
 			hql += " and (u.roles.id = :roleId) ";
 			parameters.put("roleId", info.getRoleId());

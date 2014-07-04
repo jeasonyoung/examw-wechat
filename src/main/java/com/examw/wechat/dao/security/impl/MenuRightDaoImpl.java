@@ -47,18 +47,8 @@ public class MenuRightDaoImpl extends BaseDaoImpl<MenuRight> implements IMenuRig
 		hql = this.addWhere(info, hql, parameters);
 		return this.count(hql, parameters);
 	}
-	/**
-	 * 添加查询条件到HQL。
-	 * @param info
-	 * 查询条件。
-	 * @param hql
-	 * HQL
-	 * @param parameters
-	 * 参数。
-	 * @return
-	 * HQL
-	 */
-	protected String addWhere(MenuRightInfo info, String hql, Map<String, Object> parameters){
+	//添加查询条件到HQL。
+	private String addWhere(MenuRightInfo info, String hql, Map<String, Object> parameters){
 		if(!StringUtils.isEmpty(info.getMenuId())){
 			hql += " and (m.menu.id = :menuId or m.menu.parent.id = :menuId)";
 			parameters.put("menuId", info.getMenuId());

@@ -41,18 +41,8 @@ public class RoleDaoImpl extends BaseDaoImpl<Role> implements IRoleDao {
 		hql = this.addWhere(info, hql, parameters);
 		return this.count(hql, parameters);
 	}
-	/**
-	 * 添加查询条件到HQL。
-	 * @param info
-	 * 查询条件。
-	 * @param hql
-	 * HQL
-	 * @param parameters
-	 * 参数。
-	 * @return
-	 * HQL
-	 */
-	protected String addWhere(RoleInfo info, String hql, Map<String, Object> parameters){
+	//添加查询条件到HQL。
+	private String addWhere(RoleInfo info, String hql, Map<String, Object> parameters){
 		if(!StringUtils.isEmpty(info.getName())){
 			hql += "  and (r.name like :name)";
 			parameters.put("name", "%" + info.getName()+ "%");
