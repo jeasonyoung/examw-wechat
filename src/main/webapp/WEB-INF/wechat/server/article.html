@@ -1,10 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title><#if ARTICLE ??>${ARTICLE.title}</#if></title>
+		<!-- easyui css -->
+		<link rel="stylesheet" href="<@s.url "/resources/themes/icon.css"/>" type="text/css"/>
+		<link rel="stylesheet" href="<@s.url "/resources/themes/bootstrap/easyui.css"/>" type="text/css"/>
+		<!-- jquery -->
+		<script type="text/javascript" src="<@s.url "/resources/jquery.min.js"/>"></script>
+		<!-- easyui -->
+		<script type="text/javascript" src="<@s.url "/resources/jquery.easyui.min.js"/>"></script>
+		<script type="text/javascript" src="<@s.url "/resources/locale/easyui-lang-zh_CN.js"/>"></script>
+	</head>
 <body>
-
+<#if ARTICLE ??>
+	<div class="easyui-panel" title="${content.title}" data-options="fit:true">
+		${ARTICLE.content}
+	</div>
+</#if>
 </body>
 </html>

@@ -111,7 +111,7 @@ public class CoreServiceController {
 	 */
 	@RequestMapping(value = "/article/{id}", method = {RequestMethod.GET, RequestMethod.POST})
 	public String loadArticle(@PathVariable String id, Model model){
-		model.addAttribute(this.articleService.loadArticle(id));
+		model.addAttribute("ARTICLE",this.articleService.loadArticle(id));
 		return "/server/article";
 	}
 }
