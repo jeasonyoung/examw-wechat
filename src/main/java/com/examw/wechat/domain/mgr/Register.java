@@ -14,7 +14,7 @@ import com.examw.wechat.domain.settings.Province;
  */
 public class Register implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String id,name,moblie,qq,ip;
+	private String id,name,mobile,qq,ip;
 	private Province province;
 	private Exam exam;
 	private Date createTime;
@@ -83,16 +83,16 @@ public class Register implements Serializable {
 	 * 获取手机号码。
 	 * @return 手机号码。
 	 */
-	public String getMoblie() {
-		return moblie;
+	public String getMobile() {
+		return mobile;
 	}
 	/**
 	 * 设置手机号码。
-	 * @param moblie
+	 * @param mobile
 	 * 手机号码。
 	 */
-	public void setMoblie(String moblie) {
-		this.moblie = moblie;
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 	/**
 	 * 获取QQ号码。

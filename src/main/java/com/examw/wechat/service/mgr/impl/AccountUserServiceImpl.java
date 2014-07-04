@@ -166,11 +166,11 @@ public class AccountUserServiceImpl extends BaseDataServiceImpl<AccountUser, Acc
 	 * @see com.examw.wechat.service.mgr.IAccountUserService#addSubscribe(com.examw.wechat.message.Context)
 	 */
 	@Override
-	public synchronized void addSubscribe(Context context) {
+	public synchronized AccountUser addSubscribe(Context context) {
 		if(logger.isDebugEnabled())logger.debug("添加关注...");
 		if(context == null){
 			if(logger.isDebugEnabled())logger.debug("上下文为空！");
-			return;
+			return null;
 		}
 		boolean isAdded = false;
 		AccountUser data = this.accountUserDao.loadUser(context.getAccountId(), context.getOpenId());
@@ -178,7 +178,7 @@ public class AccountUserServiceImpl extends BaseDataServiceImpl<AccountUser, Acc
 			Account account = this.accountDao.load(Account.class, context.getAccountId());
 			if(account == null){
 				if(logger.isDebugEnabled())logger.debug("未找到公众号［"+context.getAccountId()+"］记录！");
-				return;
+				return null;
 			}
 			data = new AccountUser();
 			data.setId(UUID.randomUUID().toString());
@@ -186,6 +186,10 @@ public class AccountUserServiceImpl extends BaseDataServiceImpl<AccountUser, Acc
 			data.setAccount(account);
 			data.setOpenId(context.getOpenId());
 			data.setRegister(null);
+		}
+		if(data.getStatus() == AccountUser.USER_STATUS_SUBSCRIBE) {
+			if(logger.isDebugEnabled())logger.debug("[公众号ID："+context.getAccountId()+"，openId："+context.getOpenId()+"]已被关注！");
+			return data;
 		}
 		data.setStatus(AccountUser.USER_STATUS_SUBSCRIBE);
 		data.setLastTime(new Date());
@@ -196,6 +200,7 @@ public class AccountUserServiceImpl extends BaseDataServiceImpl<AccountUser, Acc
 			if(logger.isDebugEnabled())logger.debug("[公众号ID："+context.getAccountId()+"，openId："+context.getOpenId()+"]被关注，写入数据库！");
 			this.accountUserDao.save(data);
 		}
+		return data;
 	}
 	/*
 	 * 取消关注。

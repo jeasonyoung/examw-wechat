@@ -1,5 +1,4 @@
 package com.examw.wechat.service.mgr;
-
 import com.examw.wechat.model.mgr.ArticleInfo;
 import com.examw.wechat.service.IBaseDataService;
 

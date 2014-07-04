@@ -42,17 +42,8 @@ public class RegisterDaoImpl extends BaseDaoImpl<Register> implements IRegisterD
 		hql = this.addWhere(info, hql, parameters);
 		return this.count(hql, parameters);
 	}
-	/**
-	 * 查询条件。
-	 * @param info
-	 * 查询条件。
-	 * @param hql
-	 * HQL。
-	 * @param parameters
-	 * 查询参数。
-	 * @return HQL。
-	 */
-	protected String addWhere(RegisterInfo info, String hql,Map<String, Object> parameters){
+	//查询条件。
+	private String addWhere(RegisterInfo info, String hql,Map<String, Object> parameters){
 		if(!StringUtils.isEmpty(info.getExamId())){
 			hql += " and (r.exam.id = :examId or r.exam.catalog.id = :examId)";
 			parameters.put("examId", info.getExamId());
@@ -62,9 +53,23 @@ public class RegisterDaoImpl extends BaseDaoImpl<Register> implements IRegisterD
 			parameters.put("provinceId", info.getProvinceId());
 		}
 		if(!StringUtils.isEmpty(info.getName())){
-			hql += " and ((r.name like :name) or (r.moblie like :name) or (r.qq like :name))";
+			hql += " and ((r.name like :name) or (r.mobile like :name) or (r.qq like :name))";
 			parameters.put("name", "%" + info.getName() + "%");
 		}
 		return hql;
+	}
+	/*
+	 * 加载登录用户信息。
+	 * @see com.examw.wechat.dao.mgr.IRegisterDao#loadRegister(java.lang.String)
+	 */
+	@Override
+	public Register loadRegister(String mobile) {
+		if(StringUtils.isEmpty(mobile)) return null;
+		final String hql = "from Register r where r.mobile = :mobile order by r.createTime desc";
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("mobile", mobile);
+		List<Register> list = this.find(hql, parameters, null, null);
+		if(list == null || list.size() == 0) return null; 
+		return list.get(0);
 	}
 }

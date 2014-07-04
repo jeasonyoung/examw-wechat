@@ -27,4 +27,11 @@ public interface IRegisterDao extends IBaseDao<Register> {
 	 * @return
 	 */
 	Long total(RegisterInfo info);
+	/**
+	 * 加载登录用户信息。
+	 * @param mobile
+	 * 手机号码。
+	 * @return
+	 */
+	Register loadRegister(String mobile);
 }

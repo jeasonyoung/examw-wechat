@@ -92,6 +92,7 @@
     			/verifyCodeImage = anon
     			/unauthorized = anon
     			/wechat = anon
+    			/security/init = anon
     			/** = user
     		</value>
     	</property>

@@ -15,7 +15,7 @@ import com.examw.wechat.support.CustomDateSerializer;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class RegisterInfo extends Paging {
 	private static final long serialVersionUID = 1L;
-	private String id,provinceId,provinceName,examId,examName,name,moblie,qq,ip;
+	private String id,provinceId,provinceName,examId,examName,name,mobile,qq,ip;
 	private Date createTime;
 	/**
 	 * 获取登记ID。
@@ -111,16 +111,16 @@ public class RegisterInfo extends Paging {
 	 * 获取手机号码。
 	 * @return 手机号码。
 	 */
-	public String getMoblie() {
-		return moblie;
+	public String getMobile() {
+		return mobile;
 	}
 	/**
 	 * 设置手机号码。
-	 * @param moblie
+	 * @param mobile
 	 * 手机号码。
 	 */
-	public void setMoblie(String moblie) {
-		this.moblie = moblie;
+	public void setMoblie(String mobile) {
+		this.mobile = mobile;
 	}
 	/**
 	 * 获取QQ号码。

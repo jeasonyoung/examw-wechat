@@ -1,5 +1,6 @@
 package com.examw.wechat.service.mgr;
 
+import com.examw.wechat.domain.mgr.AccountUser;
 import com.examw.wechat.message.Context;
 import com.examw.wechat.model.mgr.AccountUserInfo;
 import com.examw.wechat.service.IBaseDataService;
@@ -20,7 +21,7 @@ public interface IAccountUserService extends IBaseDataService<AccountUserInfo> {
 	 * 添加关注用户。
 	 * @param context
 	 */
-	void addSubscribe(Context context);
+	AccountUser addSubscribe(Context context);
 	/**
 	 * 取消关注。
 	 * @param context

@@ -36,9 +36,9 @@
 	<!-- 默认消息处理 -->
 	<bean id="defaultMsgHandler" class="com.examw.wechat.service.server.impl.DefaultMessageHandler">
 		<!-- 是否用户认证 -->
-		<property name="authen" value="true" />
+		<property name="authen" value="${handler_IsAuthen}" />
 		<!-- 用户认证菜单key -->
-		<property name="authenMenuKey" value="authen" />
+		<property name="authenMenuKey" value="${handler_AuthenMenuKey}" />
 		<!-- 设置认证提示信息 -->
 		<property name="authenMsg" value="${DefaultMsgHandler_AuthenMsg}" />
 		<!-- 设置菜单点击提示信息 -->
@@ -108,6 +108,14 @@
 				<entry key="default">
 					<ref local="defaultMsgHandler"/>
 				</entry>
+				<!-- 认证处理 -->
+				<entry key="authen">
+					<ref local="authenHandler"/>
+				</entry>
+				<!-- 最新资讯 -->
+				<entry key="article">
+					<ref local="articleHandler" />
+				</entry>
 		</property>
 	</bean>
 	<!-- 文本消息处理服务工厂 -->
@@ -121,10 +129,36 @@
 					<ref local="defaultMsgHandler"/>
 				</entry>
 				<!-- 认证处理 -->
-				<entry key="auth">
-					
+				<entry key="authen">
+					<ref local="authenHandler"/>
 				</entry>
 		</property>
+	</bean>
+	<!-- 认证消息事件处理 -->
+	<bean id="authenHandler" class="com.examw.wechat.service.server.impl.AuthenMessageHandler">
+		<!-- 已认证用户提示信息 -->
+		<property name="isAuthenMsg"  value="${AuthenMessageHandler_IsAuthenMsg}" />
+		<!-- 未认证用户提示信息 -->
+		<property name="msg" value="${AuthenMessageHandler_Msg}" />
+		<!-- 未找到登记记录提示信息 -->
+		<property name="noFindRegisterMsg" value="${AuthenMessageHandler_NoFindRegisterMsg}" />
+		<!-- 认证成功提示信息 -->
+		<property name="authenSuccessMsg" value="${AuthenMessageHandler_AuthenSuccessMsg}" />
+	</bean>
+	<!-- 图文消息处理 -->
+	<bean id="articleHandler" class="com.examw.wechat.service.server.impl.ArticleMessageHandler">
+		<!-- 是否用户认证 -->
+		<property name="authen" value="${handler_IsAuthen}" />
+		<!-- 用户认证菜单key -->
+		<property name="authenMenuKey" value="${handler_AuthenMenuKey}" />
+		<!-- 登记用户数据接口 -->
+		<property name="registerDao" ref="registerDao" />
+		<!-- 图文数据接口 -->
+		<property name="articleDao" ref="articleDao" />
+		<!-- 未找到图文数据提示 -->
+		<property name="noArticleMsg" value="${ArticleMessageHandler_NoArticleMsg}" />
+		<!-- 原文链接配置 -->
+		<property name="baseUrl"  value="${ArticleMessageHandler_BaseUrl}" />
 	</bean>
 	<!--  公众号服务 服务接口实现 end-->
 </beans>

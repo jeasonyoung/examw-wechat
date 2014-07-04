@@ -9,10 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.examw.wechat.service.mgr.IArticleService;
 import com.examw.wechat.service.server.ICoreService;
 import com.examw.wechat.support.MsgUtil;
 /**
@@ -24,8 +27,12 @@ import com.examw.wechat.support.MsgUtil;
 @RequestMapping(value = "/wechat")
 public class CoreServiceController {
 	private static Logger logger = Logger.getLogger(CoreServiceController.class);
+	//微信核心服务。
 	@Resource
 	private ICoreService coreService;
+	//图文服务。
+	@Resource
+	private IArticleService articleService;
 	/**
 	 * 验证微信服务器验证。
 	 * @param request
@@ -95,5 +102,16 @@ public class CoreServiceController {
 		}finally{
 			logger.info("处理完毕！[耗时：" + (System.currentTimeMillis() - before) + " ms]");
 		}
+	}
+	/**
+	 * 加载图文原文地址
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/article/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+	public String loadArticle(@PathVariable String id, Model model){
+		model.addAttribute(this.articleService.loadArticle(id));
+		return "/server/article";
 	}
 }
