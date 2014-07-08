@@ -20,7 +20,7 @@ import com.examw.wechat.service.security.IUserService;
  * @since 2014-05-15.
  */
 public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
-	private static Logger logger = Logger.getLogger(UserAuthenticationInterceptor.class);
+	private static final Logger logger = Logger.getLogger(UserAuthenticationInterceptor.class);
 	private NamedThreadLocal<Long> startTimeThreadLocal = new NamedThreadLocal<>("StopWatch-StartTime");
 	private IUserService userService;
 	/**
@@ -37,8 +37,10 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	 */
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
-		logger.info("开始业务处理..."+request.getServletPath());
-		this.startTimeThreadLocal.set(System.currentTimeMillis());//线程绑定开始时间(该数据只有当前请求的线程可见)。
+		if(logger.isDebugEnabled()){
+			this.startTimeThreadLocal.set(System.currentTimeMillis());//线程绑定开始时间(该数据只有当前请求的线程可见)。
+			logger.debug("开始业务处理..."+request.getServletPath());
+		}
 		if(handler instanceof HandlerMethod){
 			HandlerMethod hm = (HandlerMethod)handler;
 			if(hm != null && (hm.getBean() instanceof IUserAware)){
@@ -52,7 +54,7 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 						userAware.setUserId(user.getId());
 						userAware.setUserName(user.getName());
 						userAware.setUserNickName(user.getNickName());
-						logger.info(String.format("注入[%1$s]用户信息:id=%2$s;name=%3$s;nick=%4$s", account, user.getId(), user.getName(), user.getNickName()));
+						if(logger.isDebugEnabled())logger.debug(String.format("注入[%1$s]用户信息:id=%2$s;name=%3$s;nick=%4$s", account, user.getId(), user.getName(), user.getNickName()));
 					}
 				}
 			}
@@ -65,7 +67,9 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	 */
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception{
 		super.afterCompletion(request, response, handler, ex);
-		long consumeTime = System.currentTimeMillis() - this.startTimeThreadLocal.get();
-		logger.info("业务"+request.getServletPath()+"处理完成，耗时：" + consumeTime + "  " + ((consumeTime > 500) ? "[较慢]" : "[正常]"));
+		if(logger.isDebugEnabled()){
+			long consumeTime = System.currentTimeMillis() - this.startTimeThreadLocal.get();
+			logger.debug("业务"+request.getServletPath()+"处理完成，耗时：" + consumeTime + "  " + ((consumeTime > 500) ? "[较慢]" : "[正常]"));
+		}
 	}
 }

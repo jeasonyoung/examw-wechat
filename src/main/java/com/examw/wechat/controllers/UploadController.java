@@ -30,7 +30,7 @@ import com.examw.wechat.service.IFileUploadService;
 @Controller
 @RequestMapping(value = "/uploads")
 public class UploadController {
-	private static Logger logger = Logger.getLogger(UploadController.class);
+	private static final Logger logger = Logger.getLogger(UploadController.class);
 	/**
 	 * 文件上传服务接口。
 	 */
@@ -55,6 +55,7 @@ public class UploadController {
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> upload(HttpServletRequest request){
+		if(logger.isDebugEnabled())logger.debug("开始接收上传文件...");
 		 Map<String, Object> result = new HashMap<>();
  		try {
  			String err = null;
@@ -68,7 +69,7 @@ public class UploadController {
  				logger.error(err = "获得文件上传失败！");
  				throw new RuntimeException(err);
  			}
- 			logger.info("开始上传文件...");
+ 			if(logger.isDebugEnabled())logger.debug("开始上传文件...");
  			String root = request.getSession().getServletContext().getRealPath(".");
  			String dirName = request.getParameter("dir");
  			if(StringUtils.isEmpty(dirName)){
@@ -81,19 +82,19 @@ public class UploadController {
  			String rootUrl = request.getContextPath();
  			List<String> urls = new ArrayList<>();
  			for(Entry<String, MultipartFile> entry : files.entrySet()){
- 			    	logger.info("上传文件：" + entry.getKey());
+ 			    	if(logger.isDebugEnabled())logger.debug("上传文件：" + entry.getKey());
 	 				String ext = IOUtil.getExtension(entry.getValue().getOriginalFilename()).toLowerCase();
 	 				if(!Arrays.<String>asList(extMap.get(dirName).split(",")).contains(ext)){
 	 					logger.error(err = "上传文件扩展名["+ext+"]是不允许的扩展名。只允许" + extMap.get(dirName) + "格式。");
 	 					throw new RuntimeException(err);
 	 				}
 	 				String url = rootUrl + this.fileUploadService.upload(entry.getValue().getBytes(), root, dirName, ext);
-	 				logger.info("上传URL：" + url);
+	 				if(logger.isDebugEnabled())logger.debug("上传URL：" + url);
 	 				urls.add(url);
  			} 
 			result.put("error", 0);
-			 result.put("url",urls.size() == 1 ? urls.get(0) : urls.toArray(new String[0]));
- 			logger.info("上传文件完成。");
+			result.put("url",urls.size() == 1 ? urls.get(0) : urls.toArray(new String[0]));
+			if(logger.isDebugEnabled())logger.debug("上传文件完成。");
  		} catch (Exception e) {
 			logger.error("上传文件发生异常", e);
 			result.put("error",1);
@@ -113,7 +114,7 @@ public class UploadController {
 	@ResponseBody
 	public Map<String, Object> manager(HttpServletRequest request){
 		try{
-			logger.info("查询文件管理...");
+			if(logger.isDebugEnabled())logger.debug("查询文件管理...");
 			String dirName = request.getParameter("dir");
 			if(!StringUtils.isEmpty(dirName)){
 				if(!Arrays.<String>asList(extMap.keySet().toArray(new String[0])).contains(dirName)){

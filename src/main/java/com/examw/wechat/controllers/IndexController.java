@@ -83,6 +83,6 @@ public class IndexController implements IUserAware {
 	 */
 	@RequestMapping(value = "/center", method = RequestMethod.GET)
 	public String defaultWorkspace(Model model){
-		return "/Workspace";
+		return "/workspace";
 	}
 }

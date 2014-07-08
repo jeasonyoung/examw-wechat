@@ -15,21 +15,21 @@
 			<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 		</context:component-scan>
 		<!-- shiro拦截器 -->
-		<!--aop:config proxy-target-class="true"></aop:config>
+		<aop:config proxy-target-class="true"></aop:config>
 		<bean  class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
 			<property name="securityManager"  ref="securityManager" />
-		</bean-->
+		</bean>
 		<!--  mvc 注解驱动 -->
 		<mvc:annotation-driven/>
 		<!-- mvc 资源处理 -->
 		<mvc:resources location="/resources/" mapping="/resources/**"/>
 		<mvc:resources location="/uploadfiles/" mapping="/uploadfiles/**"/>
 		<!-- mvc 拦截器 -->
-		<!-- <mvc:interceptors>
-			<bean class="com.examw.oa.interceptors.UserAuthenticationInterceptor">
+		<mvc:interceptors>
+			<bean class="com.examw.wechat.interceptors.UserAuthenticationInterceptor">
 				<property name="userService"  ref="userService" />
 			</bean>
-		</mvc:interceptors> -->
+		</mvc:interceptors>
 		<!-- 文件上传 -->
 		<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 			<!-- 解析request的编码 -->

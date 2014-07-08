@@ -4,11 +4,10 @@
 <script type="text/javascript">
 <!--
 $(function(){
-	var root = $.trim("<@s.url ''/>");
 	//fileupload
 	var upload = $("#${form}_file_upload").uploadify({
 		swf:"<@s.url '/resources/uploadify/uploadify.swf'/>",
-		uploader:"<@s.url '/upload'/>",
+		uploader:"<@s.url '/uploads/upload'/>",
 		method:"POST",
 		fileObjName:"file",
 		buttonText:"上传头像",
@@ -35,7 +34,7 @@ $(function(){
 			}
 			var result = $.parseJSON(data)
 			if(result){
-				$("#${form} img").attr("src", root + result.url);
+				$("#${form} img").attr("src", result.url);
 				$("#${form} input[name='imgUrl']").val(result.url);
 			}
 		}
@@ -43,7 +42,7 @@ $(function(){
 	//change
 	$("#${form} input[name='imgUrl']").change(function(data){
 		if(data){
-			$("#${form} img").attr("src", root + $(data.target).val());	
+			$("#${form} img").attr("src",$(data.target).val());	
 		}
 	});
 });

@@ -25,7 +25,7 @@ import com.examw.wechat.service.IFileUploadService;
  * @since 2014-05-01.
  */
 public class FileUploadServiceImpl implements IFileUploadService {
-	private static Logger logger = Logger.getLogger(FileUploadServiceImpl.class);
+	private static final Logger logger = Logger.getLogger(FileUploadServiceImpl.class);
 	private String storagePath;
 	/**
 	 * 设置存储路径。
@@ -41,6 +41,7 @@ public class FileUploadServiceImpl implements IFileUploadService {
 	 */
 	@Override
 	public synchronized String upload(byte[] data,String root,String dirName,String ext) throws IOException {
+		if(logger.isDebugEnabled()) logger.debug("开始上传处理...");
 		String err = null;
 		if(data == null || data.length == 0){
 			logger.error(err = "上传文件数据为空！");
@@ -76,6 +77,7 @@ public class FileUploadServiceImpl implements IFileUploadService {
 		}
 		builder.append(DigestUtils.md5DigestAsHex(data)).append(ext.toLowerCase());
 		FileCopyUtils.copy(data, new File(root + builder.toString()));
+		if(logger.isDebugEnabled())logger.debug("文件写入完成：" + (root + builder.toString()));
 		return builder.toString();
 	}
 	/*

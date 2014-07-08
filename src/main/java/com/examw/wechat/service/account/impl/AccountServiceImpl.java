@@ -66,7 +66,7 @@ public class AccountServiceImpl extends BaseDataServiceImpl<Account, AccountInfo
 	@Override
 	public List<AccountInfo> loadAllAccounts() {
 		List<Account> list  = this.accountDao.loadAllAccounts();
-		if(list == null || list.size() == 0) return null;
+		if(list == null || list.size() == 0) return new ArrayList<>();
 		List<AccountInfo> results = new ArrayList<>();
 		for(int i = 0; i < list.size(); i++){
 			AccountInfo info = this.changeModel(list.get(i));
