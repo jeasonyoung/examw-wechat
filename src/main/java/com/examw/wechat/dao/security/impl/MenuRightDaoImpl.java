@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import com.examw.wechat.dao.impl.BaseDaoImpl;
@@ -16,12 +17,14 @@ import com.examw.wechat.model.security.MenuRightInfo;
  * @since 2014-05-04.
  */
 public class MenuRightDaoImpl extends BaseDaoImpl<MenuRight> implements IMenuRightDao {
+	private static final Logger logger = Logger.getLogger(MenuRightDaoImpl.class);
 	/*
 	 * 查询数据。
 	 * @see com.examw.netplatform.dao.admin.IMenuRightDao#findMenuRights(com.examw.netplatform.model.admin.MenuRightInfo)
 	 */
 	@Override
 	public List<MenuRight> findMenuRights(MenuRightInfo info) {
+		if(logger.isDebugEnabled()) logger.debug("查询数据...");
 		String hql = "from MenuRight m where 1 = 1 ";
 		Map<String, Object> parameters = new HashMap<>();
 		hql = this.addWhere(info, hql, parameters);
@@ -34,6 +37,7 @@ public class MenuRightDaoImpl extends BaseDaoImpl<MenuRight> implements IMenuRig
 			}
 			hql += " order by m." + info.getSort() + " " + info.getOrder();
 		}
+		if(logger.isDebugEnabled()) logger.debug(hql);
 		return  this.find(hql, parameters, info.getPage(), info.getRows());
 	}
     /*
@@ -42,9 +46,11 @@ public class MenuRightDaoImpl extends BaseDaoImpl<MenuRight> implements IMenuRig
      */
 	@Override
 	public Long total(MenuRightInfo info) {
+		if(logger.isDebugEnabled()) logger.debug("查询数据汇总...");
 		String hql = "select count(*) from MenuRight m where 1 = 1 ";
 		Map<String, Object> parameters = new HashMap<>();
 		hql = this.addWhere(info, hql, parameters);
+		if(logger.isDebugEnabled()) logger.debug(hql);
 		return this.count(hql, parameters);
 	}
 	//添加查询条件到HQL。
@@ -69,8 +75,8 @@ public class MenuRightDaoImpl extends BaseDaoImpl<MenuRight> implements IMenuRig
 	 */
 	@Override
 	public MenuRight load(MenuRightInfo info) {
+		if(logger.isDebugEnabled()) logger.debug("加载数据...");
 		if(info == null) return null;
-		
 		MenuRight data = StringUtils.isEmpty(info.getId()) ?  null : this.load(MenuRight.class, info.getId());
 		if(data != null) return data;
 		
@@ -79,6 +85,7 @@ public class MenuRightDaoImpl extends BaseDaoImpl<MenuRight> implements IMenuRig
 		parameters.put("menuId", info.getMenuId());
 		parameters.put("rightId", info.getRightId());
 		
+		if(logger.isDebugEnabled()) logger.debug(hql);
 		List<MenuRight> list = this.find(hql, parameters, null, null);
 		if(list != null && list.size() > 0) return list.get(0);
 		
@@ -90,9 +97,12 @@ public class MenuRightDaoImpl extends BaseDaoImpl<MenuRight> implements IMenuRig
 	 */
 	@Override
 	public List<MenuRight> findMenuRights(String menuId) {
+		if(logger.isDebugEnabled()) logger.debug("查询菜单［"+ menuId+"］下的权限集合...");
 		final String hql = "from MenuRight m where m.menu.id = :menuId";
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("menuId", menuId);
+		
+		if(logger.isDebugEnabled()) logger.debug(hql);
 		return this.find(hql, parameters, null, null);
 	}
 }

@@ -23,7 +23,8 @@ import com.examw.wechat.domain.security.Right;
 @Controller
 @RequestMapping(value = "/security/log")
 public class LogController {
-	private static Logger logger = Logger.getLogger(LogController.class);
+	private static final Logger logger = Logger.getLogger(LogController.class);
+	//登录日志服务接口。
 	@Resource
 	private ILoginLogService loginLogService;
 	/**
@@ -33,6 +34,7 @@ public class LogController {
 	@RequiresPermissions({ModuleConstant.SECURITY_LOGIN_LOG + ":" + Right.VIEW})
 	@RequestMapping(value={"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
+		if(logger.isDebugEnabled()) logger.debug("加载列表页面...");
 		model.addAttribute("PER_DELETE", ModuleConstant.SECURITY_LOGIN_LOG + ":" + Right.DELETE);
 		return "security/log_list";
 	}
@@ -44,6 +46,7 @@ public class LogController {
 	@RequestMapping(value="/datagrid", method = RequestMethod.POST)
 	@ResponseBody
 	public DataGrid<LoginLogInfo> datagrid(LoginLogInfo info){
+		if(logger.isDebugEnabled()) logger.debug("加载列表数据...");
 		return this.loginLogService.datagrid(info);
 	}
 	/**
@@ -55,6 +58,7 @@ public class LogController {
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Json delete(String id){
+		if(logger.isDebugEnabled()) logger.debug("删除数据［"+ id +"］...");
 		Json result = new Json();
 		try {
 			this.loginLogService.delete(id.split("\\|"));

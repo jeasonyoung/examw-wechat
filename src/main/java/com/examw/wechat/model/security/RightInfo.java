@@ -13,7 +13,7 @@ import com.examw.model.Paging;
 public class RightInfo extends Paging {
 	private static final long serialVersionUID = 1L;
 	private String id,name;
-	private int value,orderNo;
+	private Integer value,orderNo;
 	/**
 	 * 构造函数。
 	 */
@@ -27,7 +27,7 @@ public class RightInfo extends Paging {
 	 * @param value
 	 * 权限值。
 	 */
-	public RightInfo(String id, String name,int value){
+	public RightInfo(String id, String name,Integer value){
 		this.setId(id);
 		this.setName(name);
 		this.setValue(value);
@@ -70,7 +70,7 @@ public class RightInfo extends Paging {
 	 * @return
 	 * 权限值。
 	 */
-	public int getValue() {
+	public Integer getValue() {
 		return value;
 	}
 	/**
@@ -78,7 +78,7 @@ public class RightInfo extends Paging {
 	 * @param value
 	 * 权限值。
 	 */
-	public void setValue(int value) {
+	public void setValue(Integer value) {
 		this.value = value;
 	}
 	/**
@@ -86,7 +86,7 @@ public class RightInfo extends Paging {
 	 * @return
 	 * 排序号。
 	 */
-	public int getOrderNo() {
+	public Integer getOrderNo() {
 		return orderNo;
 	}
 	/**
@@ -94,7 +94,7 @@ public class RightInfo extends Paging {
 	 * @param orderNo
 	 * 排序号。
 	 */
-	public void setOrderNo(int orderNo) {
+	public void setOrderNo(Integer orderNo) {
 		this.orderNo = orderNo;
 	}
 }

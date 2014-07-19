@@ -27,7 +27,8 @@ import com.examw.wechat.service.security.IMenuService;
 @Controller
 @RequestMapping(value = "/security/menu")
 public class MenuController {
-	private static Logger logger = Logger.getLogger(MenuController.class);
+	private static final Logger logger = Logger.getLogger(MenuController.class);
+	//菜单服务接口。
 	@Resource
 	private IMenuService menuService;
 	/**
@@ -37,6 +38,7 @@ public class MenuController {
 	@RequiresPermissions({ModuleConstant.SECURITY_MENU + ":" + Right.VIEW})
 	@RequestMapping(value = {"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
+		if(logger.isDebugEnabled()) logger.debug("加载列表页面...");
 		model.addAttribute("PER_UPDATE", ModuleConstant.SECURITY_MENU + ":" + Right.UPDATE);
 		model.addAttribute("PER_DELETE", ModuleConstant.SECURITY_MENU + ":" + Right.DELETE);
 		return "security/menu_list";
@@ -49,6 +51,7 @@ public class MenuController {
 	@RequestMapping(value = "/datagrid", method = RequestMethod.POST)
 	@ResponseBody
 	public List<MenuInfo> datagrid(){
+		if(logger.isDebugEnabled()) logger.debug("加载列表数据...");
 		return this.menuService.loadMenus();
 	}
 	/**
@@ -58,6 +61,7 @@ public class MenuController {
 	@RequestMapping(value = "/tree", method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
 	public synchronized List<TreeNode> tree(){
+		if(logger.isDebugEnabled()) logger.debug("加载菜单树数据...");
 		List<TreeNode> result = new ArrayList<>();
 		List<MenuInfo> list = this.menuService.loadMenus();
 		if(list != null && list.size() > 0){
@@ -98,6 +102,7 @@ public class MenuController {
 	@RequestMapping(value = "/init", method = RequestMethod.POST)
 	@ResponseBody
 	public Json init(){
+		if(logger.isDebugEnabled()) logger.debug("初始化菜单数据...");
 		Json result = new Json();
 		try {
 			this.menuService.init();
@@ -118,6 +123,7 @@ public class MenuController {
 	@RequestMapping(value= "/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Json delete(String id){
+		if(logger.isDebugEnabled()) logger.debug("删除数据［"+ id +"］...");
 		Json result = new Json();
 		try {
 			if(!StringUtils.isEmpty(id)){

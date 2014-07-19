@@ -18,7 +18,7 @@ public interface IRoleService extends IBaseDataService<RoleInfo> {
 	 * @return
 	 * 状态名称。
 	 */
-	String getStatusName(int status);
+	String loadStatusName(Integer status);
 	/**
 	 * 加载角色权限树数据。
 	 * @param roleId

@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class Right implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private String id,name;
-	private int value,orderNo;
+	private Integer value,orderNo;
 	/**
 	 *  查看数据权限。
 	 */
@@ -59,7 +59,7 @@ public class Right implements Serializable{
 	 * @return
 	 * 权限值。
 	 */
-	public int getValue() {
+	public Integer getValue() {
 		return value;
 	}
 	/**
@@ -67,7 +67,7 @@ public class Right implements Serializable{
 	 * @param value
 	 * 权限值。
 	 */
-	public void setValue(int value) {
+	public void setValue(Integer value) {
 		this.value = value;
 	}
 	/**
@@ -75,7 +75,7 @@ public class Right implements Serializable{
 	 * @return
 	 * 排序号。
 	 */
-	public int getOrderNo() {
+	public Integer getOrderNo() {
 		return orderNo;
 	}
 	/**
@@ -83,7 +83,7 @@ public class Right implements Serializable{
 	 * @param orderNo
 	 * 排序号。
 	 */
-	public void setOrderNo(int orderNo) {
+	public void setOrderNo(Integer orderNo) {
 		this.orderNo = orderNo;
 	}
 }

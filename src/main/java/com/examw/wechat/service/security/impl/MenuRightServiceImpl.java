@@ -23,7 +23,7 @@ import com.examw.wechat.service.security.IMenuRightService;
  * @since 2014-05-04.
  */
 public class MenuRightServiceImpl extends BaseDataServiceImpl<MenuRight, MenuRightInfo> implements IMenuRightService {
-	private static Logger logger = Logger.getLogger(MenuRightServiceImpl.class);
+	private static final Logger logger = Logger.getLogger(MenuRightServiceImpl.class);
 	private IMenuRightDao menuRightDao;
 	private IMenuDao menuDao;
 	private IRightDao rightDao;
@@ -33,6 +33,7 @@ public class MenuRightServiceImpl extends BaseDataServiceImpl<MenuRight, MenuRig
 	 * 菜单权限数据接口。
 	 */
 	public void setMenuRightDao(IMenuRightDao menuRightDao) {
+		if(logger.isDebugEnabled()) logger.debug("设置菜单权限数据接口..");
 		this.menuRightDao = menuRightDao;
 	}
 	/**
@@ -41,6 +42,7 @@ public class MenuRightServiceImpl extends BaseDataServiceImpl<MenuRight, MenuRig
 	 * 菜单数据接口。
 	 */
 	public void setMenuDao(IMenuDao menuDao) {
+		if(logger.isDebugEnabled()) logger.debug("设置菜单数据接口..");
 		this.menuDao = menuDao;
 	}
 	/**
@@ -49,6 +51,7 @@ public class MenuRightServiceImpl extends BaseDataServiceImpl<MenuRight, MenuRig
 	 * 权限数据接口。
 	 */
 	public void setRightDao(IRightDao rightDao) {
+		if(logger.isDebugEnabled()) logger.debug("设置权限数据接口..");
 		this.rightDao = rightDao;
 	}
 	/*
@@ -57,6 +60,7 @@ public class MenuRightServiceImpl extends BaseDataServiceImpl<MenuRight, MenuRig
 	 */
 	@Override
 	protected List<MenuRight> find(MenuRightInfo info) {
+		if(logger.isDebugEnabled()) logger.debug("查询数据..");
 		return this.menuRightDao.findMenuRights(info);
 	}
     /*
@@ -65,6 +69,7 @@ public class MenuRightServiceImpl extends BaseDataServiceImpl<MenuRight, MenuRig
      */
 	@Override
 	protected MenuRightInfo changeModel(MenuRight data) {
+		if(logger.isDebugEnabled()) logger.debug("数据类型转换...");
 		if(data == null) return null;
 		MenuRightInfo info = new MenuRightInfo();
 		info.setId(data.getId());
@@ -81,6 +86,7 @@ public class MenuRightServiceImpl extends BaseDataServiceImpl<MenuRight, MenuRig
      */
 	@Override
 	protected Long total(MenuRightInfo info) {
+		if(logger.isDebugEnabled()) logger.debug("查询数据总数..");
 		return this.menuRightDao.total(info);
 	}
 	/*

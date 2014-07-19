@@ -29,7 +29,7 @@ import com.examw.wechat.service.security.IRoleService;
  * @since 2014-05-06.
  */
 public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> implements IRoleService {
-	private static Logger logger = Logger.getLogger(RoleServiceImpl.class);
+	private static final Logger logger = Logger.getLogger(RoleServiceImpl.class);
 	private IRoleDao roleDao;
 	private IMenuDao menuDao;
 	private IMenuRightDao menuRightDao;
@@ -40,6 +40,7 @@ public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> impleme
 	 * 角色数据接口。
 	 */
 	public void setRoleDao(IRoleDao roleDao) {
+		if(logger.isDebugEnabled()) logger.debug("设置角色数据接口...");
 		this.roleDao = roleDao;
 	}
 	/**
@@ -48,6 +49,7 @@ public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> impleme
 	 * 菜单数据接口。
 	 */
 	public void setMenuDao(IMenuDao menuDao) {
+		if(logger.isDebugEnabled()) logger.debug("设置菜单数据接口...");
 		this.menuDao = menuDao;
 	}
 	/**
@@ -56,6 +58,7 @@ public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> impleme
 	 * 菜单权限数据接口。
 	 */
 	public void setMenuRightDao(IMenuRightDao menuRightDao) {
+		if(logger.isDebugEnabled()) logger.debug("设置菜单权限数据接口...");
 		this.menuRightDao = menuRightDao;
 	}
 	/**
@@ -64,6 +67,7 @@ public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> impleme
 	 * 角色状态名称。
 	 */
 	public void setRoleStatusName(Map<Integer, String> roleStatusName) {
+		if(logger.isDebugEnabled()) logger.debug("设置角色状态名称集合...");
 		this.roleStatusName = roleStatusName;
 	}
 	/*
@@ -71,7 +75,8 @@ public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> impleme
 	 * @see com.examw.netplatform.service.admin.IRoleService#getStatusName(int)
 	 */
 	@Override
-	public String getStatusName(int status) {
+	public String loadStatusName(Integer status) {
+		if(logger.isDebugEnabled()) logger.debug("加载状态［"+ status +"］名称...");
 		if(this.roleStatusName == null || this.roleStatusName.size() == 0) return null;
 		return this.roleStatusName.get(status);
 	}
@@ -81,6 +86,7 @@ public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> impleme
 	 */
 	@Override
 	protected List<Role> find(RoleInfo info) {
+		if(logger.isDebugEnabled()) logger.debug("查询数据...");
 		return this.roleDao.findRoles(info);
 	}
 	/*
@@ -89,10 +95,11 @@ public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> impleme
 	 */
 	@Override
 	protected RoleInfo changeModel(Role data) {
+		if(logger.isDebugEnabled()) logger.debug("类型转换...");
 		if(data == null) return null;
 		RoleInfo info = new RoleInfo();
 		BeanUtils.copyProperties(data, info);
-		info.setStatusName(this.getStatusName(info.getStatus()));
+		info.setStatusName(this.loadStatusName(info.getStatus()));
 		return info;
 	}
 	/*
@@ -101,6 +108,7 @@ public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> impleme
 	 */
 	@Override
 	protected Long total(RoleInfo info) {
+		if(logger.isDebugEnabled()) logger.debug("查询数据统计...");
 		return this.roleDao.total(info);
 	}
 	/*
@@ -121,7 +129,7 @@ public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> impleme
 		}
 		BeanUtils.copyProperties(info, data);
 		if(StringUtils.isEmpty(info.getStatusName())){
-			info.setStatusName(this.getStatusName(info.getStatus()));
+			info.setStatusName(this.loadStatusName(info.getStatus()));
 		}
 		if(isAdded) this.roleDao.save(data);
 		return info;
@@ -150,6 +158,7 @@ public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> impleme
 	 */
 	@Override
 	public List<TreeNode> loadRoleRightTree(String roleId) {
+		if(logger.isDebugEnabled()) logger.debug("加载角色权限树数据...");
 		List<TreeNode> results = new ArrayList<>();
 		List<Menu>  menus =  this.menuDao.findMenus();
 		if(menus != null && menus.size() > 0){
@@ -223,6 +232,7 @@ public class RoleServiceImpl extends BaseDataServiceImpl<Role, RoleInfo> impleme
 	 */
 	@Override
 	public void addRoleRight(String roleId, String[] menuRightIds) {
+		if(logger.isDebugEnabled()) logger.debug("添加角色［"+ roleId +"］权限...");
 		if(StringUtils.isEmpty(roleId)) return;
 		Role role = this.roleDao.load(Role.class, roleId);
 		if(role == null) return;

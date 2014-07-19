@@ -23,7 +23,7 @@ import com.examw.wechat.service.security.IRightService;
 @Controller
 @RequestMapping(value = "/security/right")
 public class RightController {
-	private static Logger logger = Logger.getLogger(RightController.class);
+	private static final Logger logger = Logger.getLogger(RightController.class);
 	//设置权限服务接口。
 	@Resource
 	private IRightService rightService;
@@ -35,6 +35,7 @@ public class RightController {
 	@RequiresPermissions({ModuleConstant.SECURITY_RIGHT + ":" + Right.VIEW})
 	@RequestMapping(value = {"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
+		if(logger.isDebugEnabled()) logger.debug("加载列表页面...");
 		model.addAttribute("PER_UPDATE", ModuleConstant.SECURITY_RIGHT + ":" + Right.UPDATE);
 		model.addAttribute("PER_DELETE", ModuleConstant.SECURITY_RIGHT + ":" + Right.DELETE);
 		return "security/right_list";
@@ -47,6 +48,7 @@ public class RightController {
 	@RequestMapping(value="/datagrid", method = RequestMethod.POST)
 	@ResponseBody
 	public DataGrid<RightInfo> datagrid(RightInfo info){
+		if(logger.isDebugEnabled()) logger.debug("加载列表数据...");
 		return this.rightService.datagrid(info);
 	}
 	/**
@@ -58,6 +60,7 @@ public class RightController {
 	@RequestMapping(value="/init", method = RequestMethod.POST)
 	@ResponseBody
 	public Json init(){
+		if(logger.isDebugEnabled()) logger.debug("初始化数据...");
 		Json result = new Json();
 		try {
 			this.rightService.init();
@@ -78,6 +81,7 @@ public class RightController {
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Json delete(String id){
+		if(logger.isDebugEnabled()) logger.debug("删除数据［"+ id +"］...");
 		Json result = new Json();
 		try {
 			this.rightService.delete(id.split("\\|"));

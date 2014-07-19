@@ -28,7 +28,7 @@ import com.examw.wechat.service.security.IRoleService;
 @Controller
 @RequestMapping(value = "/security/role")
 public class RoleController {
-	private static Logger logger = Logger.getLogger(RoleController.class);
+	private static final Logger logger = Logger.getLogger(RoleController.class);
 	//设置角色服务接口。
 	@Resource
 	private IRoleService roleService;
@@ -39,6 +39,7 @@ public class RoleController {
 	@RequiresPermissions({ModuleConstant.SECURITY_ROLE + ":" + Right.VIEW})
 	@RequestMapping(value={"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
+		if(logger.isDebugEnabled()) logger.debug("加载列表页面...");
 		model.addAttribute("PER_UPDATE", ModuleConstant.SECURITY_ROLE + ":" + Right.UPDATE);
 		model.addAttribute("PER_DELETE", ModuleConstant.SECURITY_ROLE + ":" + Right.DELETE);
 		return "security/role_list";
@@ -51,8 +52,9 @@ public class RoleController {
 	@RequiresPermissions({ModuleConstant.SECURITY_ROLE + ":" + Right.UPDATE})
 	@RequestMapping(value="/edit", method = RequestMethod.GET)
 	public String edit(Model model){
-		model.addAttribute("STATUS_ENABLED", this.roleService.getStatusName(Role.STATUS_ENABLED));
-		model.addAttribute("STATUS_DISABLE", this.roleService.getStatusName(Role.STATUS_DISABLE));
+		if(logger.isDebugEnabled()) logger.debug("加载编辑页面...");
+		model.addAttribute("STATUS_ENABLED", this.roleService.loadStatusName(Role.STATUS_ENABLED));
+		model.addAttribute("STATUS_DISABLE", this.roleService.loadStatusName(Role.STATUS_DISABLE));
 		return "security/role_edit";
 	}
 	/**
@@ -63,6 +65,7 @@ public class RoleController {
 	@RequiresPermissions({ModuleConstant.SECURITY_ROLE + ":" + Right.VIEW})
 	@RequestMapping(value="/right", method = RequestMethod.GET)
 	public String roleRight(String roleId, Model model){
+		if(logger.isDebugEnabled()) logger.debug("加载授权页面...");
 		model.addAttribute("PER_UPDATE", ModuleConstant.SECURITY_ROLE + ":" + Right.UPDATE);
 		model.addAttribute("roleId", roleId);
 		return "security/role_right";
@@ -74,6 +77,7 @@ public class RoleController {
 	@RequestMapping(value="/all", method = {RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public List<RoleInfo> all(){
+		if(logger.isDebugEnabled()) logger.debug("加载全部角色数据...");
 		return this.roleService.datagrid(new RoleInfo(){
 			private static final long serialVersionUID = 1L;
 			@Override
@@ -92,6 +96,7 @@ public class RoleController {
 	@RequestMapping(value="/right-tree", method = RequestMethod.POST)
 	@ResponseBody
 	public List<TreeNode> roleRightTree(String roleId){
+		if(logger.isDebugEnabled()) logger.debug("加载角色权限数据...");
 		return this.roleService.loadRoleRightTree(roleId);
 	}
 	/**
@@ -102,6 +107,7 @@ public class RoleController {
 	@RequestMapping(value="/datagrid", method = RequestMethod.POST)
 	@ResponseBody
 	public DataGrid<RoleInfo> datagrid(RoleInfo info){
+		if(logger.isDebugEnabled()) logger.debug("加载列表数据...");
 		return this.roleService.datagrid(info);
 	}
 	/**
@@ -115,6 +121,7 @@ public class RoleController {
 	@RequestMapping(value="/update", method = RequestMethod.POST)
 	@ResponseBody
 	public Json update(RoleInfo info){
+		if(logger.isDebugEnabled()) logger.debug("更新数据...");
 		Json result = new Json();
 		try {
 			result.setData(this.roleService.update(info));
@@ -139,6 +146,7 @@ public class RoleController {
 	@RequestMapping(value="/addroleright", method = RequestMethod.POST)
 	@ResponseBody
 	public Json addRoleRights(String roleId, String menuRightIds){
+		if(logger.isDebugEnabled()) logger.debug("添加角色权限数据...");
 		Json result = new Json();
 		try {
 			 this.roleService.addRoleRight(roleId, menuRightIds.split("\\|"));
@@ -159,6 +167,7 @@ public class RoleController {
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Json delete(String id){
+		if(logger.isDebugEnabled()) logger.debug("删除数据［"+ id +"］...");
 		Json result = new Json();
 		try {
 			this.roleService.delete(id.split("\\|"));

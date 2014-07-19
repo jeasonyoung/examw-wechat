@@ -15,7 +15,7 @@ public interface IRightService extends IBaseDataService<RightInfo> {
 	 * @return
 	 * 权限名称。
 	 */
-	String getRightName(int right);
+	String loadRightName(Integer right);
 	/**
 	 * 初始化数据。
 	 * @throws Exception

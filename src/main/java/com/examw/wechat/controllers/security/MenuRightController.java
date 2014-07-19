@@ -26,7 +26,7 @@ import com.examw.wechat.service.security.IRightService;
 @Controller
 @RequestMapping(value = "/security/menu/right")
 public class MenuRightController {
-	private static Logger logger = Logger.getLogger(MenuRightController.class);
+	private static final Logger logger = Logger.getLogger(MenuRightController.class);
 	//权限服务。
 	@Resource
 	private IRightService rightService;
@@ -40,6 +40,7 @@ public class MenuRightController {
 	@RequiresPermissions({ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.VIEW})
 	@RequestMapping(value = {"","/list"}, method = RequestMethod.GET)
 	public String list(Model model){
+		if(logger.isDebugEnabled()) logger.debug("加载列表页面...");
 		model.addAttribute("PER_UPDATE", ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.UPDATE);
 		model.addAttribute("PER_DELETE", ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.DELETE);
 		return "security/menuright_list";
@@ -51,6 +52,7 @@ public class MenuRightController {
 	@RequiresPermissions({ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.UPDATE})
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String edit(String menuId, Model model){
+		if(logger.isDebugEnabled()) logger.debug("加载添加页面...");
 		model.addAttribute("PER_UPDATE", ModuleConstant.SECURITY_MENU_RIGHT + ":" + Right.UPDATE);
 		 model.addAttribute("rights", this.rightService.datagrid(new RightInfo(){
 				private static final long serialVersionUID = 1L;
@@ -70,6 +72,7 @@ public class MenuRightController {
 	@RequestMapping(value="/datagrid", method = RequestMethod.POST)
 	@ResponseBody
 	public DataGrid<MenuRightInfo> datagrid(MenuRightInfo info){
+		if(logger.isDebugEnabled()) logger.debug("加载列表数据...");
 		return this.menuRightService.datagrid(info);
 	}
 	/**
@@ -83,6 +86,7 @@ public class MenuRightController {
 	@RequestMapping(value="/update", method = RequestMethod.POST)
 	@ResponseBody
 	public Json update(MenuRightInfo info){
+		if(logger.isDebugEnabled()) logger.debug("更新数据...");
 		Json result = new Json();
 		try {
 			if(StringUtils.isEmpty(info.getMenuId())){
@@ -126,6 +130,7 @@ public class MenuRightController {
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Json delete(String id){
+		if(logger.isDebugEnabled()) logger.debug("删除数据［"+id+"］...");
 		Json result = new Json();
 		try {
 			this.menuRightService.delete(id.split("\\|"));

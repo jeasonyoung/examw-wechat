@@ -20,7 +20,7 @@ import com.examw.wechat.service.security.IRightService;
  * @since 2014-05-03.
  */
 public class RightServiceImpl extends BaseDataServiceImpl<Right,RightInfo> implements IRightService {
-	private static Logger logger = Logger.getLogger(RightServiceImpl.class);
+	private static final Logger logger = Logger.getLogger(RightServiceImpl.class);
 	private IRightDao rightDao;
 	private Map<Integer, String> rightNameMap;
 	/**
@@ -29,6 +29,7 @@ public class RightServiceImpl extends BaseDataServiceImpl<Right,RightInfo> imple
 	 * 基础权限数据接口。
 	 */
 	public void setRightDao(IRightDao rightDao) {
+		if(logger.isDebugEnabled()) logger.debug("设置基础权限数据接口...");
 		this.rightDao = rightDao;
 	}
 	/**
@@ -37,6 +38,7 @@ public class RightServiceImpl extends BaseDataServiceImpl<Right,RightInfo> imple
 	 * 权限名称。
 	 */
 	public void setRightNameMap(Map<Integer, String> rightNameMap) {
+		if(logger.isDebugEnabled()) logger.debug("设置权限名称集合");
 		this.rightNameMap = rightNameMap;
 	}
 	/*
@@ -45,6 +47,7 @@ public class RightServiceImpl extends BaseDataServiceImpl<Right,RightInfo> imple
 	 */
 	@Override
 	protected List<Right> find(RightInfo info) {
+		if(logger.isDebugEnabled()) logger.debug("查询数据...");
 		return this.rightDao.findRights(info);
 	}
 	/*
@@ -53,6 +56,7 @@ public class RightServiceImpl extends BaseDataServiceImpl<Right,RightInfo> imple
 	 */
 	@Override
 	protected RightInfo changeModel(Right data) {
+		if(logger.isDebugEnabled()) logger.debug("类型转换...");
 		if(data == null) return null;
 		RightInfo info = new RightInfo();
 		BeanUtils.copyProperties(data, info);
@@ -64,6 +68,7 @@ public class RightServiceImpl extends BaseDataServiceImpl<Right,RightInfo> imple
      */
 	@Override
 	protected Long total(RightInfo info) {
+		if(logger.isDebugEnabled()) logger.debug("查询数据统计...");
 		return this.rightDao.total(info);
 	}
     /*
@@ -72,6 +77,7 @@ public class RightServiceImpl extends BaseDataServiceImpl<Right,RightInfo> imple
      */
 	@Override
 	public RightInfo update(RightInfo info) {
+		if(logger.isDebugEnabled()) logger.debug("更新数据...");
 		if(info == null || StringUtils.isEmpty(info.getId())) return null;
 		boolean isAdded = false;
 		Right data =  this.rightDao.load(Right.class, info.getId());
@@ -91,6 +97,7 @@ public class RightServiceImpl extends BaseDataServiceImpl<Right,RightInfo> imple
      */
 	@Override
 	public void delete(String[] ids) {
+		if(logger.isDebugEnabled()) logger.debug("删除数据...");
 		if(ids == null || ids.length == 0) return;
 		for(int i = 0; i < ids.length; i++){
 			Right data = this.rightDao.load(Right.class, ids[i]);
@@ -109,20 +116,21 @@ public class RightServiceImpl extends BaseDataServiceImpl<Right,RightInfo> imple
 		if(logger.isDebugEnabled()) logger.debug("初始化权限数据...");
 		//查看
 		if(logger.isDebugEnabled()) logger.debug("初始化查看权限.");
-		this.update(new RightInfo(((Integer)Right.VIEW).toString(), this.getRightName(Right.VIEW), Right.VIEW));
+		this.update(new RightInfo(((Integer)Right.VIEW).toString(), this.loadRightName(Right.VIEW), Right.VIEW));
 		//修改
 		if(logger.isDebugEnabled()) logger.debug("初始化修改权限.");
-		this.update(new RightInfo(((Integer)Right.UPDATE).toString(), this.getRightName(Right.UPDATE), Right.UPDATE));
+		this.update(new RightInfo(((Integer)Right.UPDATE).toString(), this.loadRightName(Right.UPDATE), Right.UPDATE));
 		//删除
 		if(logger.isDebugEnabled()) logger.debug("初始化删除权限.");
-		this.update(new RightInfo(((Integer)Right.DELETE).toString(), this.getRightName(Right.DELETE), Right.DELETE));
+		this.update(new RightInfo(((Integer)Right.DELETE).toString(), this.loadRightName(Right.DELETE), Right.DELETE));
 	}
 	/*
 	 * 加载权限名称。
 	 * @see com.examw.netplatform.service.admin.IRightService#getRightName(int)
 	 */
 	@Override
-	public String getRightName(int right) {
+	public String loadRightName(Integer right) {
+		if(logger.isDebugEnabled()) logger.debug("加载权限名称［right="+ right +"］");
 		if(this.rightNameMap == null || this.rightNameMap.size() == 0) return null;
 		return this.rightNameMap.get(right);
 	}
